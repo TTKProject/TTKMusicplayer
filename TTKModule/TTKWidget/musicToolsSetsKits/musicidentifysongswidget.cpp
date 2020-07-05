@@ -6,14 +6,12 @@
 #include "musicaudiorecorderobject.h"
 #include "musicsongsharingwidget.h"
 #include "musicdownloadwidget.h"
-#include "musicnumberdefine.h"
 #include "musiccoremplayer.h"
 #include "musiclrcanalysis.h"
 #include "musictoastlabel.h"
 #include "musicuiobject.h"
 #include "musiccoreutils.h"
 #include "musicsemaphoreloop.h"
-#include "musicotherdefine.h"
 
 #include <QMovie>
 #include <QShortcut>
@@ -26,7 +24,7 @@ MusicIdentifySongsWidget::MusicIdentifySongsWidget(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
     m_mainWindow = new QStackedWidget(this);
     m_mainWindow->setObjectName("MainWindow");
-    m_mainWindow->setStyleSheet(QString("#MainWindow{%1}").arg(MusicUIObject::MBackgroundStyle17));
+    m_mainWindow->setStyleSheet(QString("#MainWindow{%1}").arg(MusicUIObject::MQSSBackgroundStyle17));
     layout->addWidget(m_mainWindow);
     setLayout(layout);
 
@@ -69,8 +67,7 @@ void MusicIdentifySongsWidget::getKey()
     }
     else
     {
-        MusicToastLabel *toast = new MusicToastLabel(this);
-        toast->defaultLabel(this, tr("Init Error!"));
+        MusicToastLabel::popup(tr("Init Error!"));
     }
 }
 
@@ -81,7 +78,7 @@ void MusicIdentifySongsWidget::detectedButtonClicked()
         return;
     }
 
-    if(m_detectedButton->styleSheet().contains(MusicUIObject::MKGSongsDetectStartBtn))
+    if(m_detectedButton->styleSheet().contains(MusicUIObject::MQSSSongsDetectStartBtn))
     {
         m_recordCore->onRecordStart();
         if(m_recordCore->error())
@@ -91,7 +88,7 @@ void MusicIdentifySongsWidget::detectedButtonClicked()
 
         m_detectedMovie->start();
         m_timer->start();
-        m_detectedButton->setStyleSheet(MusicUIObject::MKGSongsDetectStopBtn);
+        m_detectedButton->setStyleSheet(MusicUIObject::MQSSSongsDetectStopBtn);
         m_detectedLabel->setText(tr("Recogniting the music being played"));
     }
     else
@@ -99,7 +96,7 @@ void MusicIdentifySongsWidget::detectedButtonClicked()
         m_recordCore->onRecordStop();
         m_detectedMovie->stop();
         m_timer->stop();
-        m_detectedButton->setStyleSheet(MusicUIObject::MKGSongsDetectStartBtn);
+        m_detectedButton->setStyleSheet(MusicUIObject::MQSSSongsDetectStartBtn);
         m_detectedLabel->setText(tr("Intelligent Recognition Of The Music Being Played"));
     }
 }
@@ -207,15 +204,10 @@ void MusicIdentifySongsWidget::positionChanged(qint64 position)
     }
 }
 
-void MusicIdentifySongsWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-}
-
 void MusicIdentifySongsWidget::createDetectedWidget()
 {
     QWidget *widget = new QWidget(m_mainWindow);
-    widget->setStyleSheet(MusicUIObject::MColorStyle03 + MusicUIObject::MFontStyle05);
+    widget->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSFontStyle05);
     QVBoxLayout *widgetLayout = new QVBoxLayout(widget);
 
     m_detectedMovie = new QMovie(":/toolSets/lb_radar", QByteArray(), widget);
@@ -225,7 +217,7 @@ void MusicIdentifySongsWidget::createDetectedWidget()
     iconLabelLayout->setSpacing(0);
     iconLabelLayout->setContentsMargins(0, 0, 0, 0);
     m_detectedButton = new QPushButton(widget);
-    m_detectedButton->setStyleSheet(MusicUIObject::MKGSongsDetectStartBtn);
+    m_detectedButton->setStyleSheet(MusicUIObject::MQSSSongsDetectStartBtn);
     m_detectedButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_detectedButton->setFixedSize(162, 162);
     iconLabelLayout->addWidget(m_detectedButton, 0, Qt::AlignCenter);
@@ -237,7 +229,7 @@ void MusicIdentifySongsWidget::createDetectedWidget()
     m_detectedLabel->setText(tr("Intelligent Recognition Of The Music Being Played"));
 
     QLabel *text = new QLabel(tr("ShotCut:") + " Shift + Ctrl + T", widget);
-    text->setStyleSheet(MusicUIObject::MFontStyle03);
+    text->setStyleSheet(MusicUIObject::MQSSFontStyle03);
 
     widgetLayout->addStretch(2);
     widgetLayout->addWidget(iconLabel, 0, Qt::AlignCenter);
@@ -268,7 +260,7 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
     const MusicSongIdentify songIdentify(m_detectedThread->getIdentifySongs().first());
 
     QWidget *widget = new QWidget(m_mainWindow);
-    widget->setStyleSheet(MusicUIObject::MColorStyle03 + MusicUIObject::MFontStyle05);
+    widget->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSFontStyle05);
     QVBoxLayout *widgetLayout = new QVBoxLayout(widget);
     //
     QWidget *infoWidget = new QWidget(widget);
@@ -295,7 +287,7 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
         foreach(const MusicObject::MusicSongInformation &info, d->getMusicSongInfos())
         {
             if(info.m_singerName.toLower().trimmed().contains(songIdentify.m_singerName.toLower().trimmed(), Qt::CaseInsensitive) &&
-               info.m_songName.toLower().trimmed().contains(songIdentify.m_songName.toLower().trimmed(), Qt::CaseInsensitive) )
+               info.m_songName.toLower().trimmed().contains(songIdentify.m_songName.toLower().trimmed(), Qt::CaseInsensitive))
             {
                 m_currentSong = info;
                 break;
@@ -344,10 +336,10 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
     downButton->setCursor(QCursor(Qt::PointingHandCursor));
     shareButton->setCursor(QCursor(Qt::PointingHandCursor));
 
-    playButton->setStyleSheet(MusicUIObject::MKGSongsDetectPlayBtn);
-    loveButton->setStyleSheet(MusicUIObject::MKGSongsDetectUnloveBtn);
-    downButton->setStyleSheet(MusicUIObject::MKGSongsDetectDownloadBtn);
-    shareButton->setStyleSheet(MusicUIObject::MKGSongsDetectShareBtn);
+    playButton->setStyleSheet(MusicUIObject::MQSSSongsDetectPlayBtn);
+    loveButton->setStyleSheet(MusicUIObject::MQSSSongsDetectUnloveBtn);
+    downButton->setStyleSheet(MusicUIObject::MQSSSongsDetectDownloadBtn);
+    shareButton->setStyleSheet(MusicUIObject::MQSSSongsDetectShareBtn);
     connect(playButton, SIGNAL(clicked()), SLOT(musicSongPlay()));
 //    connect(loveButton, SIGNAL(clicked()), SLOT(musicSongShare()));
     connect(downButton, SIGNAL(clicked()), SLOT(musicSongDownload()));
@@ -388,12 +380,12 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
     //
     QPushButton *reDetect = new QPushButton(widget);
     reDetect->setFixedSize(56, 56);
-    reDetect->setStyleSheet(MusicUIObject::MKGSongsRedetectBtn);
+    reDetect->setStyleSheet(MusicUIObject::MQSSSongsRedetectBtn);
     reDetect->setCursor(QCursor(Qt::PointingHandCursor));
     connect(reDetect, SIGNAL(clicked()), SLOT(reDetectButtonClicked()));
 
     QLabel *text3Label = new QLabel(tr("Redetect"), widget);
-    text3Label->setStyleSheet(MusicUIObject::MFontStyle03);
+    text3Label->setStyleSheet(MusicUIObject::MQSSFontStyle03);
 
     widgetLayout->addStretch(1);
     widgetLayout->addWidget(infoWidget, 1, Qt::AlignCenter);
@@ -414,7 +406,7 @@ void MusicIdentifySongsWidget::createDetectedFailedWidget()
         delete m_mainWindow->widget(1);
     }
     QWidget *widget = new QWidget(m_mainWindow);
-    widget->setStyleSheet(MusicUIObject::MColorStyle03 + MusicUIObject::MFontStyle05);
+    widget->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSFontStyle05);
     QVBoxLayout *widgetLayout = new QVBoxLayout(widget);
 
     QLabel *iconLabel = new QLabel(widget);
@@ -422,11 +414,11 @@ void MusicIdentifySongsWidget::createDetectedFailedWidget()
     QLabel *text1Label = new QLabel(tr("No Songs Identified"), widget);
     QLabel *text2Label = new QLabel(tr("Only The Music Being Played Can Be Recognized"), widget);
     QLabel *text3Label = new QLabel(tr("Redetect"), widget);
-    text3Label->setStyleSheet(MusicUIObject::MFontStyle03);
+    text3Label->setStyleSheet(MusicUIObject::MQSSFontStyle03);
     //
     QPushButton *reDetect = new QPushButton(widget);
     reDetect->setFixedSize(56, 56);
-    reDetect->setStyleSheet(MusicUIObject::MKGSongsRedetectBtn);
+    reDetect->setStyleSheet(MusicUIObject::MQSSSongsRedetectBtn);
     reDetect->setCursor(QCursor(Qt::PointingHandCursor));
     connect(reDetect, SIGNAL(clicked()), SLOT(reDetectButtonClicked()));
 #ifdef Q_OS_UNIX

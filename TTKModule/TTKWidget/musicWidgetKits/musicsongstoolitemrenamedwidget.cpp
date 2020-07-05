@@ -2,7 +2,6 @@
 #include "musicstringutils.h"
 #include "musicuiobject.h"
 #include "musictoastlabel.h"
-#include "musicapplication.h"
 
 MusicSongsToolItemRenamedWidget::MusicSongsToolItemRenamedWidget(QWidget *parent)
     : QLineEdit(parent)
@@ -11,7 +10,7 @@ MusicSongsToolItemRenamedWidget::MusicSongsToolItemRenamedWidget(QWidget *parent
 
     m_focusBlock = false;
 
-    setStyleSheet(MusicUIObject::MLineEditStyle01);
+    setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
     setFocus(Qt::MouseFocusReason);
     setFocusPolicy(Qt::ClickFocus);
 
@@ -34,14 +33,15 @@ void MusicSongsToolItemRenamedWidget::textChanged(const QString &text)
         m_focusBlock = true;
 
         MusicToastLabel *toast = new MusicToastLabel(this);
-        toast->defaultLabel(MusicApplication::instance(), tr("Illegal Chars %1").arg(MusicUtils::String::illegalCharacters().join("")));
+        toast->setText(tr("Illegal Chars %1").arg(MusicUtils::String::illegalCharacters().join("")));
+        toast->popup();
         connect(toast, SIGNAL(animationCloseChanged()), SLOT(animationCloseChanged()));
     }
 }
 
 void MusicSongsToolItemRenamedWidget::renameFinished()
 {
-    emit renameFinished(text());
+    Q_EMIT renameFinished(text());
 }
 
 void MusicSongsToolItemRenamedWidget::animationCloseChanged()
@@ -55,17 +55,11 @@ void MusicSongsToolItemRenamedWidget::focusOutEvent(QFocusEvent *event)
     if(!m_focusBlock)
     {
         QLineEdit::focusOutEvent(event);
-        emit renameFinished(text());
+        Q_EMIT renameFinished(text());
         close();
     }
     else
     {
         Q_UNUSED(event);
     }
-}
-
-void MusicSongsToolItemRenamedWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-    //do nothing just cover the origin
 }

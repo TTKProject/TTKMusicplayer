@@ -24,7 +24,7 @@ bool MusicAbstractMoveResizeWidget::eventFilter(QObject *object, QEvent *event)
 
     if(QEvent::MouseMove == event->type())
     {
-        QMouseEvent *mouseEvent = MStatic_cast(QMouseEvent*, event);
+        QMouseEvent *mouseEvent = TTKStatic_cast(QMouseEvent*, event);
         QApplication::sendEvent(this, mouseEvent);
     }
     return false;
@@ -203,7 +203,7 @@ void MusicAbstractMoveResizeWidget::moveDirection()
             int yValue = QCursor::pos().y();
             int xValue = QCursor::pos().x();
 
-            int wValue = pos().x() + width( )- xValue;
+            int wValue = pos().x() + width()- xValue;
             int hValue = pos().y() + height() - yValue;
 
             const int twValue = m_struct.m_windowPos.x() + m_struct.m_pressedSize.width();

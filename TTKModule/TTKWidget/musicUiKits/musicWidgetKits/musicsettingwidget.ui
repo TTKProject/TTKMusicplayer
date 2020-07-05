@@ -71,12 +71,12 @@
     <number>0</number>
    </property>
    <widget class="QWidget" name="first">
-    <widget class="QLabel" name="baseSetShowInfoWidget">
+    <widget class="MusicThemeLineLabel" name="baseSetShowInfoWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -141,12 +141,12 @@ font-weight:bold;</string>
       <string>直接退出程序</string>
      </property>
     </widget>
-    <widget class="QLabel" name="multiLanguageChoiceWidget">
+    <widget class="MusicThemeLineLabel" name="multiLanguageChoiceWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>255</y>
-       <width>100</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -227,12 +227,12 @@ font-weight:bold;</string>
       <string>将天天酷音作为默认播放器</string>
      </property>
     </widget>
-    <widget class="QLabel" name="otherShowInfoWidget">
+    <widget class="MusicThemeLineLabel" name="otherShowInfoWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>165</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -245,12 +245,12 @@ font-weight:bold;</string>
       <string>其他设置</string>
      </property>
     </widget>
-    <widget class="QLabel" name="closeSetShowInfoWidget">
+    <widget class="MusicThemeLineLabel" name="closeSetShowInfoWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>80</y>
-       <width>101</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -291,12 +291,12 @@ font-weight:bold;</string>
     </widget>
    </widget>
    <widget class="QWidget" name="second">
-    <widget class="QLabel" name="baseSetShotKeyWidget">
+    <widget class="MusicThemeLineLabel" name="baseSetShotKeyWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -314,7 +314,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>50</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -328,7 +328,7 @@ font-weight:bold;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="MusicGlobalHotKeyEdit" name="item_S2">
+    <widget class="MusicGlobalHotKeyEdit" name="item_S02">
      <property name="geometry">
       <rect>
        <x>205</x>
@@ -338,7 +338,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+B</string>
@@ -352,7 +352,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>80</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -366,7 +366,7 @@ font-weight:bold;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="MusicGlobalHotKeyEdit" name="item_S4">
+    <widget class="MusicGlobalHotKeyEdit" name="item_S04">
      <property name="geometry">
       <rect>
        <x>205</x>
@@ -376,7 +376,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+Left</string>
@@ -390,7 +390,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>110</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -409,7 +409,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>140</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -417,7 +417,7 @@ font-weight:bold;</string>
       <string notr="true">background:#3BA1E6;border-radius:2px</string>
      </property>
      <property name="text">
-      <string>音量+</string>
+      <string>增加音量</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -428,7 +428,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>170</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -436,7 +436,7 @@ font-weight:bold;</string>
       <string notr="true">background:#3BA1E6;border-radius:2px</string>
      </property>
      <property name="text">
-      <string>音量-</string>
+      <string>减少音量</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -447,7 +447,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>230</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -461,7 +461,7 @@ font-weight:bold;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="MusicGlobalHotKeyEdit" name="item_S6">
+    <widget class="MusicGlobalHotKeyEdit" name="item_S06">
      <property name="geometry">
       <rect>
        <x>205</x>
@@ -471,7 +471,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+Right</string>
@@ -480,7 +480,7 @@ font-weight:bold;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="MusicGlobalHotKeyEdit" name="item_S8">
+    <widget class="MusicGlobalHotKeyEdit" name="item_S08">
      <property name="geometry">
       <rect>
        <x>205</x>
@@ -490,7 +490,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+Up</string>
@@ -509,7 +509,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+Down</string>
@@ -528,7 +528,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+S</string>
@@ -547,7 +547,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+I</string>
@@ -561,7 +561,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>260</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -593,7 +593,7 @@ font-weight:bold;</string>
       <rect>
        <x>25</x>
        <y>200</y>
-       <width>61</width>
+       <width>70</width>
        <height>20</height>
       </rect>
      </property>
@@ -617,7 +617,7 @@ font-weight:bold;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px</string>
+      <string notr="true">background:rgba(0, 0, 0, 100);border-radius:2px; </string>
      </property>
      <property name="text">
       <string>Ctrl+M</string>
@@ -628,12 +628,12 @@ font-weight:bold;</string>
     </widget>
    </widget>
    <widget class="QWidget" name="third">
-    <widget class="QLabel" name="baseSetDownloadWidget">
+    <widget class="MusicThemeLineLabel" name="baseSetDownloadWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -763,12 +763,12 @@ font-weight:bold;</string>
       <string>手动</string>
      </property>
     </widget>
-    <widget class="QLabel" name="downloadOtherWidget">
+    <widget class="MusicThemeLineLabel" name="downloadOtherWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>190</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -938,12 +938,12 @@ font-weight:bold;</string>
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="downloadSpeedWidget">
+    <widget class="MusicThemeLineLabel" name="downloadSpeedWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>260</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -958,12 +958,189 @@ font-weight:bold;</string>
     </widget>
    </widget>
    <widget class="QWidget" name="four">
-    <widget class="QLabel" name="baseSetOtherWidget">
+    <widget class="MusicThemeLineLabel" name="rippleVersionWidget">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>135</y>
+       <width>415</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;
+font-size:13px;
+font-weight:bold;</string>
+     </property>
+     <property name="text">
+      <string>版本设置</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionValue">
+     <property name="geometry">
+      <rect>
+       <x>83</x>
+       <y>160</y>
+       <width>180</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>未知</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="rippleVersionUpdateButton">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>255</y>
+       <width>100</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>手动检查更新</string>
+     </property>
+    </widget>
+    <widget class="MusicThemeLineLabel" name="setRippleSpectrumWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:transparent;
+font-size:13px;
+font-weight:bold;</string>
+     </property>
+     <property name="text">
+      <string>特效设置</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="rippleSpectrumEnableBox">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>53</y>
+       <width>230</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>开启音频波纹特效</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleSpectrumColorLabel">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>88</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>颜色</string>
+     </property>
+    </widget>
+    <widget class="MusicColorPreviewLabel" name="rippleSpectrumColorButton">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>83</y>
+       <width>80</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionLabel">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>163</y>
+       <width>55</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>当前版本:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionUpdateLabel">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>193</y>
+       <width>55</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>更新时间:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionUpdateValue">
+     <property name="geometry">
+      <rect>
+       <x>83</x>
+       <y>190</y>
+       <width>180</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>未知</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionFileLabel">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>223</y>
+       <width>55</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>版本校验:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="rippleVersionFileValue">
+     <property name="geometry">
+      <rect>
+       <x>83</x>
+       <y>220</y>
+       <width>310</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>未知</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="five">
+    <widget class="MusicThemeLineLabel" name="baseSetOtherWidget">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>20</y>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -980,7 +1157,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>135</x>
-       <y>48</y>
+       <y>50</y>
        <width>80</width>
        <height>16</height>
       </rect>
@@ -993,7 +1170,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>48</y>
+       <y>50</y>
        <width>80</width>
        <height>16</height>
       </rect>
@@ -1006,7 +1183,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>48</y>
+       <y>50</y>
        <width>101</width>
        <height>16</height>
       </rect>
@@ -1019,7 +1196,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>160</y>
+       <y>185</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1032,7 +1209,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>188</y>
+       <y>213</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1045,7 +1222,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>76</y>
+       <y>85</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1058,7 +1235,7 @@ font-weight:bold;</string>
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>104</y>
+       <y>115</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1067,12 +1244,12 @@ font-weight:bold;</string>
       <string>从文件中读取歌曲信息</string>
      </property>
     </widget>
-    <widget class="QLabel" name="otherShowInfoOtherWidget">
+    <widget class="MusicThemeLineLabel" name="otherShowInfoOtherWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>132</y>
-       <width>60</width>
+       <y>150</y>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1088,8 +1265,8 @@ font-weight:bold;</string>
     <widget class="QCheckBox" name="otherSearchCheckBox">
      <property name="geometry">
       <rect>
-       <x>215</x>
-       <y>160</y>
+       <x>240</x>
+       <y>185</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1101,8 +1278,8 @@ font-weight:bold;</string>
     <widget class="QCheckBox" name="otherLrcKTVCheckBox">
      <property name="geometry">
       <rect>
-       <x>215</x>
-       <y>188</y>
+       <x>240</x>
+       <y>213</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1114,8 +1291,8 @@ font-weight:bold;</string>
     <widget class="QCheckBox" name="otherWriteAlbumCoverCheckBox">
      <property name="geometry">
       <rect>
-       <x>215</x>
-       <y>76</y>
+       <x>230</x>
+       <y>85</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1127,8 +1304,8 @@ font-weight:bold;</string>
     <widget class="QCheckBox" name="otherWriteInfoCheckBox">
      <property name="geometry">
       <rect>
-       <x>215</x>
-       <y>104</y>
+       <x>230</x>
+       <y>115</y>
        <width>190</width>
        <height>20</height>
       </rect>
@@ -1137,12 +1314,25 @@ font-weight:bold;</string>
       <string>下载文件写入歌曲信息</string>
      </property>
     </widget>
-    <widget class="QLabel" name="otherVersionWidget">
+    <widget class="QCheckBox" name="otherScreenSaverCheckBox">
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>312</y>
-       <width>60</width>
+       <y>241</y>
+       <width>190</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>开启精彩写真屏保</string>
+     </property>
+    </widget>
+    <widget class="MusicThemeLineLabel" name="otherPluginWidget">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>275</y>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1152,103 +1342,30 @@ font-size:13px;
 font-weight:bold;</string>
      </property>
      <property name="text">
-      <string>版本设置</string>
+      <string>插件设置</string>
      </property>
     </widget>
-    <widget class="QLabel" name="otherVersionValue">
+    <widget class="QPushButton" name="otherPluginManagerButton">
      <property name="geometry">
       <rect>
        <x>25</x>
-       <y>337</y>
-       <width>70</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>未知</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="otherVersionUpdateButton">
-     <property name="geometry">
-      <rect>
-       <x>105</x>
-       <y>337</y>
-       <width>71</width>
+       <y>305</y>
+       <width>100</width>
        <height>25</height>
       </rect>
      </property>
      <property name="text">
-      <string>更新</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="setRipplesSpectrumWidget">
-     <property name="geometry">
-      <rect>
-       <x>25</x>
-       <y>220</y>
-       <width>60</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:transparent;
-font-size:13px;
-font-weight:bold;</string>
-     </property>
-     <property name="text">
-      <string>特效设置</string>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="ripplesSpectrumEnableBox">
-     <property name="geometry">
-      <rect>
-       <x>25</x>
-       <y>250</y>
-       <width>230</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>开启音频波纹特效</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="ripplesSpectrumColorLabel">
-     <property name="geometry">
-      <rect>
-       <x>25</x>
-       <y>282</y>
-       <width>31</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>颜色</string>
-     </property>
-    </widget>
-    <widget class="MusicColorPreviewLabel" name="ripplesSpectrumColorButton">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>277</y>
-       <width>80</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
+      <string>插件管理</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="five">
-    <widget class="QLabel" name="DbaseSetSongWordWidget">
+   <widget class="QWidget" name="six">
+    <widget class="MusicThemeLineLabel" name="DbaseSetSongWordWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1261,12 +1378,12 @@ font-weight:bold;</string>
       <string>样式设置</string>
      </property>
     </widget>
-    <widget class="QLabel" name="DSetColorSongWordWidget">
+    <widget class="MusicThemeLineLabel" name="DSetColorSongWordWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>200</y>
-       <width>41</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1509,13 +1626,13 @@ font-weight:bold;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="six">
-    <widget class="QLabel" name="baseSetSongWordWidget">
+   <widget class="QWidget" name="seven">
+    <widget class="MusicThemeLineLabel" name="baseSetSongWordWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1528,12 +1645,12 @@ font-weight:bold;</string>
       <string>样式设置</string>
      </property>
     </widget>
-    <widget class="QLabel" name="setColorSongWordWidget">
+    <widget class="MusicThemeLineLabel" name="setColorSongWordWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>200</y>
-       <width>41</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1762,14 +1879,27 @@ font-weight:bold;</string>
       <string>100%</string>
      </property>
     </widget>
+    <widget class="QCheckBox" name="showCortanaCheckBox">
+     <property name="geometry">
+      <rect>
+       <x>25</x>
+       <y>350</y>
+       <width>150</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>显示Cortana歌词</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QWidget" name="seven">
-    <widget class="QLabel" name="setSoundOutWidget">
+   <widget class="QWidget" name="eight">
+    <widget class="MusicThemeLineLabel" name="setSoundOutWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1827,12 +1957,12 @@ font-weight:bold;</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="setEffectWidget">
+    <widget class="MusicThemeLineLabel" name="setEffectWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>145</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1957,13 +2087,13 @@ font-weight:bold;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="eight">
-    <widget class="QLabel" name="setAudioGainWidget">
+   <widget class="QWidget" name="nine">
+    <widget class="MusicThemeLineLabel" name="setAudioGainWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>120</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -1976,12 +2106,12 @@ font-weight:bold;</string>
       <string>回放增益</string>
      </property>
     </widget>
-    <widget class="QLabel" name="setAudioWidget">
+    <widget class="MusicThemeLineLabel" name="setAudioWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>170</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -2285,13 +2415,13 @@ font-weight:bold;</string>
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="nine">
-    <widget class="QLabel" name="setProxyWidget">
+   <widget class="QWidget" name="ten">
+    <widget class="MusicThemeLineLabel" name="setProxyWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>20</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -2447,12 +2577,12 @@ font-weight:bold;</string>
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="netConnectionWidget">
+    <widget class="MusicThemeLineLabel" name="netConnectionWidget">
      <property name="geometry">
       <rect>
        <x>25</x>
        <y>195</y>
-       <width>60</width>
+       <width>415</width>
        <height>20</height>
       </rect>
      </property>
@@ -2598,7 +2728,7 @@ font-weight:bold;</string>
    <widget class="QLabel" name="baseSetWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>20</y>
       <width>60</width>
       <height>20</height>
@@ -2606,7 +2736,7 @@ font-weight:bold;</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color:transparent;
-font-size:14px;
+font-size:12px;
 color:rgb(80,80,80);
 font-weight:bold;;</string>
     </property>
@@ -2617,15 +2747,15 @@ font-weight:bold;;</string>
    <widget class="QLabel" name="wordSetWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>180</y>
+      <x>20</x>
+      <y>195</y>
       <width>60</width>
       <height>20</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color:transparent;
-font-size:14px;
+font-size:12px;
 color:rgb(80,80,80);
 font-weight:bold;;</string>
     </property>
@@ -2637,9 +2767,9 @@ font-weight:bold;;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>45</y>
+      <y>40</y>
       <width>125</width>
-      <height>125</height>
+      <height>140</height>
      </rect>
     </property>
    </widget>
@@ -2647,7 +2777,7 @@ font-weight:bold;;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>210</y>
+      <y>220</y>
       <width>125</width>
       <height>60</height>
      </rect>
@@ -2656,15 +2786,15 @@ font-weight:bold;;</string>
    <widget class="QLabel" name="supperSetWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>280</y>
+      <x>20</x>
+      <y>295</y>
       <width>60</width>
       <height>20</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color:transparent;
-font-size:14px;
+font-size:12px;
 color:rgb(80,80,80);
 font-weight:bold;;</string>
     </property>
@@ -2676,7 +2806,7 @@ font-weight:bold;;</string>
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>310</y>
+      <y>320</y>
       <width>125</width>
       <height>90</height>
      </rect>
@@ -2792,6 +2922,11 @@ font-weight:bold;;</string>
    <extends>QScrollArea</extends>
    <header>musicsmoothmovingwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MusicThemeLineLabel</class>
+   <extends>QLabel</extends>
+   <header>musicpreviewlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -7,12 +7,12 @@ MusicASXConfigManager::MusicASXConfigManager(QObject *parent)
 
 }
 
-void MusicASXConfigManager::readPlaylistData(MusicSongItems &items)
+bool MusicASXConfigManager::readPlaylistData(MusicSongItems &items)
 {
     MusicSongItem item;
     item.m_itemName = QFileInfo(m_file->fileName()).baseName();
 
-    const QDomNodeList &itemNodes = m_document->elementsByTagName("Entry");
+    const QDomNodeList &itemNodes = m_document->elementsByTagName(m_nodeHelper->nodeName("Entry"));
     for(int i=0; i<itemNodes.count(); ++i)
     {
         const QDomNode &node = itemNodes.at(i);
@@ -22,12 +22,12 @@ void MusicASXConfigManager::readPlaylistData(MusicSongItems &items)
         for(int j=0; j<paramNodes.count(); ++j)
         {
             const QDomNode &paramNode = paramNodes.at(j);
-            if(paramNode.nodeName() == "Duration")
+            if(paramNode.nodeName().toLower() == "duration")
             {
                 duration = paramNode.toElement().attribute("value");
                 duration = duration.mid(3, 5);
             }
-            else if(paramNode.nodeName() == "Ref")
+            else if(paramNode.nodeName().toLower() == "ref")
             {
                 path = paramNode.toElement().attribute("href");
             }
@@ -43,17 +43,17 @@ void MusicASXConfigManager::readPlaylistData(MusicSongItems &items)
     {
         items << item;
     }
+    return true;
 }
 
-void MusicASXConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
+bool MusicASXConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
 {
     if(items.isEmpty() || !writeConfig(path))
     {
-        return;
+        return false;
     }
     //
     QDomElement musicPlayerDom = createRoot("Asx", MusicXmlAttribute("version ", "3.0"));
-    //Class A
     for(int i=0; i<items.count(); ++i)
     {
         const MusicSongItem &item = items[i];
@@ -62,7 +62,6 @@ void MusicASXConfigManager::writePlaylistData(const MusicSongItems &items, const
 
         foreach(const MusicSong &song, items[i].m_songs)
         {
-            //Class B
             QDomElement trackDom = writeDomNode(musicPlayerDom, "Entry");
 
             writeDomText(trackDom, "Title", song.getMusicArtistBack());
@@ -74,4 +73,5 @@ void MusicASXConfigManager::writePlaylistData(const MusicSongItems &items, const
 
     QTextStream out(m_file);
     m_document->save(out, 4);
+    return true;
 }

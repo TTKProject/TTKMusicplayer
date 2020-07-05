@@ -5,7 +5,6 @@
 #include "musicrightareawidget.h"
 #include "musicdownloadwidget.h"
 #include "musiccoreutils.h"
-#include "musicmessagebox.h"
 
 #include <qmath.h>
 #include <QScrollBar>
@@ -78,7 +77,11 @@ void MusicSongsListPlayedTableWidget::updateSongsFileName(const MusicSongs &song
                           item = new QTableWidgetItem;
         item->setToolTip(songs[i].getMusicName());
         item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 15));
-        item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
         setItem(i, 1, item);
@@ -88,12 +91,16 @@ void MusicSongsListPlayedTableWidget::updateSongsFileName(const MusicSongs &song
         setItem(i, 3, item);
 
                           item = new QTableWidgetItem(songs[i].getMusicPlayTime());
-        item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         setItem(i, 4, item);
     }
 
-    setFixedHeight( qMax(365, allRowsHeight()) );
+    setFixedHeight(qMax(365, allRowsHeight()));
 }
 
 void MusicSongsListPlayedTableWidget::clearAllItems()
@@ -138,7 +145,7 @@ void MusicSongsListPlayedTableWidget::selectRow(int index)
     setCellWidget(index, 0, m_musicSongsPlayWidget);
     m_playRowIndex = index;
 
-    setFixedHeight( qMax(365, allRowsHeight()) );
+    setFixedHeight(qMax(365, allRowsHeight()));
 
     if(m_scrollBar)
     {
@@ -171,22 +178,30 @@ void MusicSongsListPlayedTableWidget::replacePlayWidgetRow()
     item = new QTableWidgetItem;
     item->setToolTip(name);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 15));
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     setItem(m_playRowIndex, 1, item);
     setItem(m_playRowIndex, 2, new QTableWidgetItem);
     setItem(m_playRowIndex, 3, new QTableWidgetItem);
 
-    item = new QTableWidgetItem( (*m_musicSongs)[m_playRowIndex].getMusicPlayTime() );
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+    item = new QTableWidgetItem((*m_musicSongs)[m_playRowIndex].getMusicPlayTime());
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(m_playRowIndex, 4, item);
 
     delete m_musicSongsPlayWidget;
     m_musicSongsPlayWidget = nullptr;
 
-    setFixedHeight( qMax(365, allRowsHeight()) );
+    setFixedHeight(qMax(365, allRowsHeight()));
 }
 
 void MusicSongsListPlayedTableWidget::itemCellEntered(int row, int column)
@@ -280,12 +295,12 @@ void MusicSongsListPlayedTableWidget::setDeleteItemAt()
         --m_playRowIndex;
     }
 
-    removeRow( index );
-    m_musicSongs->removeAt( index );
+    removeRow(index);
+    m_musicSongs->removeAt(index);
 
-    setFixedHeight( qMax(365, allRowsHeight()) );
+    setFixedHeight(qMax(365, allRowsHeight()));
 
-    emit setDeleteItemAt(index);
+    Q_EMIT setDeleteItemAt(index);
 }
 
 void MusicSongsListPlayedTableWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -293,7 +308,7 @@ void MusicSongsListPlayedTableWidget::contextMenuEvent(QContextMenuEvent *event)
     Q_UNUSED(event);
     QMenu rightClickMenu(this);
 
-    rightClickMenu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_play"), tr("musicPlay"), this, SLOT(musicPlayClicked()));
     rightClickMenu.addAction(tr("downloadMore..."), this, SLOT(musicSongDownload()));
     rightClickMenu.addSeparator();

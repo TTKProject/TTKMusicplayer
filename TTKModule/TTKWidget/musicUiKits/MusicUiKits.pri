@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musicuiobject.h \
     $$PWD/musiccontextuiobject.h \
@@ -35,9 +34,8 @@ HEADERS  += \
     $$PWD/musicvideofloatuiobject.h \
     $$PWD/musicvideouiobject.h \
     $$PWD/musicwidgetheaders.h
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
+
 FORMS    += \
     $$PWD/musicApplication/musicapplication.ui \
     $$PWD/musicLrcKits/musiclrcartphotouploadwidget.ui \
@@ -48,21 +46,18 @@ FORMS    += \
     $$PWD/musicLrcKits/musiclrccolorwidget.ui \
     $$PWD/musicLrcKits/musiclrcposterwidget.ui \
     $$PWD/musicLrcKits/musiclrcdownloadbatchwidget.ui \
-    $$PWD/musicToolsetsKits/musicaudiorecorderwidget.ui \
-    $$PWD/musicToolsetsKits/musicdesktopwallpaperwidget.ui \
     $$PWD/musicToolsetsKits/musicfileinformationwidget.ui \
     $$PWD/musicToolsetsKits/musiclocalsongsmanagerwidget.ui \
     $$PWD/musicToolsetsKits/musictimerwidget.ui \
     $$PWD/musicToolsetsKits/musictransformwidget.ui \
     $$PWD/musicToolsetsKits/musicnetworkconnectiontestwidget.ui \
-    $$PWD/musicToolsetsKits/musicvolumegainwidget.ui \
-    $$PWD/musicToolsetsKits/musicsoundtouchwidget.ui \
+    $$PWD/musicToolsetsKits/musicreplaygainwidget.ui \
     $$PWD/musicToolsetsKits/musicsongchecktoolswidget.ui \
     $$PWD/musicToolsetsKits/musicsongringtonemakerwidget.ui \
     $$PWD/musicToolsetsKits/musicsoundkmicrowidget.ui \
     $$PWD/musicToolsetsKits/musicspectrumwidget.ui \
     $$PWD/musicToolsetsKits/musicsongdlnatransferwidget.ui \
-    $$PWD/musicToolsKits/musicwebmusicradioplaywidget.ui \
+    $$PWD/musicToolsKits/musicwebfmradioplaywidget.ui \
     $$PWD/musicToolsKits/musicconnecttransferwidget.ui \
     $$PWD/musicToolsKits/musiccloudfileinformationwidget.ui \
     $$PWD/musicToolsKits/musictoolsetswidget.ui \
@@ -79,12 +74,10 @@ FORMS    += \
     $$PWD/musicWidgetKits/musiccolordialog.ui \
     $$PWD/musicWidgetKits/musicsettingwidget.ui \
     $$PWD/musicWidgetKits/musicsongsharingwidget.ui \
-    $$PWD/musicWidgetKits/musicsonglistsharingwidget.ui \
     $$PWD/musicWidgetKits/musicsongslistiteminfowidget.ui \
     $$PWD/musicWidgetKits/musicsourceupdatewidget.ui \
     $$PWD/musicWidgetKits/musicsoundeffectswidget.ui \
     $$PWD/musicWidgetKits/musicmessageaboutdialog.ui \
-    $$PWD/musicWidgetKits/musicsonglistenhancelosslesswidget.ui \
     $$PWD/musicWidgetKits/musicdownloadbatchwidget.ui \
-    $$PWD/musicWidgetKits/musicsongitemselecteddialog.ui
-}
+    $$PWD/musicWidgetKits/musicsongitemselecteddialog.ui \
+    $$PWD/musicWidgetKits/musicpluginwidget.ui

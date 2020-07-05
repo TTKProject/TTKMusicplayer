@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musiccoreutils.h \
     $$PWD/musicwidgetutils.h \
@@ -28,11 +27,10 @@ HEADERS  += \
     $$PWD/musicurlutils.h \
     $$PWD/musicqmmputils.h \
     $$PWD/musiccodecutils.h \
-    $$PWD/musicfileutils.h
+    $$PWD/musicfileutils.h \
+    $$PWD/musicimageutils.h
 
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
     $$PWD/musiccoreutils.cpp \
     $$PWD/musicwidgetutils.cpp \
@@ -42,6 +40,5 @@ SOURCES += \
     $$PWD/musicurlutils.cpp \
     $$PWD/musicqmmputils.cpp \
     $$PWD/musiccodecutils.cpp \
-    $$PWD/musicfileutils.cpp
-
-}
+    $$PWD/musicfileutils.cpp \
+    $$PWD/musicimageutils.cpp

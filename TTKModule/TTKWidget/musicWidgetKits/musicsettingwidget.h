@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -149,15 +149,20 @@ public Q_SLOTS:
     /*!
      * Version update check changed.
      */
-    void otherVersionUpdateChanged();
+    void rippleVersionUpdateChanged();
     /*!
-     * Ripples spectrum color changed.
+     * Ripple spectrum color changed.
      */
-    void ripplesSpectrumColorChanged();
+    void rippleSpectrumColorChanged();
     /*!
-     * Ripples spectrum opacity enable changed.
+     * Ripple spectrum opacity enable changed.
      */
-    void ripplesSpectrumOpacityEnableClicked(bool state);
+    void rippleSpectrumOpacityEnableClicked(bool state);
+
+    /*!
+     * Plugin manager changed.
+     */
+    void otherPluginManagerChanged();
 
     /*!
      * Change to desktop lrc widget.
@@ -255,7 +260,7 @@ public Q_SLOTS:
     /*!
      * Save the change results.
      */
-    void commitTheResults();
+    void saveResults();
     /*!
      * Override exec function.
      */
@@ -284,6 +289,10 @@ protected:
      * Init normal setting stack widget.
      */
     void initNormalSettingWidget();
+    /*!
+     * Init spectrum setting stack widget.
+     */
+    void initSpectrumSettingWidget();
     /*!
      * Init other setting stack widget.
      */

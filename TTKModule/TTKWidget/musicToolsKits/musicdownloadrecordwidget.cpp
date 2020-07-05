@@ -20,7 +20,7 @@ MusicDownloadRecordTableWidget::MusicDownloadRecordTableWidget(QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     MusicUtils::Widget::setTransparent(this, 0);
-    verticalScrollBar()->setStyleSheet(MusicUIObject::MScrollBarStyle03);
+    verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle03);
 }
 
 MusicDownloadRecordTableWidget::~MusicDownloadRecordTableWidget()
@@ -35,9 +35,13 @@ void MusicDownloadRecordTableWidget::createItem(int index, const MusicSong &reco
     setItem(index, 0, item);
 
                       item = new QTableWidgetItem;
-    item->setToolTip( record.getMusicName() );
+    item->setToolTip(record.getMusicName());
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(index, 1, item);
 
@@ -45,14 +49,18 @@ void MusicDownloadRecordTableWidget::createItem(int index, const MusicSong &reco
     item->setData(MUSIC_PROCS_ROLE, 100);
     setItem(index, 2, item);
 
-                      item = new QTableWidgetItem( record.getMusicSizeStr() );
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+                      item = new QTableWidgetItem(record.getMusicSizeStr());
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
     setItem(index, 3, item);
 
     //just fix table widget size hint
-    setFixedHeight( allRowsHeight() );
+    setFixedHeight(allRowsHeight());
 }
 
 

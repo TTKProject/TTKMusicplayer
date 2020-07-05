@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,12 @@ QT       += core
 
 TEMPLATE = lib
 
-include(../../TTKVersion.pri)
+include($$PWD/../../TTKVersion.pri)
 
-win32:TARGET = ../../../bin/$$TTKMusicPlayer/TTKDumper
-unix:TARGET = ../../lib/$$TTKMusicPlayer/TTKDumper
+DESTDIR = $$OUT_PWD/../../bin/$$TTKMusicPlayer
+TARGET = TTKDumper
 
-CONFIG       += warn_off
-unix:VERSION += 1.0.0
+CONFIG += plugin lib
 
 INCLUDEPATH += $$PWD/../../TTKModule/TTKCore/musicCoreKits
 
@@ -41,17 +40,18 @@ win32:msvc{
 }
 
 SOURCES += \
+    $$PWD/miniprocess.cpp \
     $$PWD/minidumper.cpp \
     $$PWD/ttkdumper.cpp
     
 HEADERS += \
-    $$PWD/mini.h \
+    $$PWD/miniprocess.h \
     $$PWD/minidumper.h \
     $$PWD/ttkdumper.h \
     $$PWD/ttklogger.h
 
 #load extra define
-include(../TTKExtrasDefine.pri)
+include($$PWD/../TTKExtrasDefine.pri)
 
 win32{
     RC_FILE = TTKDumper.rc

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,50 +21,50 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the music magic widget style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGEnhanceOn = " \
+    const QString MQSSEnhanceOn = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/btn_magic_on_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/btn_magic_on_hover);}";
+            background-image: url(:/enhance/btn_magic_on_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/btn_magic_on_hover); }";
 
-    const QString MKGEnhanceOff = " \
+    const QString MQSSEnhanceOff = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/btn_magic_off_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/btn_magic_off_hover);}";
+            background-image: url(:/enhance/btn_magic_off_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/btn_magic_off_hover); }";
 
-    const QString MKGEnhanceClose = " \
+    const QString MQSSEnhanceClose = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/btn_close_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/btn_close_hover);}";
+            background-image: url(:/enhance/btn_close_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/btn_close_hover); }";
 
-    const QString MKGEnhanceHelp = " \
+    const QString MQSSEnhanceHelp = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/btn_help_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/btn_help_hover);}";
+            background-image: url(:/enhance/btn_help_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/btn_help_hover); }";
 
-    const QString MKGEnhanceShare = " \
+    const QString MQSSEnhanceShare = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/btn_share_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/btn_share_hover);}";
+            background-image: url(:/enhance/btn_share_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/btn_share_hover); }";
 
-    const QString MKGEnhanceTitle = " \
+    const QString MQSSEnhanceTitle = " \
             QToolButton{ border:none; \
-            background-image: url(:/enhance/lb_title_normal);} \
-            QToolButton:hover{ background-image: url(:/enhance/lb_title_hover);}";
+            background-image: url(:/enhance/lb_title_normal); } \
+            QToolButton:hover{ background-image: url(:/enhance/lb_title_hover); }";
 
-    const QString MKGEqualizerOn = " \
+    const QString MQSSEqualizerOn = " \
             QPushButton{ border:none; \
-            background-image: url(:/enhance/btn_equalizer_on_normal);} \
-            QPushButton:hover{ background-image: url(:/enhance/btn_equalizer_on_hover);}";
+            background-image: url(:/enhance/btn_equalizer_on_normal); } \
+            QPushButton:hover{ background-image: url(:/enhance/btn_equalizer_on_hover); }";
 
-    const QString MKGEqualizerOff = " \
+    const QString MQSSEqualizerOff = " \
             QPushButton{ border:none; \
-            background-image: url(:/enhance/btn_equalizer_off_normal);} \
-            QPushButton:hover{ background-image: url(:/enhance/btn_equalizer_off_hover);}";
+            background-image: url(:/enhance/btn_equalizer_off_normal); } \
+            QPushButton:hover{ background-image: url(:/enhance/btn_equalizer_off_hover); }";
 
 }
 

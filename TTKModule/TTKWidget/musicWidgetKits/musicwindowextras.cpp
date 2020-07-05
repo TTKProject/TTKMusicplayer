@@ -16,12 +16,13 @@ MusicWindowExtras::MusicWindowExtras(QObject *parent)
     m_taskbarProgress = nullptr;
     m_taskbarButton = nullptr;
     m_thumbnailToolBar = nullptr;
-    m_superClass = MStatic_cast(MusicApplication*, parent);
-    disableBlurBehindWindow( QtWin::isCompositionEnabled() );
-#  ifdef TTK_DEBUG
+    m_superClass = TTKStatic_cast(MusicApplication*, parent);
+
+    disableBlurBehindWindow(QtWin::isCompositionEnabled());
+#ifdef TTK_DEBUG
     createJumpList();
     createTaskbar();
-#  endif
+#endif
     createThumbnailToolBar();
 #else
     m_disableBlurBehindWindow = true;
@@ -50,7 +51,7 @@ void MusicWindowExtras::disableBlurBehindWindow(bool enable)
 }
 
 #if defined Q_OS_WIN && defined TTK_WINEXTRAS
-void MusicWindowExtras::showPlayStatus(bool status) const
+void MusicWindowExtras::setCurrentPlayStatus(bool status) const
 {
     if(!status)
     {

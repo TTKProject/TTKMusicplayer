@@ -25,11 +25,6 @@ void MusicWebDJRadioInfoTableWidget::setQueryInput(MusicDownLoadQueryThreadAbstr
     }
 }
 
-void MusicWebDJRadioInfoTableWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-}
-
 
 
 MusicWebDJRadioInfoWidget::MusicWebDJRadioInfoWidget(QWidget *parent)
@@ -93,7 +88,7 @@ void MusicWebDJRadioInfoWidget::createCategoryInfoItem(const MusicResultsItem &i
     if(!m_resizeWidgets.isEmpty())
     {
         MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-        connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+        connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
         if(!item.m_coverUrl.isEmpty() && item.m_coverUrl != COVER_URL_NULL)
         {
             download->startToDownload(item.m_coverUrl);
@@ -124,7 +119,7 @@ void MusicWebDJRadioInfoWidget::createLabels()
 
     layout()->removeWidget(m_mainWindow);
     QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->verticalScrollBar()->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+    scrollArea->verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setAlignment(Qt::AlignLeft);
@@ -132,7 +127,7 @@ void MusicWebDJRadioInfoWidget::createLabels()
     layout()->addWidget(scrollArea);
 
     QWidget *function = new QWidget(m_mainWindow);
-    function->setStyleSheet(MusicUIObject::MCheckBoxStyle01 + MusicUIObject::MPushButtonStyle03);
+    function->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01 + MusicUIObject::MQSSPushButtonStyle03);
     QVBoxLayout *grid = new QVBoxLayout(function);
 
     QWidget *firstTopFuncWidget = new QWidget(function);
@@ -141,7 +136,7 @@ void MusicWebDJRadioInfoWidget::createLabels()
     firstLabel->setText(tr("<font color=#158FE1> DJRadio > %1 </font>").arg(m_currentPlaylistItem.m_name));
     QPushButton *backButton = new QPushButton(tr("Back"));
     backButton->setFixedSize(90, 30);
-    backButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+    backButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
     backButton->setCursor(QCursor(Qt::PointingHandCursor));
     connect(backButton, SIGNAL(clicked()), this, SIGNAL(backToMainMenu()));
     firstTopFuncLayout->addWidget(firstLabel);
@@ -163,15 +158,15 @@ void MusicWebDJRadioInfoWidget::createLabels()
     QFont nameFont = nameLabel->font();
     nameFont.setPixelSize(20);
     nameLabel->setFont(nameFont);
-    nameLabel->setStyleSheet(MusicUIObject::MFontStyle01);
+    nameLabel->setStyleSheet(MusicUIObject::MQSSFontStyle01);
     nameLabel->setText("-");
     QLabel *singerLabel = new QLabel(topLineWidget);
-    singerLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    singerLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     singerLabel->setText("-");
     QLabel *playCountLabel = new QLabel(topLineWidget);
-    playCountLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    playCountLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     QLabel *updateTimeLabel = new QLabel(topLineWidget);
-    updateTimeLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    updateTimeLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     updateTimeLabel->setText("-");
 
     topLineLayout->addWidget(nameLabel);
@@ -187,7 +182,7 @@ void MusicWebDJRadioInfoWidget::createLabels()
 
     //
     QWidget *functionWidget = new QWidget(this);
-    functionWidget->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+    functionWidget->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
     QHBoxLayout *hlayout = new QHBoxLayout(functionWidget);
     m_songButton = new QPushButton(functionWidget);
     m_songButton->setText(tr("songItems"));

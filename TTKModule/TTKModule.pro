@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,25 @@
 # =================================================
 
 TEMPLATE = lib
-CONFIG += TTK_BUILD_LIB
 
-include(../TTKMusicPlayer.pri)
-unix:VERSION += $$TTKMusicPlayer
+include($$PWD/TTKModule.pri)
+include($$PWD/../TTKMusicPlayer.pri)
+CONFIG += plugin lib
 
-win32:TARGET = ../../bin/$$TTKMusicPlayer/TTKCore
-unix:TARGET = ../lib/$$TTKMusicPlayer/TTKCore
+
+##qmmp lib check
+include($$PWD/../TTKExtra/qmmp.pri)
+win32:{
+    QMMP_DEPANDS = $$DESTDIR/qmmp1.dll
+    QMMP_DEPANDS = $$replace(QMMP_DEPANDS, /, \\)
+}
+unix:!mac{
+    QMMP_DEPANDS = $$DESTDIR/libqmmp.so
+}
+!exists($$QMMP_DEPANDS): error("Could not find qmmp library, please download and put it to output dir")
+
+
+TARGET = TTKCore
 
 INCLUDEPATH += $$PWD
 

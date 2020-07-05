@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 
 #include <QDataStream>
 #include "musicglobaldefine.h"
-#include "musicnumberdefine.h"
 
 /*! @brief The class of the music time object.
  * @author Greedysky <greedysky@163.com>
@@ -155,16 +154,20 @@ public:
     /*!
      * Get all time value by type.
      */
-    qint64 getTimeStamp(Type type) const;
+    qint64 getTimestamp(Type type) const;
     //
     /*!
      * Transform ms time from utc since epoch.
      */
-    static qint64 timeStamp(bool ms = true);
+    static qint64 timestamp(bool ms = true);
     /*!
-     * Init random time seed.
+     * Init random value seed.
      */
-    static void timeSRand();
+    static void initRandom();
+    /*!
+     * Get random value.
+     */
+    static int random(int value = RAND_MAX);
     //
     /*!
      * Transform string format(mm:ss) to msec time.
@@ -224,7 +227,7 @@ protected:
     /*!
      * Init parameters;
      */
-    void init();
+    void initialize();
     /*!
      * Copy other time data to this obejct;
      */

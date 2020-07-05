@@ -1,7 +1,5 @@
 #include "musickgartistsimilarthread.h"
 #include "musicdownloadkginterface.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicKGArtistSimilarThread::MusicKGArtistSimilarThread(QObject *parent)
     : MusicDownLoadSimilarThread(parent)
@@ -16,7 +14,7 @@ void MusicKGArtistSimilarThread::startToSearch(const QString &text)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_AR_SIM_URL, false).arg(text);
@@ -40,7 +38,7 @@ void MusicKGArtistSimilarThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -63,13 +61,13 @@ void MusicKGArtistSimilarThread::downLoadFinished()
             info.m_coverUrl = regx.cap(1);
             info.m_name = regx.cap(3);
             info.m_updateTime.clear();
-            emit createSimilarItem(info);
+            Q_EMIT createSimilarItem(info);
 
             pos += regx.matchedLength();
             pos = regx.indexIn(html, pos);
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -21,17 +21,17 @@ QT       += network xml
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    $$PWD/dlnafinder.h \
-    $$PWD/dlnafileserver.h \
-    $$PWD/dlnaclient.h \
-    $$PWD/dlnahelper.h \
-    $$PWD/dlnaservice.h \
-    $$PWD/dlnaxml.h
+    $$PWD/qdlnafinder.h \
+    $$PWD/qdlnafileserver.h \
+    $$PWD/qdlnaclient.h \
+    $$PWD/qdlnahelper.h \
+    $$PWD/qdlnaservice.h \
+    $$PWD/qdlnaxml.h
 
 SOURCES += \
-    $$PWD/dlnahelper.cpp \
-    $$PWD/dlnafileserver.cpp \
-    $$PWD/dlnafinder.cpp \
-    $$PWD/dlnaclient.cpp \
-    $$PWD/dlnaxml.cpp
+    $$PWD/qdlnahelper.cpp \
+    $$PWD/qdlnafileserver.cpp \
+    $$PWD/qdlnafinder.cpp \
+    $$PWD/qdlnaclient.cpp \
+    $$PWD/qdlnaxml.cpp
 

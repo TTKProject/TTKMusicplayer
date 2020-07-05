@@ -3,9 +3,6 @@
 #include "musicsemaphoreloop.h"
 #include "musicnumberutils.h"
 #include "musiccoreutils.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicXMMVInfoConfigManager::MusicXMMVInfoConfigManager(QObject *parent)
     : MusicAbstractXml(parent)
@@ -70,7 +67,7 @@ void MusicDownLoadQueryXMMovieThread::startToSearch(QueryType type, const QStrin
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     deleteAll();
 
     m_searchText = text.trimmed();
@@ -78,11 +75,11 @@ void MusicDownLoadQueryXMMovieThread::startToSearch(QueryType type, const QStrin
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_SONG_DATA_URL, false).arg(text).arg(1).arg(m_pageSize),
                       MusicUtils::Algorithm::mdII(XM_SONG_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -97,7 +94,7 @@ void MusicDownLoadQueryXMMovieThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(XM_AR_MV_URL, false).arg(m_searchText).arg(offset + 1);
@@ -122,7 +119,7 @@ void MusicDownLoadQueryXMMovieThread::startToSingleSearch(const QString &text)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSingleSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSingleSearch %2").arg(getClassName()).arg(text));
     m_searchText = text.trimmed();
     m_interrupt = true;
 
@@ -137,8 +134,8 @@ void MusicDownLoadQueryXMMovieThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -171,9 +168,9 @@ void MusicDownLoadQueryXMMovieThread::downLoadFinished()
                     musicInfo.m_timeLength = MusicTime::msecTime2LabelJustified(value["length"].toInt());
 
                     musicInfo.m_songId = value["mvId"].toString();
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicMVAttribute(&musicInfo, false);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -185,7 +182,7 @@ void MusicDownLoadQueryXMMovieThread::downLoadFinished()
                     item.m_singerName = musicInfo.m_singerName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
@@ -204,7 +201,7 @@ void MusicDownLoadQueryXMMovieThread::downLoadFinished()
         m_musicSongInfos << d->getMusicSongInfos();
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -216,7 +213,7 @@ void MusicDownLoadQueryXMMovieThread::pageDownLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 pageDownLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 pageDownLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -250,10 +247,10 @@ void MusicDownLoadQueryXMMovieThread::pageDownLoadFinished()
 
                 MusicResultsItem info;
                 info.m_id = partial.cap(2).remove("/mv/");
-                info.m_coverUrl = partial.cap(1).remove("@1e_1c_100Q_160w_90h").replace("https://", "http://");
+                info.m_coverUrl = partial.cap(1).remove("@1e_1c_100Q_160w_90h").replace(TTK_HTTPS, TTK_HTTP);
                 info.m_name = partial.cap(3);
                 info.m_updateTime.clear();
-                emit createMovieInfoItem(info);
+                Q_EMIT createMovieInfoItem(info);
 
                 pos_p += partial.matchedLength();
                 pos_p = partial.indexIn(cap, pos_p);
@@ -264,23 +261,23 @@ void MusicDownLoadQueryXMMovieThread::pageDownLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
 void MusicDownLoadQueryXMMovieThread::singleDownLoadFinished()
 {
-    M_LOGGER_INFO(QString("%1 singleDownLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 singleDownLoadFinished").arg(getClassName()));
 
-    emit clearAllItems();
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
     MusicObject::MusicSongInformation musicInfo;
     musicInfo.m_songId = m_searchText;
-    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     readFromMusicMVAttribute(&musicInfo, true);
-    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
     if(!musicInfo.m_songAttrs.isEmpty())
     {
@@ -289,11 +286,11 @@ void MusicDownLoadQueryXMMovieThread::singleDownLoadFinished()
         item.m_singerName = musicInfo.m_singerName;
         item.m_time = musicInfo.m_timeLength;
         item.m_type = mapQueryServerString();
-        emit createSearchedItem(item);
+        Q_EMIT createSearchedItem(item);
         m_musicSongInfos << musicInfo;
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -399,7 +396,7 @@ void MusicDownLoadQueryXMMovieThread::readFromMusicMVAttribute(MusicObject::Musi
         MusicObject::MusicSongAttribute *attr = &info->m_songAttrs[i];
         const QString &urlPrefix = attr->m_url;
         QStringList urls;
-        qint64 round = attr->m_size.toLongLong()/20000000 + 1;
+        qint64 round = attr->m_size.toLongLong() / 20000000 + 1;
         qint64 start = 0, end = 0;
         while(round > 0)
         {
@@ -419,6 +416,6 @@ void MusicDownLoadQueryXMMovieThread::readFromMusicMVAttribute(MusicObject::Musi
         }
         attr->m_size = MusicUtils::Number::size2Label(attr->m_size.toLongLong());
         attr->m_url = urls.join(TTK_STR_SPLITER);
-        attr->m_format = MusicUtils::String::StringSplite(attr->m_url);
+        attr->m_format = MusicUtils::String::stringSplitToken(attr->m_url);
     }
 }

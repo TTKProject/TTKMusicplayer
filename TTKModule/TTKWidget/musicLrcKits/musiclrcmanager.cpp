@@ -1,4 +1,5 @@
 #include "musiclrcmanager.h"
+#include "musicwidgetutils.h"
 
 #include <QFile>
 #include <QFontDatabase>
@@ -174,8 +175,8 @@ void MusicLrcManager::setFontFamily(int index)
 
 void MusicLrcManager::setFontType(int type)
 {
-    m_font.setBold( (type == 1 || type == 3) );
-    m_font.setItalic( (type == 2 || type == 3) );
+    m_font.setBold((type == 1 || type == 3));
+    m_font.setItalic((type == 2 || type == 3));
 }
 
 void MusicLrcManager::setSelfGeometry(const QPoint &point)
@@ -223,16 +224,16 @@ void MusicLrcManager::setLrcFontSize(int size)
     {
         m_font.setPointSize(size);
     }
-    setText( text() );
+    setText(text());
     update();
 }
 
 void MusicLrcManager::startLrcMask(qint64 intervaltime)
 {
     m_intervalCount = 0.0f;
-    m_geometry.setX(QFontMetrics(m_font).width(text()));
+    m_geometry.setX(MusicUtils::Widget::fontTextWidth(m_font, text()));
 
-    const qreal count = intervaltime / m_speedLevel;
+    const float count = intervaltime / m_speedLevel;
     m_lrcMaskWidthInterval = (count != 0) ? m_geometry.x() / count : 0;
     m_lrcMaskWidth = 0;
     m_timer->start(LRC_PER_TIME);
@@ -251,8 +252,8 @@ void MusicLrcManager::setLinearGradientColor(const MusicLrcColor &color)
     for(int i=0; i<cl.count(); ++i)
     {
         QColor rgb = cl[i];
-        rgb.setAlpha(m_transparent*2.55);
-        linearGradient.setColorAt((i+1)*1.0/cl.count(), rgb);
+        rgb.setAlpha(m_transparent * 2.55);
+        linearGradient.setColorAt((i + 1) * 1.0 / cl.count(), rgb);
     }
     m_linearGradient = linearGradient;
 
@@ -261,8 +262,8 @@ void MusicLrcManager::setLinearGradientColor(const MusicLrcColor &color)
     for(int i=0; i<cl.count(); ++i)
     {
         QColor rgb = cl[i];
-        rgb.setAlpha(m_transparent*2.55);
-        maskLinearGradient.setColorAt((i+1)*1.0/cl.count(), rgb);
+        rgb.setAlpha(m_transparent * 2.55);
+        maskLinearGradient.setColorAt((i + 1) * 1.0 / cl.count(), rgb);
     }
     m_maskLinearGradient = maskLinearGradient;
 
@@ -278,6 +279,6 @@ void MusicLrcManager::setUpdateMask()
 
 void MusicLrcManager::setText(const QString &str)
 {
-    m_geometry.setX(QFontMetrics(m_font).width(str));
+    m_geometry.setX(MusicUtils::Widget::fontTextWidth(m_font, str));
     QLabel::setText(str);
 }

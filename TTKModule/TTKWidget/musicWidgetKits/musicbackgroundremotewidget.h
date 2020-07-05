@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,11 +56,11 @@ public Q_SLOTS:
     /*!
      * Send download data from net.
      */
-    void downLoadDataChanged(const QString &data);
+    void downLoadFinished(const QString &data);
     /*!
      * Send download data from net.
      */
-    virtual void downLoadDataChanged(const MusicSkinRemoteGroups &data);
+    virtual void downLoadFinished(const MusicSkinRemoteGroups &data);
 
 protected:
     /*!
@@ -70,7 +70,7 @@ protected:
 
     int m_currentIndex;
     MusicSkinRemoteGroups m_groups;
-    MusicBackgroundListWidget *m_listWidget;
+    MusicBackgroundListWidget *m_backgroundList;
     MusicDownloadQueueCache *m_downloadQueue;
     MusicDownloadBackgroundRemoteThread *m_queryThread;
 
@@ -93,9 +93,9 @@ public:
     virtual ~MusicBackgroundThunderWidget();
 
     /*!
-     * Init the current download object.
+     * Init parameters.
      */
-    void init();
+    void initialize();
 
     /*!
      * Create functions widget.
@@ -114,7 +114,7 @@ public Q_SLOTS:
     /*!
      * Send download data from net.
      */
-    virtual void downLoadDataChanged(const MusicSkinRemoteGroups &data) override;
+    virtual void downLoadFinished(const MusicSkinRemoteGroups &data) override;
 
 protected:
     /*!
@@ -147,9 +147,9 @@ public:
     explicit MusicBackgroundDailyWidget(QWidget *parent = nullptr);
 
     /*!
-     * Init the current download object.
+     * Init parameters.
      */
-    void init();
+    void initialize();
 
     /*!
      * Output remote skin.
@@ -160,7 +160,7 @@ public Q_SLOTS:
     /*!
      * Send download data from net.
      */
-    virtual void downLoadDataChanged(const MusicSkinRemoteGroups &data) override;
+    virtual void downLoadFinished(const MusicSkinRemoteGroups &data) override;
 
 };
 

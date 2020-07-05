@@ -6,7 +6,7 @@
         <lastPlayIndex value="1">-1,-1</lastPlayIndex>
     </musicSetting>
     <plusSetting>
-        <geometry value="242,84,1033,690"/>
+        <geometry value="242,84,1000,690"/>
         <language value="0"/>
         <autoPlay value="0"/>
         <closeEvent value="1"/>
@@ -26,11 +26,15 @@
         <otherWriteInfo value="1"/>
         <otherSideBy value="0"/>
         <otherSongFormat value="0"/>
-        <otherLrcKTV value="1"/>
-        <otherRippleSpectrumEnable value="1"/>
-        <otherRippleSpectrumColor value="250,218,131"/>
-        <otherRippleSpectrumOpacity value="100"/>
+        <otherLrcKTVMode value="1"/>
+        <otherScreenSaverEnable value="0"/>
+        <otherScreenSaverTime value="10"/>
+        <otherScreenSaverIndex value=""/>
     </otherSetting>
+    <rippleSetting>
+        <rippleSpectrumEnable value="1"/>
+        <rippleSpectrumColor value="250,218,131"/>
+    </rippleSetting>
     <backgroundSetting>
         <backgroundTheme value="theme-7"/>
         <backgroundTransparent value="100"/>
@@ -70,7 +74,6 @@
         <equalizerEnable value="0"/>
         <equalizerIndex value="5"/>
         <equalizerValue value="0,-6,6,6,3,2,-2,-5,-6,-8,-8"/>
-        <enhancedBalance value="0"/>
         <enhancedFadeEnable value="0"/>
         <enhancedFadeInValue value="1000"/>
         <enhancedFadeOutValue value="1000"/>
@@ -80,6 +83,8 @@
         <enhancedLADSPA value="0"/>
         <enhancedSOX value="0"/>
         <enhancedSRC value="0"/>
+        <enhancedMonoStereo value="0"/>
+        <enhancedMono value="0"/>
     </equalizerSetting>
     <timeSetting>
         <timeAutoIndex value="2"/>

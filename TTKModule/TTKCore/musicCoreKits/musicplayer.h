@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,10 @@ public:
      * Get current player postion.
      */
     qint64 position() const;
+    /*!
+     * Set current play pos.
+     */
+    void setPosition(qint64 position);
 
     /*!
      * Set current player to next music.
@@ -105,10 +109,6 @@ public:
      * Set current player mute or not.
      */
     void setMuted(bool muted);
-    /*!
-     * Set current play pos.
-     */
-    void setPosition(qint64 position);
 
     /*!
      * Set current music enhanced effect.
@@ -132,14 +132,6 @@ Q_SIGNALS:
      * Current position changed.
      */
     void positionChanged(qint64 position);
-    /*!
-     * Current volume changed.
-     */
-    void volumeChanged(int volume);
-    /*!
-     * Current mute state changed.
-     */
-    void mutedChanged(bool muted);
 
 public Q_SLOTS:
     /*!
@@ -157,19 +149,15 @@ public Q_SLOTS:
     /*!
      * Set current equalizer effect.
      */
-    void setEqEffect(const MIntList &hz);
+    void setEqEffect(const TTKIntList &hz);
     /*!
      * Set enable to set current equalizer effect.
      */
-    void setEnaleEffect(bool enable);
+    void setEnabledEffect(bool enable);
     /*!
      * Read equalizer effect from config file.
      */
     void setEqInformation();
-    /*!
-     * Set current player volume.
-     */
-    void setSoundEffectVolume(int value);
     /*!
      * Remove current music media data.
      */
@@ -181,9 +169,9 @@ private Q_SLOTS:
      */
     void update();
     /*!
-     * Get current duration by time out.
+     * Query current duration by time out.
      */
-    void getCurrentDuration();
+    void queryCurrentDuration();
 
 protected:
     /*!
@@ -199,8 +187,8 @@ protected:
     Enhanced m_musicEnhanced;
     qint64 m_duration;
 
-    int m_tryTimes;
-    int m_volumeMusic3D, m_balance;
+    int m_durationTimes;
+    int m_volumeMusic3D;
     float m_posOnCircle;
 
 };

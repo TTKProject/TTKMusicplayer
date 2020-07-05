@@ -4,6 +4,7 @@
 #include "musicuiobject.h"
 #include "musicinteriorlrcuiobject.h"
 #include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musictime.h"
 #include "musicconnectionpool.h"
 #include "musicplayer.h"
@@ -13,7 +14,7 @@
 #include "musiclrcmanagerforinterior.h"
 #include "musicsettingmanager.h"
 #include "musicstringutils.h"
-#include "musicotherdefine.h"
+#include "musicwidgetutils.h"
 
 #include <QPainter>
 #include <QTextBlock>
@@ -25,7 +26,7 @@
 MusicLrcMakerWidgetItem::MusicLrcMakerWidgetItem(QWidget *ui, QObject *parent)
     : QLabel(ui), m_parentObject(parent)
 {
-    setStyleSheet(MusicUIObject::MBorderStyle02 + MusicUIObject::MBackgroundStyle17);
+    setStyleSheet(MusicUIObject::MQSSBorderStyle02 + MusicUIObject::MQSSBackgroundStyle17);
     setFixedSize(650, ITEM_HEIGHT);
 
     reset();
@@ -100,7 +101,7 @@ void MusicLrcMakerWidgetItem::moveLeft()
 void MusicLrcMakerWidgetItem::moveRight()
 {
     m_leftDirection = false;
-    const int w = QFontMetrics(font()).width(text());
+    const int w = MusicUtils::Widget::fontTextWidth(font(), text());
     m_paintIndex += m_itemDelta;
 
     if(m_paintIndex >= w)
@@ -116,14 +117,14 @@ void MusicLrcMakerWidgetItem::setText(const QString &string)
 {
     QLabel::setText(string);
     const int len = string.isEmpty() ? 1 : string.length();
-    m_itemDelta = QFontMetrics(font()).width(string)/len;
+    m_itemDelta = MusicUtils::Widget::fontTextWidth(font(), string) / len;
 }
 
 void MusicLrcMakerWidgetItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    const int w = QFontMetrics(font()).width(text());
+    const int w = MusicUtils::Widget::fontTextWidth(font(), text());
     if(!m_leftDirection && m_intervalCount + w >= width() && m_paintIndex >= width() / 2)
     {
         m_intervalCount -= m_itemDelta;
@@ -148,17 +149,18 @@ MusicLrcMakerWidget::MusicLrcMakerWidget(QWidget *parent)
       m_ui(new Ui::MusicLrcMakerWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     setAttribute(Qt::WA_DeleteOnClose, true);
 
     m_ui->stackedWidget->setFocusPolicy(Qt::StrongFocus);
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
-    m_ui->stackedWidget->setStyleSheet(QString("#stackedWidget{%1}").arg(MusicUIObject::MBackgroundStyle17));
+    m_ui->stackedWidget->setStyleSheet(QString("#stackedWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle17));
 
     m_currentLine = 0;
     m_intervalTime = 0;
@@ -264,9 +266,8 @@ void MusicLrcMakerWidget::saveButtonClicked()
     }
 
     m_analysis->saveLrcTimeChanged();
-    MusicMessageBox message;
-    message.setText(tr("save file finished"));
-    message.exec();
+
+    MusicToastLabel::popup(tr("save file finished"));
 }
 
 void MusicLrcMakerWidget::reMakeButtonClicked()
@@ -363,7 +364,7 @@ void MusicLrcMakerWidget::setCurrentSecondWidget()
     cursor.movePosition(QTextCursor::Start);
     m_ui->makeTextEdit->setTextCursor(cursor);
     m_ui->makeTextEdit->setCurrentCharFormat(QTextCharFormat());
-    m_lineItem->setText( cursor.block().text() );
+    m_lineItem->setText(cursor.block().text());
 
     m_ui->stackedWidget->setCurrentIndex(LRC_MAKER_INDEX_2);
 }
@@ -373,9 +374,7 @@ void MusicLrcMakerWidget::setCurrentThirdWidget()
     if(m_ui->stackedWidget->currentIndex() == 2 &&
        m_plainText.count() > m_ui->makeTextEdit->textCursor().blockNumber())
     {
-        MusicMessageBox message;
-        message.setText(tr("Lyrics make has not been completed!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Lyrics make has not been completed!"));
         return;
     }
 
@@ -384,7 +383,7 @@ void MusicLrcMakerWidget::setCurrentThirdWidget()
 
     if(m_times.count() == m_plainText.count())
     {
-        MIntStringMap data;
+        TTKIntStringMap data;
         for(int i=0; i<m_times.count(); ++i)
         {
             data.insert(m_times.value(i), m_plainText[i]);
@@ -393,7 +392,7 @@ void MusicLrcMakerWidget::setCurrentThirdWidget()
 
         for(int i=0; i<m_analysis->getLineMax(); ++i)
         {
-            m_musicLrcContainer[i]->setText( QString() );
+            m_musicLrcContainer[i]->setText(QString());
         }
         setItemStyleSheet(0, -3, 90);
         setItemStyleSheet(1, -6, 35);
@@ -444,7 +443,7 @@ void MusicLrcMakerWidget::keyReleaseEvent(QKeyEvent* event)
 void MusicLrcMakerWidget::createCurrentLine(int key)
 {
     QTextCursor cursor = m_ui->makeTextEdit->textCursor();
-    if(m_ui->stackedWidget->currentIndex() == 2 && m_plainText.count() > m_currentLine )
+    if(m_ui->stackedWidget->currentIndex() == 2 && m_plainText.count() > m_currentLine)
     {
         switch(key)
         {
@@ -456,7 +455,7 @@ void MusicLrcMakerWidget::createCurrentLine(int key)
             case Qt::Key_Up:
                 {
                     cursor.movePosition(QTextCursor::PreviousBlock, QTextCursor::KeepAnchor);
-                    m_lineItem->setText( cursor.block().text() );
+                    m_lineItem->setText(cursor.block().text());
 
                     if(--m_currentLine < 0)
                     {
@@ -479,7 +478,7 @@ void MusicLrcMakerWidget::createCurrentLine(int key)
                         return;
                     }
                     cursor.movePosition(QTextCursor::NextBlock, QTextCursor::KeepAnchor);
-                    m_lineItem->setText( cursor.block().text() );
+                    m_lineItem->setText(cursor.block().text());
 
                     if(++m_currentLine >= m_plainText.count())
                     {
@@ -504,8 +503,8 @@ void MusicLrcMakerWidget::createCurrentLine(int key)
 
 void MusicLrcMakerWidget::createMainWidget()
 {
-    m_ui->nextButton_M->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton_M->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->nextButton_M->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton_M->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 #ifdef Q_OS_UNIX
     m_ui->nextButton_M->setFocusPolicy(Qt::NoFocus);
     m_ui->cancelButton_M->setFocusPolicy(Qt::NoFocus);
@@ -556,13 +555,13 @@ void MusicLrcMakerWidget::createFirstWidget()
 {
     m_ui->stateButton_F->setText(!MusicApplication::instance()->isPlaying() ? tr("Play") : tr("Stop"));
 
-    m_ui->artNameEdit->setStyleSheet(MusicUIObject::MLineEditStyle01);
-    m_ui->songNameEdit->setStyleSheet(MusicUIObject::MLineEditStyle01);
-    m_ui->authorNameEdit->setStyleSheet(MusicUIObject::MLineEditStyle01);
-    m_ui->introductionTextEdit->setStyleSheet( MusicUIObject::MTextEditStyle01 );
+    m_ui->artNameEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    m_ui->songNameEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    m_ui->authorNameEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    m_ui->introductionTextEdit->setStyleSheet(MusicUIObject::MQSSTextEditStyle01);
     m_ui->lrcTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_ui->lrcTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_ui->lrcTextEdit->setStyleSheet(MusicUIObject::MTextEditStyle01 + MusicUIObject::MScrollBarStyle01);
+    m_ui->lrcTextEdit->setStyleSheet(MusicUIObject::MQSSTextEditStyle01 + MusicUIObject::MQSSScrollBarStyle01);
     m_ui->lrcTextEdit->setAcceptRichText(false);
     m_ui->lrcTextEdit->setLineWrapMode(QTextEdit::NoWrap);
 
@@ -573,11 +572,11 @@ void MusicLrcMakerWidget::createFirstWidget()
     m_ui->lrcTextEdit->setTextCursor(cur);
 
     m_ui->timeSlider_F->setFocusPolicy(Qt::NoFocus);
-    m_ui->timeSlider_F->setStyleSheet(MusicUIObject::MSliderStyle09);
-    m_ui->stateButton_F->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->previousButton_F->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->nextButton_F->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton_F->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->timeSlider_F->setStyleSheet(MusicUIObject::MQSSSliderStyle09);
+    m_ui->stateButton_F->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->previousButton_F->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->nextButton_F->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton_F->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->stateButton_F->setFocusPolicy(Qt::NoFocus);
@@ -602,20 +601,20 @@ void MusicLrcMakerWidget::createSecondWidget()
     m_ui->makeTextEdit->setLineWrapMode(QTextEdit::NoWrap);
     m_ui->makeTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_ui->makeTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_ui->makeTextEdit->setStyleSheet(MusicUIObject::MTextEditStyle01 + MusicUIObject::MScrollBarStyle01);
+    m_ui->makeTextEdit->setStyleSheet(MusicUIObject::MQSSTextEditStyle01 + MusicUIObject::MQSSScrollBarStyle01);
     m_ui->makeTextEdit->setAcceptRichText(false);
     m_ui->makeTextEdit->setAutoFormatting(QTextEdit::AutoNone);
     m_ui->makeTextEdit->setEnabled(false);
 
     QFont font = m_ui->makeTextEdit->font();
     font.setPointSize(15);
-    m_ui->makeTextEdit->setFont( font );
+    m_ui->makeTextEdit->setFont(font);
 
     m_ui->timeSlider_S->setFocusPolicy(Qt::NoFocus);
-    m_ui->timeSlider_S->setStyleSheet(MusicUIObject::MSliderStyle09);
-    m_ui->previousButton_S->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->nextButton_S->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton_S->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->timeSlider_S->setStyleSheet(MusicUIObject::MQSSSliderStyle09);
+    m_ui->previousButton_S->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->nextButton_S->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton_S->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->previousButton_S->setFocusPolicy(Qt::NoFocus);
@@ -646,18 +645,18 @@ void MusicLrcMakerWidget::createThirdWidget()
     m_ui->timeSlider_T->setFocusPolicy(Qt::NoFocus);
     m_ui->lrc_make_up_T->setToolTip(tr("Before 1s"));
     m_ui->lrc_make_down_T->setToolTip(tr("After 1s"));
-    m_ui->lrc_make_up_T->setStyleSheet(MusicUIObject::MKGInteriorMakeUp);
-    m_ui->lrc_make_down_T->setStyleSheet(MusicUIObject::MKGInteriorMakeDown);
+    m_ui->lrc_make_up_T->setStyleSheet(MusicUIObject::MQSSInteriorMakeUp);
+    m_ui->lrc_make_down_T->setStyleSheet(MusicUIObject::MQSSInteriorMakeDown);
     connect(m_ui->lrc_make_up_T, SIGNAL(clicked()), SLOT(lrcSpeedSlower()));
     connect(m_ui->lrc_make_down_T, SIGNAL(clicked()), SLOT(lrcSpeedFaster()));
 
-    m_ui->timeSlider_T->setStyleSheet(MusicUIObject::MSliderStyle09);
-    m_ui->stateButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->remakeButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->uploadButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->saveButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->previousButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton_T->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->timeSlider_T->setStyleSheet(MusicUIObject::MQSSSliderStyle09);
+    m_ui->stateButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->remakeButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->uploadButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->saveButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->previousButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton_T->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->stateButton_T->setFocusPolicy(Qt::NoFocus);
@@ -698,15 +697,13 @@ bool MusicLrcMakerWidget::checkInputValid()
 
     if(errorFlag)
     {
-        MusicMessageBox message;
-        message.setText(msg);
-        message.exec();
+        MusicToastLabel::popup(msg);
         return false;
     }
     return true;
 }
 
-void MusicLrcMakerWidget::setControlEnable(bool enable) const
+void MusicLrcMakerWidget::setControlEnabled(bool enable) const
 {
     m_ui->artNameEdit->setEnabled(enable);
     m_ui->songNameEdit->setEnabled(enable);
@@ -760,7 +757,7 @@ void MusicLrcMakerWidget::setItemStyleSheet(int index, int size, int transparent
 
     if(M_SETTING_PTR->value("LrcColor").toInt() != -1)
     {
-        const MusicLrcColor::LrcColorType index = MStatic_cast(MusicLrcColor::LrcColorType, M_SETTING_PTR->value("LrcColor").toInt());
+        const MusicLrcColor::LrcColorType index = TTKStatic_cast(MusicLrcColor::LrcColorType, M_SETTING_PTR->value("LrcColor").toInt());
         const MusicLrcColor &cl = MusicLrcColor::mapIndexToColor(index);
         w->setLinearGradientColor(cl);
     }

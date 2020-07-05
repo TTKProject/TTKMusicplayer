@@ -1,6 +1,8 @@
 #include "musictoastlabel.h"
-#include "musicnumberdefine.h"
 #include "musicuiobject.h"
+#include "musicwidgetutils.h"
+#include "musicapplication.h"
+#include "musicsettingmanager.h"
 
 #include <QPainter>
 #include <QPropertyAnimation>
@@ -12,6 +14,9 @@ MusicToastLabel::MusicToastLabel(QWidget *parent)
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_QuitOnClose);
     setAttribute(Qt::WA_DeleteOnClose);
+
+    setFontSize(15);
+    setFontMargin(20, 20);
 
     m_font = font();
     connect(&m_timer, SIGNAL(timeout()), SLOT(closeAnimation()));
@@ -28,14 +33,6 @@ MusicToastLabel::MusicToastLabel(const QString &text, QWidget *parent)
 MusicToastLabel::~MusicToastLabel()
 {
     m_timer.stop();
-}
-
-void MusicToastLabel::defaultLabel(QWidget *parent, const QString &text)
-{
-    setFontSize(15);
-    setFontMargin(20, 20);
-    setText(text);
-    popup(parent);
 }
 
 void MusicToastLabel::setFontMargin(int height, int width)
@@ -80,15 +77,30 @@ bool MusicToastLabel::bold() const
 
 void MusicToastLabel::popup(QWidget *parent)
 {
-    const QPoint &globalPoint = parent->mapToGlobal(QPoint(0, 0));
-    move( globalPoint.x() + (parent->width() - width())/2, globalPoint.y() + (parent->height() - height())/2);
+    if(!parent)
+    {
+        const QSize &windowSize = M_SETTING_PTR->value(MusicSettingManager::ScreenSize).toSize();
+        move((windowSize.width() - width()) / 2, windowSize.height() - 200);
+    }
+    else
+    {
+        const QPoint &globalPoint = parent->mapToGlobal(QPoint(0, 0));
+        move(globalPoint.x() + (parent->width() - width()) / 2, globalPoint.y() + (parent->height() - height()) / 2);
+    }
     show();
+}
+
+void MusicToastLabel::popup(const QString &text)
+{
+    MusicToastLabel *label = new MusicToastLabel(MusicApplication::instance());
+    label->setText(text);
+    label->popup();
 }
 
 void MusicToastLabel::setText(const QString &text)
 {
-    const QFontMetrics &metrics = QFontMetrics(m_font);
-    setFixedSize(metrics.width(text) + m_margin.x(), metrics.height() + m_margin.y());
+    setFixedSize(MusicUtils::Widget::fontTextWidth(m_font, text) + m_margin.x(),
+                 MusicUtils::Widget::fontTextHeight(m_font) + m_margin.y());
     QLabel::setText(text);
 }
 
@@ -114,7 +126,11 @@ void MusicToastLabel::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0, 0, 0, 175));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    painter.drawRoundedRect(rect(), 6, 6);
+#else
     painter.drawRoundRect(rect(), 6, 6);
+#endif
 
     painter.setPen(QColor(255, 255, 255));
     painter.drawText(rect(), Qt::AlignCenter, text());

@@ -13,7 +13,7 @@ static void onDiskAppear(DADiskRef disk, void *context)
     if (sDevices.contains(disk_name))
         return;
     sDevices.append(disk_name);
-    QDeviceWatcherPrivate *p = static_cast<QDeviceWatcherPrivate*>(context);
+    QDeviceWatcherPrivate *p = TTKStatic_cast(QDeviceWatcherPrivate*, context);
     p->emitDeviceAdded(disk_name);
 }
 
@@ -21,7 +21,7 @@ static void onDiskDisappear(DADiskRef disk, void *context)
 {
     QString disk_name = DADiskGetBSDName(disk);
     sDevices.removeAll(disk_name); //erase?
-    QDeviceWatcherPrivate *p = static_cast<QDeviceWatcherPrivate*>(context);
+    QDeviceWatcherPrivate *p = TTKStatic_cast(QDeviceWatcherPrivate*, context);
     p->emitDeviceRemoved(disk_name);
 }
 
@@ -32,7 +32,7 @@ QDeviceWatcherPrivate::~QDeviceWatcherPrivate()
 
 bool QDeviceWatcherPrivate::start()
 {
-    init();
+    initialize();
     QThread::start();
 }
 
@@ -51,7 +51,7 @@ void QDeviceWatcherPrivate::parseDeviceInfo()
 }
 
 
-bool QDeviceWatcherPrivate::init()
+bool QDeviceWatcherPrivate::initialize()
 {
     //get sDevices
     //FSGetVolumeInfo()

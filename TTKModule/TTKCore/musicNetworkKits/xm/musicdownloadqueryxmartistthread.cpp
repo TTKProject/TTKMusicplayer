@@ -1,8 +1,5 @@
 #include "musicdownloadqueryxmartistthread.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryXMArtistThread::MusicDownLoadQueryXMArtistThread(QObject *parent)
     : MusicDownLoadQueryArtistThread(parent)
@@ -17,18 +14,18 @@ void MusicDownLoadQueryXMArtistThread::startToSearch(const QString &artist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(artist));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(artist));
     deleteAll();
 
     m_searchText = artist;
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_ARTIST_DATA_URL, false).arg(artist).arg(1).arg(30),
                       MusicUtils::Algorithm::mdII(XM_ARTIST_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -44,8 +41,8 @@ void MusicDownLoadQueryXMArtistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -90,9 +87,9 @@ void MusicDownLoadQueryXMArtistThread::downLoadFinished()
                     musicInfo.m_discNumber = "0";
                     musicInfo.m_trackNumber = value["track"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo, value["listenFiles"], m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -103,13 +100,13 @@ void MusicDownLoadQueryXMArtistThread::downLoadFinished()
                     {
                         artistFlag = true;
                         MusicResultsItem info;
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                         getDownLoadIntro(&info);
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                         info.m_id = m_searchText;
                         info.m_name = musicInfo.m_singerName;
                         info.m_coverUrl = musicInfo.m_smallPicUrl;
-                        emit createArtistInfoItem(info);
+                        Q_EMIT createArtistInfoItem(info);
                     }
                     //
                     MusicSearchedItem item;
@@ -118,14 +115,14 @@ void MusicDownLoadQueryXMArtistThread::downLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -137,11 +134,11 @@ void MusicDownLoadQueryXMArtistThread::getDownLoadIntro(MusicResultsItem *item)
     }
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_ARTIST_DATA_INFO_URL, false).arg(m_searchText),
                       MusicUtils::Algorithm::mdII(XM_ARTIST_INFO_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     MusicSemaphoreLoop loop;

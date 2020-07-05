@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #include <QMutex>
 #include "musicsingleton.h"
-
-#define M_DISPATCH_PTR (MusicSingleton<MusicDispatchManager>::createInstance())
 
 class QTimer;
 
@@ -94,5 +92,8 @@ protected:
     DECLARE_SINGLETON_CLASS(MusicDispatchManager)
 
 };
+
+#define M_DISPATCH_PTR GetMusicDispatchManager()
+MUSIC_CORE_EXPORT MusicDispatchManager* GetMusicDispatchManager();
 
 #endif // MUSICDISPATCHMANAGER_H

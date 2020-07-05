@@ -1,6 +1,8 @@
 # TTKMusicPlayer
+[ÁÆÄ‰Ωì‰∏≠Êñá Chinese](./README_cn.md) | [ÁπÅ‰Ωì‰∏≠Êñá Chinese](./README_tc.md)
+
 ![TTKMusicplayer](https://img.shields.io/badge/Greedysky-TTKMusicPlayer-green.svg?style=flat-square)
-![Version](https://img.shields.io/badge/Version-2.9.0.0-blue.svg?style=flat-square)
+![Version](https://img.shields.io/badge/Version-2.13.0.0-blue.svg?style=flat-square)
 ![License](https://img.shields.io/badge/License-GPL%20V3-yellowgreen.svg?style=flat-square)
 
 ![LOGO](https://github.com/Greedysky/Resource/blob/master/Screen/logo_pic.png?raw=true)
@@ -9,24 +11,21 @@
 
 Usage
 ----
-**The music player use of qmmp core library based on Qt.
-Compiler tutorial I have written in the wiki.(See here <u>https://github.com/Greedysky/TTKMusicplayer/wiki</u> )**
+**The music player use of qmmp core library based on Qt. Compiler tutorial I have written in the wiki.(See here <u>https://github.com/Greedysky/TTKMusicplayer/wiki</u> )**
 
 ### Attention: This software is only for learning and communication, the songs' and playlists' copyright belongs to each music platform.
-### ±æœÓƒø¥˙¬Î≤ª”√”⁄…Ã”√£¨Ωˆœﬁ—–æø∫Õ—ßœ∞ π”√£¨◊ ‘¥∞Ê»®πÈ∏ˆ“Ù¿÷∆ΩÃ®À˘”–°£
  
 ## CI Status
  * Qt develop version be tested on Qt4.8.7 for windows-mingw 32bit
  * Qt develop version be tested on Qt4.8.7 for linux-gcc 64bit
  * Qt develop version be tested on Qt5.x for windows-mingw 32bit
  * Qt develop version be tested on Qt5.x for linux-gcc 64bit
- * Qt develop version be tested on Qt5.x for windows-msvc
  
 | Platform | Qt & Compiler       | Status                                                                                      |
 | :---:    | :---:               | :---:                                                                                       |
 | Linux    | 4.8.7 GCC & 5.x GCC    | ![Linux](https://img.shields.io/badge/build-passing-brightgreen.svg)                            |
 | Windows  | 4.8.7 GCC & 5.x GCC       | ![Windows](https://img.shields.io/badge/build-passing-brightgreen.svg) |
-| Windows  | 5.x MSVC       | ![Windows](https://img.shields.io/badge/build-passing-brightgreen.svg) |
+| Windows  | 5.x MSVC       | ![Windows](https://img.shields.io/badge/build-unknown-lightgrey.svg) |
 | OS X     | 5.x Clang     | ![OSX](https://img.shields.io/badge/build-unknown-lightgrey.svg)                           |
  
 # For Developers
@@ -67,7 +66,7 @@ Features
 -------
 TTKMusicPlayer can meet your most demands
  * Support for multiple music formats.
- * SID File(*.sid *.mus *.str *.prg *.P00) on linux
+ * SID File(*.sid *.mus *.str *.prg *.P00)
  * MusePack File(*.mpc)
  * WavPack File(*.wv)
  * Ogg Vorbis File(*.ogg)
@@ -77,31 +76,43 @@ TTKMusicPlayer can meet your most demands
  * PCM File(*.wav *.au *.snd *.aif *.aiff *.8svx *.sph *.sf *.voc *.w64)
  * CUE File(*.cue)
  * MPEG File(*.mp1 *.mp2 *.mp3 *.wav)
- * Game File(*.ay *.gms *.gym *.hes *.kss *.nsf *.nsfe *.sap *.spc *.vgm *.vgz)
+ * Game Audio File(*.ay *.gms *.gym *.hes *.kss *.nsf *.nsfe *.sap *.spc *.vgm *.vgz)
  * FLAC File(*.flac *.oga)
  * Monkey's Audio File(*.ape)
- * FFmpeg File(*.wma *.ape *.tta *.m4a *.ra *.shn *.vqf *.ac3)
- * ModPlug File(*.mod *.s3m *.xm *.it *.669 *.amf *.ams *.dbm *.dmf *.dsm *.far,mdl *.med *.mtm 
-                *.okt *.ptm *.stm *.ult *.umx *.mt2 *.psm *.mdz *.s3z *.xmz *.itz *.mdr *.s3r
-                *.xmr *.itr *.dgz *.s3gz *.xmgz *.itgz)
- * Playlist formats(ttklist, m3u, m3u8, pls, wpl, xspf, asx, kwl, kgl, fpl)
- * Junior fans interface. Interface cool, gorgeous pop. Maintaining a perfect performance under Vista and XP, refreshing
-Screenshots.
+ * FFmpeg File(*.wma *.ape *.tta *.m4a *.ra *.shn *.vqf *.ac3 *.tak *.dsf *.dsdiff)
+ * ModPlug File(*.mod *.s3m *.xm *.it *.669 *.amf *.ams *.dbm *.dmf *.dsm *.far,mdl *.med *.mtm *.okt *.ptm *.stm *.ult *.umx *.mt2 *.psm *.mdz *.s3z *.xmz *.itz *.mdr *.s3r *.xmr *.itr *.dgz *.s3gz *.xmgz *.itgz)
+ * AdLib Sound File(*.adl *.hsc *.ksm *.lds)
+ * Apple Lossless Audio File(*.alac)
+ * Another Slight Atari File(*.sap *.cm3 *.cmc *.cmr *.cms *.dmc *.dlt *.mpd *.mpt *.rmt *.tm2 *.tm8 *.tmc *.fc)
+ * DTS Coherent Acoustics File(*.wav *.dts *.cpt)
+ * Dynamic Universal File(*.mod *.mdz *.stk *.m15 *.fst *.oct *.nt *.s3m *.s3z *.stm *.stz *.it *.itz *.xm *.xmz *ptm *.ptz *mtm *.mtz *669 *psm *umx *am *.j2b *dsm *amf *okt *.okta *mo3)
+ * Future Composer File(*.fc *.fc13 *.fc14 *.smod)
+ * OptimFrog File(*.ofr *.ofs)
+ * Audio Overload File(*.psf *.psf2 *.spu *.ssf *.qsf *.dsf *.minipsf *.minipsf2 *.minissf *.miniqsf *.minidsf)
+ * Atari ST(E) And Amiga File(*.sndh *.snd *.sc68)
+ * Speex Audio File(*.spx)
+ * V2 Module Audio File(*.v2m)
+ * AY/YM Audio File(*.vtx *.asc *.sqt *psg *.stc *.stp *.pt1 *.pt2 *.pt3 *.psc *.ay *.ym)
+ * ST-Sound File(*.ym)
+ * Playlist formats(tkpl, m3u, m3u8, pls, wpl, xspf, asx, kwl, kgl, fpl, csv, txt, nfn)
+ * Junior fans interface. Interface cool, gorgeous pop. Maintaining a perfect performance under Vista and XP, refreshing Screenshots.
  * Search and high-speed downloads. Song search accuracy optimization, intelligent save bandwidth, you can disable the network function, 8 source download speed.
- * Perfect music. It supports local playback, compatible with all audio files, super perfect sound, music and more appealing.
+ * It supports local playback, compatible with all audio files, super perfect sound, music and more appealing.
  * User-friendly design. Attention to detail design, personalize, simple operation, found music more convenient.
- * Personalized cell phone ringtones. Ringtones DIY, so you have personalized ringtones Yang Hyun.
- * Audio format I choose. I made my songs, I decided to sound quality.
+ * Personalized cell phone ringtones. Ringtones DIY, so you have personalized ringtones.
  * Personalized skin. DIY your own personalized skin, creating a only part of your skin.
  * Music cube model. After entering the mini mode, it will remain in your desktop a "Clover" shaped icon, you can freely drag the desktop, you want to control the player, cut songs, play, lyrics control, volume adjustment in control.
- * Colorful custom skin. You can select skin color, set the transparency of freedom, and support transparent frosted glass (Windows Aero effects), music from becoming a type, colored.
- * Search Download Manager. Search Results tab merger - all of the search results tab concentrated under one label, make operation easier. Speed flip - drop-down slider, you can auto-flip, no longer need to click the "Next" a one roll.
- * Local music search, and cloud music library and interactive, custom ringtone.
+ * Colorful custom skin. You can select skin color, set the transparency of freedom, and support transparent frosted glass (Windows Aero effects).
+ * Search Download Manager. Search Results tab merger - all of the search results tab concentrated under one label, make operation easier.
+ * Local music search, and cloud music library and interactive.
  * Support converting different music formats, and can change the sound as like Tom Cat, also can enhance the sound.
  * Local music transferred to the cloud or mobile device.
  * Local music and the human voice humming recognition.
- * Music song, artist, album, playlistm, toplist and movie search supported.
- * Music song spectrum and test supported.
+ * Music song, artist, album, playlist, toplist and movie search supported.
+ * Music DSP effects and Visual effects supported.
+ * Music song spectrum(projectm, goom, sonique, florid, wavebar) and test supported.
+ * Music replay gain scan and write supported.
+ * Music screen saver supported.
  
 
 Screenshots
@@ -137,7 +148,7 @@ Screenshots
 ![Other Tools](https://github.com/Greedysky/Resource/blob/master/Screen/10.jpg?raw=true)
 
 ### Spectrum
-![Magic Music](https://github.com/Greedysky/Resource/blob/master/Screen/11.jpg?raw=true)
+![Spectrum](https://github.com/Greedysky/Resource/blob/master/Screen/11.jpg?raw=true)
 
 ### Other Functions
 ![Other Functions](https://github.com/Greedysky/Resource/blob/master/Screen/12.jpg?raw=true)
@@ -145,7 +156,7 @@ Screenshots
 Copyright
 -------
  * This file is part of the TTK Music Player project.
- * Copyright (c) 2015 - 2019 Greedysky Studio.
+ * Copyright (c) 2015 - 2020 Greedysky Studio.
  * Mail: greedysky@163.com.
  
 How To Contribute

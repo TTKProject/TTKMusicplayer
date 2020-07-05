@@ -211,13 +211,12 @@ QString MusicSongTag::getMode() const
 
 QString MusicSongTag::getBitrate() const
 {
-    return m_parameters[TagReadAndWrite::TAG_BITRATE].toString();
+    return m_parameters[TagReadAndWrite::TAG_BITRATE].toString() + " kbps";
 }
 
 QString MusicSongTag::getLengthString() const
 {
-    return MusicTime::msecTime2LabelJustified(
-           m_parameters[TagReadAndWrite::TAG_LENGTH].toULongLong());
+    return MusicTime::msecTime2LabelJustified(m_parameters[TagReadAndWrite::TAG_LENGTH].toULongLong());
 }
 
 QString MusicSongTag::findLegalDataString(TagReadAndWrite::MusicTag type) const
@@ -230,7 +229,7 @@ QString MusicSongTag::findPluginPath() const
 {
     const QString &suffix = QFileInfo(m_filePath).suffix().toLower();
 
-    const MStringListMap formats(MusicFormats::supportFormatsStringMap());
+    const TTKStringListMap formats(MusicFormats::supportFormatsStringMap());
     foreach(const QString &key, formats.keys())
     {
         if(formats.value(key).contains(suffix))
@@ -248,18 +247,18 @@ bool MusicSongTag::readOtherTaglib()
     loader.setFileName(findPluginPath());
 
     const QObject *obj = loader.instance();
-    DecoderFactory *decoderfac = nullptr;
-    if(obj && (decoderfac = MObject_cast(DecoderFactory*, obj)))
+    DecoderFactory *factory = nullptr;
+    if(obj && (factory = TTKObject_cast(DecoderFactory*, obj)))
     {
         qint64 length = 0;
-        MetaDataModel *model = decoderfac->createMetaDataModel(m_filePath, true);
+        MetaDataModel *model = factory->createMetaDataModel(m_filePath, true);
         if(model)
         {
             m_parameters.insert(TagReadAndWrite::TAG_COVER, model->cover());
             delete model;
         }
 
-        const QList<TrackInfo*> infos(decoderfac->createPlayList(m_filePath, TrackInfo::AllParts, nullptr));
+        const QList<TrackInfo*> infos(factory->createPlayList(m_filePath, TrackInfo::AllParts, nullptr));
         if(!infos.isEmpty())
         {
             TrackInfo *info = infos.first();
@@ -306,11 +305,11 @@ bool MusicSongTag::saveOtherTaglib()
 
     bool status = false;
     const QObject *obj = loader.instance();
-    DecoderFactory *decoderfac = nullptr;
-    if(obj && (decoderfac = MObject_cast(DecoderFactory*, obj)))
+    DecoderFactory *factory = nullptr;
+    if(obj && (factory = TTKObject_cast(DecoderFactory*, obj)))
     {
         status = true;
-        MetaDataModel *model = decoderfac->createMetaDataModel(m_filePath, false);
+        MetaDataModel *model = factory->createMetaDataModel(m_filePath, false);
         if(model)
         {
             const QList<TagModel* > &tags = model->tags();

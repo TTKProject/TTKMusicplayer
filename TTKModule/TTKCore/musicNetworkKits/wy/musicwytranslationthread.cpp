@@ -2,8 +2,6 @@
 #include "musicsemaphoreloop.h"
 #include "musicdownloadquerywythread.h"
 #include "musicdownloadwyinterface.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicWYTranslationThread::MusicWYTranslationThread(QObject *parent)
     : MusicTranslationThreadAbstract(parent)
@@ -63,18 +61,18 @@ void MusicWYTranslationThread::downLoadFinished()
             if(value.contains("code") && value["code"].toInt() == 200)
             {
                 value = value["tlyric"].toMap();
-                emit downLoadDataChanged(value["lyric"].toString());
+                Q_EMIT downLoadDataChanged(value["lyric"].toString());
             }
         }
         else
         {
-            emit downLoadDataChanged(QString());
+            Q_EMIT downLoadDataChanged(QString());
         }
     }
     else
     {
-        M_LOGGER_ERROR("Translation source data error");
-        emit downLoadDataChanged(QString());
+        TTK_LOGGER_ERROR("Translation source data error");
+        Q_EMIT downLoadDataChanged(QString());
     }
 
     deleteAll();

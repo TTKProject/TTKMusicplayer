@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ public Q_SLOTS:
     /*!
      * Data download finished and send to shared on web.
      */
-    void downLoadDataChanged(const QString &playUrl, const QString &imageUrl);
+    void downLoadFinished(const QString &playUrl, const QString &imageUrl);
     /*!
      * Query url time out, that means share failed.
      */

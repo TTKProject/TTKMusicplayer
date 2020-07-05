@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -101,7 +101,7 @@ protected:
     int m_currentIndex;
     MusicSongs m_currentSongs;
     QButtonGroup *m_buttonGroup;
-    MIntListMap m_searchfileListCache;
+    TTKIntListMap m_searchfileListCache;
     MusicDeviceInfoItem *m_currentDeviceItem;
     QString m_songCountLabel, m_selectCountLabel;
     MusicConnectTransferThread *m_transferThread;

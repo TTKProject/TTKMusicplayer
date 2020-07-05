@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,10 +43,6 @@ public:
     ~MusicToastLabel();
 
     /*!
-     * Create default label.
-     */
-    void defaultLabel(QWidget *parent, const QString &text);
-    /*!
      * Set text margin in the body.
      */
     void setFontMargin(int height, int width);
@@ -74,10 +70,15 @@ public:
      * Get context font bold.
      */
     bool bold() const;
+
     /*!
      * Popup the toast widget in parent widget.
      */
-    void popup(QWidget *parent);
+    void popup(QWidget *parent = nullptr);
+    /*!
+     * Create default label.
+     */
+    static void popup(const QString &text);
 
 Q_SIGNALS:
     /*!

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #include "musicsingleton.h"
 #include "musicdownloadthreadabstract.h"
-
-#define M_DOWNLOAD_QUERY_PTR (MusicSingleton<MusicDownLoadQueryFactory>::createInstance())
 
 class MusicDownLoadSimilarThread;
 class MusicDownLoadSongSuggestThread;
@@ -123,5 +121,8 @@ protected:
     DECLARE_SINGLETON_CLASS(MusicDownLoadQueryFactory)
 
 };
+
+#define M_DOWNLOAD_QUERY_PTR GetMusicDownLoadQueryFactory()
+MUSIC_NETWORK_EXPORT MusicDownLoadQueryFactory* GetMusicDownLoadQueryFactory();
 
 #endif // MUSICDOWNLOADQUERYFACTORY_H

@@ -2,7 +2,7 @@
 #include "musicitemdelegate.h"
 #include "musicconnectionpool.h"
 #include "musicnumberutils.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 
 #include <QScrollBar>
 
@@ -25,7 +25,7 @@ MusicCloudDownloadTableWidget::MusicCloudDownloadTableWidget(QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     MusicUtils::Widget::setTransparent(this, 0);
-    verticalScrollBar()->setStyleSheet(MusicUIObject::MScrollBarStyle03);
+    verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle03);
 
     setFixedHeight(0);
 }
@@ -42,9 +42,13 @@ void MusicCloudDownloadTableWidget::createItem(int index, const MusicSong &recor
     setItem(index, 0, item);
 
                       item = new QTableWidgetItem;
-    item->setToolTip( record.getMusicName() );
+    item->setToolTip(record.getMusicName());
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(index, 1, item);
 
@@ -52,14 +56,18 @@ void MusicCloudDownloadTableWidget::createItem(int index, const MusicSong &recor
     item->setData(MUSIC_PROCS_ROLE, 100);
     setItem(index, 2, item);
 
-                      item = new QTableWidgetItem( record.getMusicSizeStr() );
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+                      item = new QTableWidgetItem(record.getMusicSizeStr());
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
     setItem(index, 3, item);
 
     //just fix table widget size hint
-    setFixedHeight( allRowsHeight() );
+    setFixedHeight(allRowsHeight());
 }
 
 
@@ -78,7 +86,7 @@ MusicCloudUploadTableWidget::MusicCloudUploadTableWidget(QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     MusicUtils::Widget::setTransparent(this, 0);
-    verticalScrollBar()->setStyleSheet(MusicUIObject::MScrollBarStyle03);
+    verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle03);
 
     setFixedHeight(0);
 }
@@ -105,9 +113,7 @@ void MusicCloudUploadTableWidget::reuploadFile()
 {
     if(currentRow() < 0)
     {
-        MusicMessageBox message;
-        message.setText(tr("Please Select One Item First!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return;
     }
 
@@ -120,7 +126,7 @@ void MusicCloudUploadTableWidget::reuploadFile()
     const QString data(it->data(MUSIC_DATAS_ROLE).toString());
     if(!data.isEmpty())
     {
-        emit reuploadFilesToServer(QStringList() << data);
+        Q_EMIT reuploadFilesToServer(QStringList() << data);
     }
 }
 
@@ -128,9 +134,7 @@ void MusicCloudUploadTableWidget::reuploadFiles()
 {
     if(currentRow() < 0)
     {
-        MusicMessageBox message;
-        message.setText(tr("Please Select One Item First!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return;
     }
 
@@ -152,7 +156,7 @@ void MusicCloudUploadTableWidget::reuploadFiles()
 
     if(!datas.isEmpty())
     {
-        emit reuploadFilesToServer(datas);
+        Q_EMIT reuploadFilesToServer(datas);
     }
 }
 
@@ -164,20 +168,28 @@ void MusicCloudUploadTableWidget::createItem(int index, const MusicSong &record)
     setItem(index, 0, item);
 
                       item = new QTableWidgetItem;
-    item->setToolTip( record.getMusicName() );
+    item->setToolTip(record.getMusicName());
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(index, 1, item);
 
-                      item = new QTableWidgetItem( record.getMusicSizeStr() );
-    item->setTextColor(QColor(MusicUIObject::MColorStyle12_S));
+                      item = new QTableWidgetItem(record.getMusicSizeStr());
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+#else
+    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+#endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
     setItem(index, 2, item);
 
     //just fix table widget size hint
-    setFixedHeight( allRowsHeight() );
+    setFixedHeight(allRowsHeight());
 }
 
 void MusicCloudUploadTableWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -185,7 +197,7 @@ void MusicCloudUploadTableWidget::contextMenuEvent(QContextMenuEvent *event)
     Q_UNUSED(event);
     QMenu rightClickMenu(this);
 
-    rightClickMenu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     const bool empty = !m_musicSongs->isEmpty();
     rightClickMenu.addAction(tr("musicInfo..."), this, SLOT(musicFileInformation()))->setEnabled(empty);

@@ -9,13 +9,14 @@ MusicMessageAboutDialog::MusicMessageAboutDialog(QWidget *parent)
       m_ui(new Ui::MusicMessageAboutDialog)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
-    m_ui->confirmButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->confirmButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
     m_ui->confirmButton->setCursor(QCursor(Qt::PointingHandCursor));
 #ifdef Q_OS_UNIX
     m_ui->confirmButton->setFocusPolicy(Qt::NoFocus);
@@ -24,11 +25,9 @@ MusicMessageAboutDialog::MusicMessageAboutDialog(QWidget *parent)
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
     connect(m_ui->confirmButton, SIGNAL(clicked()), SLOT(close()));
 
-    //
     m_counterPVThread = new MusicDownloadCounterPVThread(this);
     connect(m_counterPVThread, SIGNAL(downLoadDataChanged(QString)), SLOT(musicGetCounterFinished(QString)));
     m_counterPVThread->startToDownload();
-    //
 }
 
 MusicMessageAboutDialog::~MusicMessageAboutDialog()

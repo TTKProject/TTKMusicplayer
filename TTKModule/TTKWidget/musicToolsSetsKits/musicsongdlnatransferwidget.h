@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ namespace Ui {
 class MusicSongDlnaTransferWidget;
 }
 
-class DlnaFinder;
-class DlnaFileServer;
+class QDlnaFinder;
+class QDlnaFileServer;
 
 /*! @brief The class of the song dlna transfer widget.
  * @author Greedysky <greedysky@163.com>
@@ -90,8 +90,8 @@ private:
     bool m_isPlaying;
     int m_currentPlayIndex;
     MusicSongs *m_musicSongs;
-    DlnaFinder *m_dlnaFinder;
-    DlnaFileServer *m_dlnaFileServer;
+    QDlnaFinder *m_dlnaFinder;
+    QDlnaFileServer *m_dlnaFileServer;
 
 };
 

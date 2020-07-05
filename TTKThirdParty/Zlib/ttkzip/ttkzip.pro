@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,12 @@
 
 TEMPLATE = lib
 
-include(../../../TTKVersion.pri)
+include($$PWD/../../../TTKVersion.pri)
 
-win32:TARGET = ../../../../bin/$$TTKMusicPlayer/TTKZip
-unix:TARGET = ../../../lib/$$TTKMusicPlayer/TTKZip
+DESTDIR = $$OUT_PWD/../../../bin/$$TTKMusicPlayer
+TARGET = TTKZip
 
-CONFIG       += warn_off
-unix:VERSION += 1.0.0
+CONFIG += warn_off plugin lib
 
 DEFINES += \
     ZLIB_DLL \
@@ -33,13 +32,10 @@ DEFINES += \
 INCLUDEPATH += $$PWD/../
 
 win32{
-    LIBS += -L../../../bin/$$TTKMusicPlayer -lzlib
     HEADERS  += $$PWD/iowin32.h
     SOURCES += $$PWD/iowin32.c
 }
-unix:!mac{
-    LIBS += -L../../../lib/$$TTKMusicPlayer -lzlib
-}
+LIBS += -L$$DESTDIR -lzlib
 
 HEADERS  += \
     $$PWD/zip.h \

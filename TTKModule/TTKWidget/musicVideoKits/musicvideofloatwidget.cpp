@@ -5,7 +5,7 @@
 MusicVideoFloatWidget::MusicVideoFloatWidget(QWidget *parent)
     : MusicFloatAbstractWidget(parent)
 {
-    setStyleSheet(MusicUIObject::MBackgroundStyle06);
+    setStyleSheet(MusicUIObject::MQSSBackgroundStyle06);
 
     resizeWindow(0, 0);
     m_search = new QPushButton(tr(" Search"), this);
@@ -28,11 +28,11 @@ MusicVideoFloatWidget::MusicVideoFloatWidget(QWidget *parent)
     m_download->setGeometry(15, 130, 80, 20);
     m_share->setGeometry(15, 170, 80, 20);
 
-    m_search->setStyleSheet(MusicUIObject::MKGVideoFloatSearch + MusicUIObject::MPushButtonStyle09);
-    m_fresh->setStyleSheet(MusicUIObject::MKGVideoFloatFresh + MusicUIObject::MPushButtonStyle09);
-    m_fullscreen->setStyleSheet(MusicUIObject::MKGVideoFloatFullscreen + MusicUIObject::MPushButtonStyle09);
-    m_download->setStyleSheet(MusicUIObject::MKGVideoFloatDownload + MusicUIObject::MPushButtonStyle09);
-    m_share->setStyleSheet(MusicUIObject::MKGVideoFloatShare + MusicUIObject::MPushButtonStyle09);
+    m_search->setStyleSheet(MusicUIObject::MQSSVideoFloatSearch + MusicUIObject::MQSSPushButtonStyle09);
+    m_fresh->setStyleSheet(MusicUIObject::MQSSVideoFloatFresh + MusicUIObject::MQSSPushButtonStyle09);
+    m_fullscreen->setStyleSheet(MusicUIObject::MQSSVideoFloatFullscreen + MusicUIObject::MQSSPushButtonStyle09);
+    m_download->setStyleSheet(MusicUIObject::MQSSVideoFloatDownload + MusicUIObject::MQSSPushButtonStyle09);
+    m_share->setStyleSheet(MusicUIObject::MQSSVideoFloatShare + MusicUIObject::MQSSPushButtonStyle09);
 
     m_search->setCursor(QCursor(Qt::PointingHandCursor));
     m_fresh->setCursor(QCursor(Qt::PointingHandCursor));
@@ -61,7 +61,7 @@ void MusicVideoFloatWidget::resizeWindow(int width, int height)
 {
     m_rectIn = QRect(566 + width, 138 + height/2, 125, 210);
     m_rectOut = QRect(676 + width, 189 + height/2, 125, 105);
-    setGeometry( m_rectOut );
+    setGeometry(m_rectOut);
 }
 
 void MusicVideoFloatWidget::setText(Type type, const QString &text)

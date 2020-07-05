@@ -2,9 +2,7 @@
 #include "musicdownloadsourcethread.h"
 #include "musicobject.h"
 
-#include <QStringList>
-
-#define IP_CHECK_URL    "QmZadEd0V0ovaUpsMlc4MG1uSWVUUUpnenhKRFdSSTJKV0hDdlRIcE1tND0="
+#define IP_CHECK_URL    "ZlhkcnFzd1RabVhCZXNWM1pnbk5hT1ErL2RpMUNjK0hYQ3FXUHdCOVNGSlpDU2ZmNTZnekhHUlo3WkwrUWhtQXljNitUcjJmZ0RId004OFc5QlVibjhvRGlRSzY3QXlVbmZHNFV3bkhZdGZMU2JTZ3lJTkNhOGZJUlNhcmlBUmcvRUVrQWc9PQ=="
 
 MusicNetworkOperator::MusicNetworkOperator(QObject *parent)
     : QObject(parent)
@@ -15,26 +13,27 @@ MusicNetworkOperator::MusicNetworkOperator(QObject *parent)
 void MusicNetworkOperator::startToDownload()
 {
     MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-    connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+    connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
     download->startToDownload(MusicUtils::Algorithm::mdII(IP_CHECK_URL, false));
 }
 
 void MusicNetworkOperator::downLoadFinished(const QByteArray &data)
 {
-    QTextStream in(MConst_cast(QByteArray*, &data));
-    in.setCodec("gb2312");
+    QString line;
 
-    QString line, text(in.readAll());
-    QRegExp regx("<center>([^<]+)</center>");
-    int pos = text.indexOf(regx);
-    while(pos != -1)
+    QJson::Parser parser;
+    bool ok;
+    const QVariant &json = parser.parse(data, &ok);
+    if(ok)
     {
-        line = regx.cap(0).remove("<center>").remove("</center>").trimmed();
-        line = line.right(2);
-        pos += regx.matchedLength();
-        pos = regx.indexIn(text, pos);
+        QVariantMap value = json.toMap();
+        if(value.contains("result"))
+        {
+            value = value["result"].toMap();
+            line = value["operators"].toString();
+        }
     }
 
-    emit getNetworkOperatorFinished(line);
+    Q_EMIT getNetworkOperatorFinished(line);
     deleteLater();
 }

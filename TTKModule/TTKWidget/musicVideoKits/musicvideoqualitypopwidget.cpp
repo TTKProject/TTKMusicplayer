@@ -1,7 +1,6 @@
 #include "musicvideoqualitypopwidget.h"
 #include "musicvideouiobject.h"
 #include "musicuiobject.h"
-#include "musicnumberdefine.h"
 #include "musicconnectionpool.h"
 #include "musicvideosearchtablewidget.h"
 
@@ -11,7 +10,7 @@ MusicVideoQualityPopWidget::MusicVideoQualityPopWidget(QWidget *parent)
     initWidget();
 
     setFixedSize(44, 20);
-    setStyleSheet(MusicUIObject::MKGVideoBtnSDMode);
+    setStyleSheet(MusicUIObject::MQSSVideoBtnSDMode);
 
     M_CONNECTION_PTR->setValue(getClassName(), this);
     M_CONNECTION_PTR->poolConnect(getClassName(), MusicVideoSearchTableWidget::getClassName());
@@ -28,31 +27,31 @@ void MusicVideoQualityPopWidget::setQualityActionState()
     QList<QAction*> actions = m_actionGroup->actions();
     if(actions.count() >= 4)
     {
-        actions[0]->setEnabled( findExistByBitrate(MB_250) );
-        actions[1]->setEnabled( findExistByBitrate(MB_500) );
-        actions[2]->setEnabled( findExistByBitrate(MB_750) );
-        actions[3]->setEnabled( findExistByBitrate(MB_1000) );
+        actions[0]->setEnabled(findExistByBitrate(MB_250));
+        actions[1]->setEnabled(findExistByBitrate(MB_500));
+        actions[2]->setEnabled(findExistByBitrate(MB_750));
+        actions[3]->setEnabled(findExistByBitrate(MB_1000));
     }
 }
 
 void MusicVideoQualityPopWidget::setQualityText(const QString &url)
 {
-    QString style = MusicUIObject::MKGVideoBtnSDMode;
+    QString style = MusicUIObject::MQSSVideoBtnSDMode;
     switch(findMVBitrateByUrl(url))
     {
-        case MB_250:   style = MusicUIObject::MKGVideoBtnSTMode; break;
-        case MB_500:   style = MusicUIObject::MKGVideoBtnSDMode; break;
-        case MB_750:   style = MusicUIObject::MKGVideoBtnHDMode; break;
-        case MB_1000:  style = MusicUIObject::MKGVideoBtnSQMode; break;
+        case MB_250:   style = MusicUIObject::MQSSVideoBtnSTMode; break;
+        case MB_500:   style = MusicUIObject::MQSSVideoBtnSDMode; break;
+        case MB_750:   style = MusicUIObject::MQSSVideoBtnHDMode; break;
+        case MB_1000:  style = MusicUIObject::MQSSVideoBtnSQMode; break;
         default: break;
     }
-    setStyleSheet( style );
+    setStyleSheet(style);
 }
 
 void MusicVideoQualityPopWidget::movieQualityChoiced(QAction *action)
 {
     QString url;
-    switch( action->data().toInt() )
+    switch(action->data().toInt())
     {
         case 0: url = findMVUrlByBitrate(MB_250); break;
         case 1: url = findMVUrlByBitrate(MB_500); break;
@@ -60,8 +59,8 @@ void MusicVideoQualityPopWidget::movieQualityChoiced(QAction *action)
         case 3: url = findMVUrlByBitrate(MB_1000); break;
         default: break;
     }
-    setQualityText( url );
-    emit mediaUrlChanged( url );
+    setQualityText(url);
+    Q_EMIT mediaUrlChanged(url);
 }
 
 void MusicVideoQualityPopWidget::initWidget()
@@ -83,7 +82,7 @@ void MusicVideoQualityPopWidget::initWidget()
 QString MusicVideoQualityPopWidget::findMVUrlByBitrate(int bitrate)
 {
     MusicObject::MusicSongAttributes data;
-    emit getMusicMediaInfo(data);
+    Q_EMIT getMusicMediaInfo(data);
 
     foreach(const MusicObject::MusicSongAttribute &attr, data)
     {
@@ -98,7 +97,7 @@ QString MusicVideoQualityPopWidget::findMVUrlByBitrate(int bitrate)
 int MusicVideoQualityPopWidget::findMVBitrateByUrl(const QString &url)
 {
     MusicObject::MusicSongAttributes data;
-    emit getMusicMediaInfo(data);
+    Q_EMIT getMusicMediaInfo(data);
 
     foreach(const MusicObject::MusicSongAttribute &attr, data)
     {
@@ -114,7 +113,7 @@ int MusicVideoQualityPopWidget::findMVBitrateByUrl(const QString &url)
 bool MusicVideoQualityPopWidget::findExistByBitrate(int bitrate)
 {
     MusicObject::MusicSongAttributes data;
-    emit getMusicMediaInfo(data);
+    Q_EMIT getMusicMediaInfo(data);
 
     foreach(const MusicObject::MusicSongAttribute &attr, data)
     {

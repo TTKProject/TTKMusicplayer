@@ -7,9 +7,9 @@ MusicXSPFConfigManager::MusicXSPFConfigManager(QObject *parent)
 
 }
 
-void MusicXSPFConfigManager::readPlaylistData(MusicSongItems &items)
+bool MusicXSPFConfigManager::readPlaylistData(MusicSongItems &items)
 {
-    const QDomNodeList &trackNodes = m_document->elementsByTagName("trackList");
+    const QDomNodeList &trackNodes = m_document->elementsByTagName(m_nodeHelper->nodeName("trackList"));
     for(int i=0; i<trackNodes.count(); ++i)
     {
         const QDomNode &node = trackNodes.at(i);
@@ -22,27 +22,26 @@ void MusicXSPFConfigManager::readPlaylistData(MusicSongItems &items)
 
         const QString &string = element.attribute("sortIndex");
         item.m_sort.m_index = string.isEmpty() ? -1 : string.toInt();
-        item.m_sort.m_sortType = MStatic_cast(Qt::SortOrder, element.attribute("sortType").toInt());
+        item.m_sort.m_sortType = TTKStatic_cast(Qt::SortOrder, element.attribute("sortType").toInt());
         items << item;
     }
+    return true;
 }
 
-void MusicXSPFConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
+bool MusicXSPFConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
 {
     if(items.isEmpty() || !writeConfig(path))
     {
-        return;
+        return false;
     }
     //
     createProcessingInstruction();
     //
     QDomElement musicPlayerDom = createRoot("playlist");
-    //Class A
     writeDomText(musicPlayerDom, "creator", APP_NAME);
     for(int i=0; i<items.count(); ++i)
     {
         const MusicSongItem &item = items[i];
-        //Class A
         QDomElement trackListDom = writeDomElementMutil(musicPlayerDom, "trackList", MusicXmlAttributes()
                                                        << MusicXmlAttribute("name", item.m_itemName) << MusicXmlAttribute("index", i)
                                                        << MusicXmlAttribute("count", item.m_songs.count())
@@ -51,7 +50,6 @@ void MusicXSPFConfigManager::writePlaylistData(const MusicSongItems &items, cons
 
         foreach(const MusicSong &song, items[i].m_songs)
         {
-            //Class B
             QDomElement trackDom = writeDomElementMutil(trackListDom, "track", MusicXmlAttributes()
                                                         << MusicXmlAttribute("name", song.getMusicName())
                                                         << MusicXmlAttribute("playCount", song.getMusicPlayCount())
@@ -69,6 +67,7 @@ void MusicXSPFConfigManager::writePlaylistData(const MusicSongItems &items, cons
 
     QTextStream out(m_file);
     m_document->save(out, 4);
+    return true;
 }
 
 MusicSongs MusicXSPFConfigManager::readMusicFilePath(const QDomNode &node) const

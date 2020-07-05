@@ -34,12 +34,12 @@ bool MusicUserModel::addUser(const MusicUserUIDItem &uid, const QString &pwd, co
     if(submitAll())
     {
         database().commit();
-        M_LOGGER_INFO("submit successfully");
+        TTK_LOGGER_INFO("submit successfully");
         return true;
     }
     else
     {
-        M_LOGGER_INFO("submit failed");
+        TTK_LOGGER_INFO("submit failed");
         database().rollback();
         return false;
     }
@@ -66,12 +66,12 @@ bool MusicUserModel::addUser(const MusicUserInfoRecord &info)
     if(submitAll())
     {
         database().commit();
-        M_LOGGER_INFO("submit successfully");
+        TTK_LOGGER_INFO("submit successfully");
         return true;
     }
     else
     {
-        M_LOGGER_INFO("submit failed");
+        TTK_LOGGER_INFO("submit failed");
         database().rollback();
         return false;
     }
@@ -79,7 +79,7 @@ bool MusicUserModel::addUser(const MusicUserInfoRecord &info)
 
 bool MusicUserModel::updateUser(const MusicUserUIDItem &uid, const QString &pwd, const QString &mail, const QString &name, const QString &time, bool pwdMask)
 {
-    MVariantMap map;
+    TTKVariantMap map;
     map["USERNAME"] = name;
     map["PASSWD"] = pwd.isEmpty() ? QString() : (pwdMask ? pwd : userPasswordEncryption(pwd));
     map["EMAIL"] = mail;
@@ -89,7 +89,7 @@ bool MusicUserModel::updateUser(const MusicUserUIDItem &uid, const QString &pwd,
 
 bool MusicUserModel::updateUser(const MusicUserUIDItem &uid, const QString &name, const QString &sex, const QString &birth, const QString &city, const QString &country, const QString &sign)
 {
-    MVariantMap map;
+    TTKVariantMap map;
     map["USERNAME"] = name;
     map["SEX"] = sex;
     map["BIRTHDAY"] = birth;
@@ -101,21 +101,21 @@ bool MusicUserModel::updateUser(const MusicUserUIDItem &uid, const QString &name
 
 bool MusicUserModel::updateUser(const MusicUserInfoRecord &info)
 {
-    MVariantMap map;
+    TTKVariantMap map;
     map["USERNAME"] = info.m_nickName;
     return updateRecordData(info.m_item, map);
 }
 
 bool MusicUserModel::updateUserIcon(const MusicUserUIDItem &uid, const QString &icon)
 {
-    MVariantMap map;
+    TTKVariantMap map;
     map["ICON"] = icon;
     return updateRecordData(uid, map);
 }
 
 bool MusicUserModel::updateUserPwd(const MusicUserUIDItem &uid, const QString &pwd, bool pwdMask)
 {
-    MVariantMap map;
+    TTKVariantMap map;
     map["PASSWD"] = pwd.isEmpty() ? QString() : (pwdMask ? pwd : userPasswordEncryption(pwd));
     return updateRecordData(uid, map);
 }
@@ -153,7 +153,7 @@ bool MusicUserModel::mailCheck(const MusicUserUIDItem &uid, const QString &mail)
 
 QString MusicUserModel::userPasswordEncryption(const QString &pwd) const
 {
-    return MusicUtils::Algorithm::md5( pwd.toUtf8() ).toHex();
+    return MusicUtils::Algorithm::md5(pwd.toUtf8()).toHex();
 }
 
 QStringList MusicUserModel::getAllUsers()
@@ -166,7 +166,8 @@ QStringList MusicUserModel::getAllUsers()
     {
         users.insert(record(i).value("USERID").toString());
     }
-    return users.toList();
+
+    return users.values();
 }
 
 QStringList MusicUserModel::getAllCities()
@@ -180,7 +181,7 @@ QStringList MusicUserModel::getAllCities()
         cities << record(i).value("CITYNAME").toString();
     }
 
-    return cities.toList();
+    return cities.values();
 }
 
 QStringList MusicUserModel::getAllCountries(const QString &city)
@@ -207,7 +208,7 @@ QString MusicUserModel::getRecordData(const MusicUserUIDItem &uid, const QString
     return record(0).value(field).toString();
 }
 
-bool MusicUserModel::updateRecordData(const MusicUserUIDItem &uid, const MVariantMap &data)
+bool MusicUserModel::updateRecordData(const MusicUserUIDItem &uid, const TTKVariantMap &data)
 {
     if(databaseSelectedFilter(uid))
     {

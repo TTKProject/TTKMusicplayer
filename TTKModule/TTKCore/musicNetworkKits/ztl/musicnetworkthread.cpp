@@ -23,7 +23,7 @@ MusicNetworkThread::~MusicNetworkThread()
 
 void MusicNetworkThread::start()
 {
-    M_LOGGER_INFO("Load NetworkThread");
+    TTK_LOGGER_INFO("Load NetworkThread");
     m_timer.start(NETWORK_DETECT_INTERVAL);
 }
 
@@ -40,6 +40,6 @@ void MusicNetworkThread::networkStateChanged()
         const QHostInfo &info = QHostInfo::fromName(NETWORK_REQUEST_ADDRESS);
         m_networkState = !info.addresses().isEmpty();
         m_networkState = block ? false : m_networkState;
-        emit networkConnectionStateChanged(m_networkState);
+        Q_EMIT networkConnectionStateChanged(m_networkState);
     });
 }

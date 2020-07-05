@@ -19,8 +19,8 @@ MusicLrcFloatPlayWidget::MusicLrcFloatPlayWidget(QWidget *parent)
     layout->addWidget(m_musicNext);
     setLayout(layout);
 
-    m_musicPrevious->setStyleSheet(MusicUIObject::MKGBtnPrevious);
-    m_musicNext->setStyleSheet(MusicUIObject::MKGBtnNext);
+    m_musicPrevious->setStyleSheet(MusicUIObject::MQSSBtnPrevious);
+    m_musicNext->setStyleSheet(MusicUIObject::MQSSBtnNext);
 
     m_musicPrevious->setCursor(QCursor(Qt::PointingHandCursor));
     m_musicKey->setCursor(QCursor(Qt::PointingHandCursor));
@@ -53,8 +53,8 @@ MusicLrcFloatPlayWidget::~MusicLrcFloatPlayWidget()
 
 void MusicLrcFloatPlayWidget::resizeWindow(int width, int height)
 {
-    m_rectIn = QRect((width - this->width())/2, height - this->height(), 145, 60);
-    m_rectOut = QRect((width - this->width())/2, height - 5, 145, 60);
+    m_rectIn = QRect((width - this->width()) / 2, height - this->height(), 145, 60);
+    m_rectOut = QRect((width - this->width()) / 2, height - 5, 145, 60);
 
     setGeometry(m_rectOut);
 
@@ -80,5 +80,5 @@ void MusicLrcFloatPlayWidget::enterEvent(QEvent *event)
 void MusicLrcFloatPlayWidget::setCurrentPlayState()
 {
     MusicApplication *w = MusicApplication::instance();
-    m_musicKey->setStyleSheet(w->isPlaying() ? MusicUIObject::MKGBtnPause : MusicUIObject::MKGBtnPlay);
+    m_musicKey->setStyleSheet(w->isPlaying() ? MusicUIObject::MQSSBtnPause : MusicUIObject::MQSSBtnPlay);
 }

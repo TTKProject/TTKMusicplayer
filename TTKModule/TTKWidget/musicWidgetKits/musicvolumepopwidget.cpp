@@ -1,7 +1,6 @@
 #include "musicvolumepopwidget.h"
 #include "musicfunctionuiobject.h"
 #include "musicuiobject.h"
-#include "musicnumberdefine.h"
 #include "musicclickedslider.h"
 #include "musicwidgetheaders.h"
 
@@ -28,7 +27,7 @@ void MusicVolumePopWidget::setValue(int value)
     m_volumeSlider->setValue(value);
     m_volumeSlider->blockSignals(false);
 
-    QString style = MusicUIObject::MKGBtnSound;
+    QString style = MusicUIObject::MQSSBtnSound;
     if(66 < value && value <=100)
     {
         style += "QToolButton{ margin-left:-60px; }";
@@ -57,7 +56,7 @@ int MusicVolumePopWidget::value() const
 void MusicVolumePopWidget::leaveEvent(QEvent *event)
 {
     MusicToolMenuWidget::leaveEvent(event);
-    QTimer::singleShot(500*MT_MS, m_menu, SLOT(close()));
+    QTimer::singleShot(500 * MT_MS, m_menu, SLOT(close()));
 }
 
 void MusicVolumePopWidget::enterEvent(QEvent *event)
@@ -67,7 +66,7 @@ void MusicVolumePopWidget::enterEvent(QEvent *event)
     {
         m_menuShown = true;
         popupMenu();
-        QTimer::singleShot(500*MT_MS, this, SLOT(timeToResetFlag()));
+        QTimer::singleShot(500 * MT_MS, this, SLOT(timeToResetFlag()));
     }
 }
 
@@ -87,7 +86,7 @@ void MusicVolumePopWidget::initWidget()
     m_volumeSlider = new MusicClickedSlider(Qt::Vertical, this);
     m_volumeSlider->setCursor(QCursor(Qt::PointingHandCursor));
     m_volumeSlider->setRange(0, 100);
-    m_volumeSlider->setStyleSheet(MusicUIObject::MSliderStyle02);
+    m_volumeSlider->setStyleSheet(MusicUIObject::MQSSSliderStyle02);
 
     connect(m_volumeSlider, SIGNAL(valueChanged(int)), SIGNAL(musicVolumeChanged(int)));
 

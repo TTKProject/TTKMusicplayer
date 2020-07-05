@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musicobject.h \
     $$PWD/musicformats.h \
@@ -32,7 +31,7 @@ HEADERS  += \
     $$PWD/musicabstractthread.h \
     $$PWD/musicsettingmanager.h \
     $$PWD/musicconnectionpool.h \
-    $$PWD/musicregeditmanager.h \
+    $$PWD/musicplatformmanager.h \
     $$PWD/musicsingleton.h \
     $$PWD/musiccoremplayer.h \
     $$PWD/musicsong.h \
@@ -40,20 +39,17 @@ HEADERS  += \
     $$PWD/musiccryptographichash.h \
     $$PWD/musicbackgroundmanager.h \
     $$PWD/musicsemaphoreloop.h \
-    $$PWD/musiccategoryconfigmanager.h \
-    $$PWD/musiclicenseobject.h \
+    $$PWD/musiccategoryconfigmanager.h  \
     $$PWD/musicplaylistmanager.h \
     $$PWD/musichotkeymanager.h \
     $$PWD/musicruntimemanager.h \
     $$PWD/musicdispatchmanager.h \
     $$PWD/musicextractwrap.h \
     $$PWD/musicbackgroundconfigmanager.h \
-    $$PWD/musicsysconfigmanager.h \
+    $$PWD/musicconfigmanager.h \
     $$PWD/musicsinglemanager.h
 
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
     $$PWD/musicformats.cpp \
     $$PWD/musictime.cpp \
@@ -62,22 +58,20 @@ SOURCES += \
     $$PWD/musicabstractxml.cpp \
     $$PWD/musicabstractthread.cpp \
     $$PWD/musicconnectionpool.cpp \
-    $$PWD/musicregeditmanager.cpp \
+    $$PWD/musicplatformmanager.cpp \
     $$PWD/musiccoremplayer.cpp \
+    $$PWD/musicsingleton.cpp \
     $$PWD/musicsong.cpp \
     $$PWD/musicsongtag.cpp \
     $$PWD/musiccryptographichash.cpp \
     $$PWD/musicbackgroundmanager.cpp \
     $$PWD/musicsemaphoreloop.cpp \
     $$PWD/musiccategoryconfigmanager.cpp \
-    $$PWD/musiclicenseobject.cpp \
     $$PWD/musicplaylistmanager.cpp \
     $$PWD/musichotkeymanager.cpp \
     $$PWD/musicruntimemanager.cpp \
     $$PWD/musicdispatchmanager.cpp \
     $$PWD/musicextractwrap.cpp \
     $$PWD/musicbackgroundconfigmanager.cpp \
-    $$PWD/musicsysconfigmanager.cpp \
+    $$PWD/musicconfigmanager.cpp \
     $$PWD/musicsinglemanager.cpp
-
-}

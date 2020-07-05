@@ -1,7 +1,4 @@
 #include "musickwtextdownloadthread.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicKWTextDownLoadThread::MusicKWTextDownLoadThread(const QString &url, const QString &save, MusicObject::DownloadType  type, QObject *parent)
     : MusicDownLoadThreadAbstract(url, save, type, parent)
@@ -15,7 +12,7 @@ void MusicKWTextDownLoadThread::startToDownload()
     {
         if(m_file->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
-            m_timer.start(MT_S2MS);
+            m_speedTimer.start(MT_S2MS);
             m_manager = new QNetworkAccessManager(this);
 
             QNetworkRequest request;
@@ -31,8 +28,8 @@ void MusicKWTextDownLoadThread::startToDownload()
         }
         else
         {
-            emit downLoadDataChanged("The kuwo text file create failed");
-            M_LOGGER_ERROR(QString("%1 file create failed!").arg(getClassName()));
+            Q_EMIT downLoadDataChanged("The kuwo text file create failed");
+            TTK_LOGGER_ERROR(QString("%1 file create failed!").arg(getClassName()));
             deleteAll();
         }
     }
@@ -45,7 +42,7 @@ void MusicKWTextDownLoadThread::downLoadFinished()
         deleteAll();
         return;
     }
-    m_timer.stop();
+    m_speedTimer.stop();
 
     if(m_reply->error() == QNetworkReply::NoError)
     {
@@ -70,18 +67,23 @@ void MusicKWTextDownLoadThread::downLoadFinished()
 
             QTextStream outstream(m_file);
             outstream.setCodec("utf-8");
-            outstream << lrcData << endl;
+            outstream << lrcData;
+#if TTK_QT_VERSION_CHECK(5,15,0)
+            outstream << Qt::endl;
+#else
+            outstream << endl;
+#endif
             m_file->close();
-            M_LOGGER_INFO(QString("%1 download has finished!").arg(getClassName()));
+            TTK_LOGGER_INFO(QString("%1 download has finished!").arg(getClassName()));
         }
         else
         {
-            M_LOGGER_ERROR(QString("%1 download file error!").arg(getClassName()));
+            TTK_LOGGER_ERROR(QString("%1 download file error!").arg(getClassName()));
             m_file->remove();
             m_file->close();
         }
     }
 
-    emit downLoadDataChanged( transferData() );
+    Q_EMIT downLoadDataChanged(mapCurrentQueryData());
     deleteAll();
 }

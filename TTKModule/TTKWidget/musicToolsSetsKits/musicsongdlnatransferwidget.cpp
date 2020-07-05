@@ -4,22 +4,23 @@
 #include "musicuiobject.h"
 #include "musicsongssummariziedwidget.h"
 
-#include "qdlna/dlnafinder.h"
-#include "qdlna/dlnaclient.h"
-#include "qdlna/dlnafileserver.h"
+#include "qdlna/qdlnafinder.h"
+#include "qdlna/qdlnaclient.h"
+#include "qdlna/qdlnafileserver.h"
 
 MusicSongDlnaTransferWidget::MusicSongDlnaTransferWidget(QWidget *parent)
     : MusicAbstractMoveWidget(parent),
       m_ui(new Ui::MusicSongDlnaTransferWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_isPlaying = false;
     m_currentPlayIndex = -1;
     m_musicSongs = nullptr;
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
@@ -30,10 +31,10 @@ MusicSongDlnaTransferWidget::MusicSongDlnaTransferWidget(QWidget *parent)
     m_ui->nextButton->setIcon(QIcon(":/functions/btn_next_hover"));
     m_ui->refreshButton->setIcon(QIcon(":/functions/btn_fresh_fore_hover"));
 
-    m_ui->playButton->setStyleSheet(MusicUIObject::MBackgroundStyle01);
-    m_ui->previousButton->setStyleSheet(MusicUIObject::MBackgroundStyle01);
-    m_ui->nextButton->setStyleSheet(MusicUIObject::MBackgroundStyle01);
-    m_ui->refreshButton->setStyleSheet(MusicUIObject::MBackgroundStyle01);
+    m_ui->playButton->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
+    m_ui->previousButton->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
+    m_ui->nextButton->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
+    m_ui->refreshButton->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
 
 #ifdef Q_OS_UNIX
     m_ui->playButton->setFocusPolicy(Qt::NoFocus);
@@ -52,15 +53,15 @@ MusicSongDlnaTransferWidget::MusicSongDlnaTransferWidget(QWidget *parent)
     m_ui->nextButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->refreshButton->setCursor(QCursor(Qt::PointingHandCursor));
 
-    m_ui->deviceComboBox->setStyleSheet(MusicUIObject::MComboBoxStyle02);
-    m_ui->timeSlider->setStyleSheet(MusicUIObject::MSliderStyle10);
+    m_ui->deviceComboBox->setStyleSheet(MusicUIObject::MQSSComboBoxStyle02);
+    m_ui->timeSlider->setStyleSheet(MusicUIObject::MQSSSliderStyle10);
     m_ui->timeSlider->setValue(0);
 
     m_ui->deviceComboBox->addItem(tr("No Connections"));
     m_ui->deviceComboBox->setEnabled(false);
 
-    m_dlnaFinder = new DlnaFinder(this);
-    m_dlnaFileServer = new DlnaFileServer(this);
+    m_dlnaFinder = new QDlnaFinder(this);
+    m_dlnaFileServer = new QDlnaFileServer(this);
     startToScan();
     m_dlnaFileServer->start();
 
@@ -128,7 +129,7 @@ void MusicSongDlnaTransferWidget::musicPlay()
     }
 
     MusicSongItems songs;
-    emit getMusicLists(songs);
+    Q_EMIT getMusicLists(songs);
 
     if(songs.empty())
     {
@@ -145,10 +146,9 @@ void MusicSongDlnaTransferWidget::musicPlay()
     const MusicSong &song = (*m_musicSongs)[m_currentPlayIndex];
     QFileInfo info(song.getMusicPath());
 
-    M_LOGGER_INFO(song.getMusicPath());
-    DlnaClient *client = m_dlnaFinder->client(index);
+    QDlnaClient *client = m_dlnaFinder->client(index);
     m_dlnaFileServer->setPrefixPath(info.path());
-    client->tryToPlayFile(m_dlnaFileServer->getLocalAddress() + info.fileName());
+    client->tryToPlayFile(m_dlnaFileServer->getLocalAddress(client->server()) + info.fileName());
 
 //    m_isPlaying = !m_isPlaying;
 //    m_ui->playButton->setIcon(QIcon(m_isPlaying ? ":/functions/btn_pause_hover" : ":/functions/btn_play_hover"));

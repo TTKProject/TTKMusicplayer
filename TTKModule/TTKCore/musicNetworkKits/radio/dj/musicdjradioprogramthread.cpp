@@ -1,6 +1,4 @@
 #include "musicdjradioprogramthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 #include <QDateTime>
 
@@ -16,12 +14,12 @@ void MusicDJRadioProgramThread::startToDownload(MusicObject::Program type)
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request, type == MusicObject::Recommed ?
                       MusicUtils::Algorithm::mdII(DJ_RECOMMEND_N_URL, false):
                       MusicUtils::Algorithm::mdII(DJ_HOT_N_URL, false),
                       MusicUtils::Algorithm::mdII(DJ_HOT_NDT_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->post(request, parameter);
@@ -72,13 +70,13 @@ void MusicDJRadioProgramThread::downLoadFinished()
                     item.m_updateTime = QDateTime::fromMSecsSinceEpoch(value["createTime"].toULongLong()).toString(MUSIC_YEAR_FORMAT);
                     item.m_playCount = value["subCount"].toString();
 
-                    emit createProgramItem(item);
+                    Q_EMIT createProgramItem(item);
                     m_items << item;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

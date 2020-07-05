@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,6 @@ namespace Ui {
 class MusicEqualizerDialog;
 }
 
-class QSlider;
-class QSignalMapper;
-
 /*! @brief The class of the equalizer widget.
  * @author Greedysky <greedysky@163.com>
  */
@@ -50,11 +47,11 @@ Q_SIGNALS:
     /*!
      * Current equlizer parameters changed emit.
      */
-    void setEqEffect(const MIntList &effect);
+    void setEqEffect(const TTKIntList &effect);
     /*!
      * Set equlizer enable state changed emit.
      */
-    void setEnaleEffect(bool enable);
+    void setEnabledEffect(bool enable);
 
 public Q_SLOTS:
     /*!
@@ -80,17 +77,13 @@ public Q_SLOTS:
 
 protected:
     /*!
-     * Init widget and parameters.
+     * Init parameters.
      */
-    void init();
-    /*!
-     * Init and create slider.
-     */
-    void initSlider(QSlider *slider, int index);
+    void initialize();
     /*!
      * Enable or disable control state.
      */
-    void setControlEnable(bool enable) const;
+    void setControlEnabled(bool enable) const;
     /*!
      * Read equalizer info from config.
      */
@@ -106,13 +99,12 @@ protected:
     /*!
      * Emit current equalizer parameters value.
      */
-    void emitParameter();
+    void parameterSubmit();
 
     Ui::MusicEqualizerDialog *m_ui;
     bool m_eable;
     bool m_eqChoiceSelected;
-    MIntList m_equalizeValue;
-    QSignalMapper *m_signalMapper;
+    TTKIntList m_equalizeValue;
 
 };
 

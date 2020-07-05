@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,8 +23,6 @@
 #include <QGridLayout>
 #include "musicuiobject.h"
 #include "musicbackgroundconfigmanager.h"
-
-#define CURRENT_ITEMS_COUNT         47
 
 /*! @brief The class of the background list item.
  * @author Greedysky <greedysky@163.com>
@@ -81,29 +79,29 @@ public:
     /*!
      * Select the current item enable or not.
      */
-    void setSelectEnable(bool s);
+    void setSelectEnabled(bool s);
     /*!
      * Get current selected item state.
      */
-    inline bool isSelectEnable() const { return m_selectedMask; }
+    inline bool isSelectEnabled() const { return m_selectedMask; }
 
     /*!
      * Close option set the current item.
      */
-    void setCloseEnable(bool s);
+    void setCloseEnabled(bool s);
     /*!
      * Get close option set the current item.
      */
-    inline bool isCloseEnable() const { return m_closeSet; }
+    inline bool isCloseEnabled() const { return m_closeSet; }
 
     /*!
      * Show title name set the current item.
      */
-    void setShowNameEnable(bool s);
+    void setShowNameEnabled(bool s);
     /*!
      * Get show title name set the current item.
      */
-    inline bool isShowNameEnable() const { return m_showNameMask; }
+    inline bool isShowNameEnabled() const { return m_showNameMask; }
 
 Q_SIGNALS:
     /*!
@@ -169,6 +167,7 @@ public:
      * Create item by icon.
      */
     void createItem(const QString &icon, bool state);
+
     /*!
      * Update item by backgroud image.
      */
@@ -223,7 +222,7 @@ private Q_SLOTS:
     void itemHasClicked(MusicBackgroundListItem *item);
 
 protected:
-    QGridLayout *m_layout;
+    QGridLayout *m_gridLayout;
     MusicBackgroundListItem *m_currentItem;
     QList<MusicBackgroundListItem*> m_items;
 

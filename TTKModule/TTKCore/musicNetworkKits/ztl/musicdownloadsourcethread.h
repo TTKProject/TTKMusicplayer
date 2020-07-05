@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
+
 #include "musicnetworkabstract.h"
 
 /*! @brief The class of source data download thread.
@@ -39,16 +40,6 @@ public:
      * Start to download data.
      */
     void startToDownload(const QString &url);
-
-Q_SIGNALS:
-    /*!
-     * Send download byte data from net.
-     */
-    void downLoadByteDataChanged(const QByteArray &data);
-    /*!
-     * Send download ext data from net.
-     */
-    void downLoadExtDataChanged(const QByteArray &data, const QVariantMap &ext);
 
 public Q_SLOTS:
     /*!

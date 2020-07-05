@@ -8,22 +8,23 @@ MusicLrcColorWidget::MusicLrcColorWidget(QWidget *parent)
       m_ui(new Ui::MusicLrcColorWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
     m_ui->listWidget->setFrameShape(QFrame::NoFrame);
     m_ui->listWidget->setSpacing(1);
 
-    m_ui->addButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->deleteButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->modifyButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->upButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->downButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->confirmButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->addButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->deleteButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->modifyButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->upButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->downButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->confirmButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->addButton->setFocusPolicy(Qt::NoFocus);
@@ -55,7 +56,11 @@ void MusicLrcColorWidget::setColors(const QList<QColor> &colors)
     foreach(const QColor &color, colors)
     {
         QListWidgetItem *it = new QListWidgetItem(m_ui->listWidget);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        it->setBackground(color);
+#else
         it->setBackgroundColor(color);
+#endif
         m_ui->listWidget->addItem(it);
     }
 }
@@ -65,7 +70,11 @@ QList<QColor> MusicLrcColorWidget::getColors() const
     QList<QColor> colors;
     for(int i=0; i<m_ui->listWidget->count(); ++i)
     {
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        colors << m_ui->listWidget->item(i)->background().color();
+#else
         colors << m_ui->listWidget->item(i)->backgroundColor();
+#endif
     }
     return colors;
 }
@@ -77,7 +86,11 @@ void MusicLrcColorWidget::addButtonClicked()
     {
         const QColor &color = getColor.color();
         QListWidgetItem *it = new QListWidgetItem(m_ui->listWidget);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        it->setBackground(color);
+#else
         it->setBackgroundColor(color);
+#endif
         m_ui->listWidget->addItem(it);
     }
 }
@@ -100,7 +113,11 @@ void MusicLrcColorWidget::modifyButtonClicked()
         QListWidgetItem *it = m_ui->listWidget->currentItem();
         if(it)
         {
+#if TTK_QT_VERSION_CHECK(5,13,0)
+            it->setBackground(color);
+#else
             it->setBackgroundColor(color);
+#endif
         }
     }
 }

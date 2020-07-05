@@ -33,15 +33,12 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_KITS_HEADERS
     ${MUSIC_WIDGET_DIR}/musicalbumfoundwidget.h
     ${MUSIC_WIDGET_DIR}/musicsoundeffectswidget.h
     ${MUSIC_WIDGET_DIR}/musicartistfoundwidget.h
-    ${MUSIC_WIDGET_DIR}/musicsonglistsharingwidget.h
-    ${MUSIC_WIDGET_DIR}/musicsonglistenhancelosslesswidget.h
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundwidget.h
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundcategorypopwidget.h
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundcommentswidget.h
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundinfowidget.h
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundtablewidget.h
     ${MUSIC_WIDGET_DIR}/musicmessageaboutdialog.h
-    ${MUSIC_WIDGET_DIR}/musicpagingwidgetobject.h
     ${MUSIC_WIDGET_DIR}/musicbackgroundremotewidget.h
     ${MUSIC_WIDGET_DIR}/musicfuntionanimationwidget.h
     ${MUSIC_WIDGET_DIR}/musicsongslistplayedwidget.h
@@ -52,6 +49,7 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_KITS_HEADERS
     ${MUSIC_WIDGET_DIR}/musicartistlistfoundwidget.h
     ${MUSIC_WIDGET_DIR}/musicartistlistfoundcategorypopwidget.h
     ${MUSIC_WIDGET_DIR}/musicripplespecturmobject.h
+    ${MUSIC_WIDGET_DIR}/musicpluginwidget.h
   )
 
 set_property(GLOBAL PROPERTY MUSIC_WIDGET_KITS_SOURCES
@@ -87,15 +85,12 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_KITS_SOURCES
     ${MUSIC_WIDGET_DIR}/musicalbumfoundwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicsoundeffectswidget.cpp
     ${MUSIC_WIDGET_DIR}/musicartistfoundwidget.cpp
-    ${MUSIC_WIDGET_DIR}/musicsonglistsharingwidget.cpp
-    ${MUSIC_WIDGET_DIR}/musicsonglistenhancelosslesswidget.cpp
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundcategorypopwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundcommentswidget.cpp
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundinfowidget.cpp
     ${MUSIC_WIDGET_DIR}/musicplaylistfoundtablewidget.cpp
     ${MUSIC_WIDGET_DIR}/musicmessageaboutdialog.cpp
-    ${MUSIC_WIDGET_DIR}/musicpagingwidgetobject.cpp
     ${MUSIC_WIDGET_DIR}/musicbackgroundremotewidget.cpp
     ${MUSIC_WIDGET_DIR}/musicfuntionanimationwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicsongslistplayedwidget.cpp
@@ -106,5 +101,6 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_KITS_SOURCES
     ${MUSIC_WIDGET_DIR}/musicartistlistfoundwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicartistlistfoundcategorypopwidget.cpp
     ${MUSIC_WIDGET_DIR}/musicripplespecturmobject.cpp
+    ${MUSIC_WIDGET_DIR}/musicpluginwidget.cpp
   )
   

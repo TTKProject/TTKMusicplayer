@@ -1,8 +1,5 @@
 #include "musicdownloadquerywyplaylistthread.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryWYPlaylistThread::MusicDownLoadQueryWYPlaylistThread(QObject *parent)
     : MusicDownLoadQueryPlaylistThread(parent)
@@ -31,18 +28,18 @@ void MusicDownLoadQueryWYPlaylistThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     m_pageTotal = 0;
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(WY_PL_N_URL, false),
                       MusicUtils::Algorithm::mdII(WY_PL_NDT_URL, false).arg(m_searchText).arg(m_pageSize).arg(m_pageSize*offset));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->post(request, parameter);
@@ -57,16 +54,16 @@ void MusicDownLoadQueryWYPlaylistThread::startToSearch(const QString &playlist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(playlist));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(playlist));
 
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(WY_PL_ATTR_N_URL, false),
                       MusicUtils::Algorithm::mdII(WY_PL_ATTR_NDT_URL, false).arg(playlist));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     QNetworkReply *reply = m_manager->post(request, parameter);
@@ -81,14 +78,14 @@ void MusicDownLoadQueryWYPlaylistThread::getPlaylistInfo(MusicResultsItem &item)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 getPlaylistInfo %2").arg(getClassName()).arg(item.m_id));
+    TTK_LOGGER_INFO(QString("%1 getPlaylistInfo %2").arg(getClassName()).arg(item.m_id));
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(WY_PL_ATTR_N_URL, false),
                       MusicUtils::Algorithm::mdII(WY_PL_ATTR_NDT_URL, false).arg(item.m_id));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     MusicSemaphoreLoop loop;
@@ -142,8 +139,8 @@ void MusicDownLoadQueryWYPlaylistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -193,22 +190,22 @@ void MusicDownLoadQueryWYPlaylistThread::downLoadFinished()
                     value = value["creator"].toMap();
                     item.m_nickName = value["nickname"].toString();
 
-                    emit createPlaylistItem(item);
+                    Q_EMIT createPlaylistItem(item);
                 }
             }
         }
     }
 
-//    emit downLoadDataChanged(QString());
+//    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
 void MusicDownLoadQueryWYPlaylistThread::getDetailsFinished()
 {
-    QNetworkReply *reply = MObject_cast(QNetworkReply*, QObject::sender());
+    QNetworkReply *reply = TTKObject_cast(QNetworkReply*, QObject::sender());
 
-    M_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -261,9 +258,9 @@ void MusicDownLoadQueryWYPlaylistThread::getDetailsFinished()
                     musicInfo.m_discNumber = value["cd"].toString();
                     musicInfo.m_trackNumber = value["no"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttributeNew(&musicInfo, value, m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -276,12 +273,12 @@ void MusicDownLoadQueryWYPlaylistThread::getDetailsFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
 }

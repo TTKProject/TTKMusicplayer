@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,35 +88,35 @@ public:
     /*!
      * Get user logintime.
      */
-    inline QString getUserLogTime(const MusicUserUIDItem &uid) { return getRecordData(uid, "LOGINTIME");}
+    inline QString getUserLogTime(const MusicUserUIDItem &uid) { return getRecordData(uid, "LOGINTIME"); }
     /*!
      * Get user name.
      */
-    inline QString getUserName(const MusicUserUIDItem &uid) { return getRecordData(uid, "USERNAME");}
+    inline QString getUserName(const MusicUserUIDItem &uid) { return getRecordData(uid, "USERNAME"); }
     /*!
      * Get user sex.
      */
-    inline QString getUserSex(const MusicUserUIDItem &uid) { return getRecordData(uid, "SEX");}
+    inline QString getUserSex(const MusicUserUIDItem &uid) { return getRecordData(uid, "SEX"); }
     /*!
      * Get user city.
      */
-    inline QString getUserCity(const MusicUserUIDItem &uid) { return getRecordData(uid, "CITY");}
+    inline QString getUserCity(const MusicUserUIDItem &uid) { return getRecordData(uid, "CITY"); }
     /*!
      * Get user country.
      */
-    inline QString getUserCountry(const MusicUserUIDItem &uid) { return getRecordData(uid, "COUNTRY");}
+    inline QString getUserCountry(const MusicUserUIDItem &uid) { return getRecordData(uid, "COUNTRY"); }
     /*!
      * Get user birthday.
      */
-    inline QString getUserBirthday(const MusicUserUIDItem &uid) { return getRecordData(uid, "BIRTHDAY");}
+    inline QString getUserBirthday(const MusicUserUIDItem &uid) { return getRecordData(uid, "BIRTHDAY"); }
     /*!
      * Get user signature.
      */
-    inline QString getUserSignature(const MusicUserUIDItem &uid) { return getRecordData(uid, "SIGNATURE");}
+    inline QString getUserSignature(const MusicUserUIDItem &uid) { return getRecordData(uid, "SIGNATURE"); }
     /*!
      * Get user password by md5 mut.
      */
-    inline QString getUserPWDMD5(const MusicUserUIDItem &uid) { return getRecordData(uid, "PASSWD");}
+    inline QString getUserPWDMD5(const MusicUserUIDItem &uid) { return getRecordData(uid, "PASSWD"); }
     /*!
      * Get user icon.
      */
@@ -147,7 +147,7 @@ protected:
     /*!
      * Update record data by uid and field and data.
      */
-    bool updateRecordData(const MusicUserUIDItem &uid, const MVariantMap &data);
+    bool updateRecordData(const MusicUserUIDItem &uid, const TTKVariantMap &data);
     /*!
      * Set current database table by given uid.
      */

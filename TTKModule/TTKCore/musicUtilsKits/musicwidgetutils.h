@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
+class QPainter;
 class QComboBox;
 
 #include "musicobject.h"
-#include "musicnumberdefine.h"
 #include "musicglobaldefine.h"
 
 /*! @brief The namespace of the utils widget.
@@ -32,6 +32,10 @@ namespace MusicUtils
 {
     namespace Widget
     {
+        /*!
+         * Set widget border shadow.
+         */
+        MUSIC_UTILS_EXPORT void setBorderShadow(QWidget *widget, QPainter *painter);
         /*!
          * Set widget label font.
          */
@@ -45,6 +49,20 @@ namespace MusicUtils
          */
         MUSIC_UTILS_EXPORT QString elidedText(const QFont &font, const QString &text, Qt::TextElideMode mode, int width);
         /*!
+         * Get text width by font.
+         */
+        MUSIC_UTILS_EXPORT int fontTextWidth(const QFont &font, const QString &text);
+        /*!
+         * Get font height by font.
+         */
+        MUSIC_UTILS_EXPORT int fontTextHeight(const QFont &font);
+
+        /*!
+         * Get window screen geometry.
+         */
+        MUSIC_UTILS_EXPORT QRect windowScreenGeometry(int index = 0);
+
+        /*!
          * Set widget transparent.
          */
         MUSIC_UTILS_EXPORT void setTransparent(QWidget *widget, int alpha);
@@ -56,55 +74,6 @@ namespace MusicUtils
          * Set widget to round by ratioX and ratioY.
          */
         MUSIC_UTILS_EXPORT void widgetToRound(QWidget *w, int ratioX, int ratioY);
-        /*!
-         * Set fusion two image.
-         */
-        MUSIC_UTILS_EXPORT void fusionPixmap(QPixmap &back, const QPixmap &front, const QPoint &pt);
-        /*!
-         * Set pixmap to round by ratio.
-         */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QSize &size, int ratioX, int ratioY);
-        /*!
-         * Set pixmap to round by ratio.
-         */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QRect &rect, int ratioX, int ratioY);
-        /*!
-         * Set pixmap to round by ratio.
-         */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QPixmap &mask, const QSize &size);
-        /*!
-         * Get bitmap mask from rect.
-         */
-        MUSIC_UTILS_EXPORT QBitmap getBitmapMask(const QRect &rect, int ratioX, int ratioY);
-        /*!
-         * Get pximap data.
-         */
-        MUSIC_UTILS_EXPORT QByteArray getPixmapData(const QPixmap &pix);
-
-        /*!
-         * Rerender the custum value.
-         */
-        template <typename T>
-        MUSIC_UTILS_EXPORT T reRenderValue(const T &key, const T &alpha, const T &value)
-        {
-            if(alpha < 0) return 0;
-            else if(alpha > key) return key;
-
-            return (key - alpha)*1.0/100*value + alpha;
-        }
-
-        /*!
-         * Rerender the image alpha.
-         */
-        MUSIC_UTILS_EXPORT int reRenderAlpha(int alpha, int value);
-        /*!
-         * Rerender the image by color burn transform.
-         */
-        MUSIC_UTILS_EXPORT void reRenderImage(int delta, const QImage *input, QImage *output);
-        /*!
-         * Image color burn transform.
-         */
-        MUSIC_UTILS_EXPORT int colorBurnTransform(int c, int delta);
 
     }
 }

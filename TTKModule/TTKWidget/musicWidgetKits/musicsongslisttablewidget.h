@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public:
     /*!
      * Set current searched file indexs.
      */
-    void setMusicSongsSearchedFileName(MusicSongs *songs, const MIntList &fileIndexs);
+    void setMusicSongsSearchedFileName(MusicSongs *songs, const TTKIntList &fileIndexs);
 
     /*!
      * Select the current play row.
@@ -67,7 +67,7 @@ public:
     /*!
      * Set music sort.
      */
-    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort;}
+    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort; }
     /*!
      * Update item time label time.
      */
@@ -102,7 +102,7 @@ Q_SIGNALS:
     /*!
      * Delete items from indexs and check remove file or not.
      */
-    void deleteItemAt(const MIntList &index, bool fileRemove);
+    void deleteItemAt(const TTKIntList &index, bool fileRemove);
     /*!
      * Swap the current play index when user drag and drop.
      */

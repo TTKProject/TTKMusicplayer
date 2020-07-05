@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ public:
     /*!
      * Set current transparent.
      */
-    void setTransparent(int trans) { m_transparent = trans;}
+    void setTransparent(int trans) { m_transparent = trans; }
 
 protected:
     /*!
@@ -106,6 +106,28 @@ protected:
     QLinearGradient m_linearGradient;
     QLinearGradient m_maskLinearGradient;
     int m_transparent;
+
+};
+
+
+/*! @brief The class of the theme line label.
+ * @author Greedysky <greedysky@163.com>
+ */
+class MUSIC_WIDGET_EXPORT MusicThemeLineLabel : public QLabel
+{
+    Q_OBJECT
+    TTK_DECLARE_MODULE(MusicThemeLineLabel)
+public:
+    /*!
+     * Object contsructor.
+     */
+    explicit MusicThemeLineLabel(QWidget *parent = nullptr);
+
+protected:
+    /*!
+     * Override the widget event.
+     */
+    virtual void paintEvent(QPaintEvent *event) override;
 
 };
 

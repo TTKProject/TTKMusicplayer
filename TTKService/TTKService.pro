@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,41 +18,18 @@
 
 TEMPLATE = app
 
-contains(CONFIG, TTK_BUILD_LIB){
-    CONFIG -= TTK_BUILD_LIB
-}
+include($$PWD/../TTKMusicPlayer.pri)
 
-CONFIG += TTK_NO_MSVC_LINK_NEED
-win32{
-    msvc{
-        CONFIG -= TTK_NO_MSVC_LINK_NEED
-    }
-}
-include(../TTKMusicPlayer.pri)
-unix:VERSION += $$TTKMusicPlayer
+TARGET = TTKService
 
-win32{
-    TARGET = ../../bin/$$TTKMusicPlayer/TTKService
-    LIBS += -L../bin/$$TTKMusicPlayer -lTTKCore -lTTKDumper
-}
-unix{
-    TARGET = ../lib/$$TTKMusicPlayer/TTKService
-    LIBS += -L./lib/$$TTKMusicPlayer -lTTKCore -lTTKDumper
-}
+LIBS += -L$$DESTDIR -lTTKCore -lTTKConfig
 
-
-INCLUDEPATH += ../TTKModule
-
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
-HEADERS  += \
-    ../TTKModule/musicapplication.h \
-    ../TTKModule/musicleftareawidget.h \
-    ../TTKModule/musictopareawidget.h \
-    ../TTKModule/musicrightareawidget.h \
-    ../TTKModule/musicbottomareawidget.h \
-    ../TTKModule/musicapplicationobject.h
-
-}
+INCLUDEPATH += \
+    $$PWD/../TTKModule \
+    $$PWD/../TTKModule/TTKCore/musicCoreKits \
+    $$PWD/../TTKModule/TTKWidget/musicCoreKits \
+    $$PWD/../TTKRun \
+    $$PWD/../TTKConfig
 
 SOURCES += \
     musicservicemain.cpp

@@ -28,7 +28,7 @@ MusicFunctionToolBoxTopWidget::MusicFunctionToolBoxTopWidget(int index, const QS
     m_labelIcon = new QLabel(this);
     m_labelIcon->setPixmap(QPixmap(":/tiny/lb_arrow_up_normal"));
     m_labelText = new QLabel(this);
-    m_labelText->setStyleSheet(MusicUIObject::MColorStyle10);
+    m_labelText->setStyleSheet(MusicUIObject::MQSSColorStyle10);
     m_labelText->setText(text);
     MusicUtils::Widget::setLabelFontStyle(m_labelText, MusicObject::FT_Bold);
 
@@ -52,12 +52,17 @@ void MusicFunctionToolBoxTopWidget::setItemExpand(bool expand)
 
 bool MusicFunctionToolBoxTopWidget::isItemExpand() const
 {
-    return m_labelIcon->pixmap()->cacheKey() == QPixmap(":/tiny/lb_arrow_down_normal").cacheKey();
+#if TTK_QT_VERSION_CHECK(5,15,0)
+    const QPixmap &pix =  m_labelIcon->pixmap(Qt::ReturnByValue);
+#else
+    const QPixmap &pix = *m_labelIcon->pixmap();
+#endif
+    return pix.cacheKey() == QPixmap(":/tiny/lb_arrow_down_normal").cacheKey();
 }
 
 void MusicFunctionToolBoxTopWidget::setTitle(const QString &text)
 {
-    m_labelText->setText(QFontMetrics(m_labelText->font()).elidedText(text, Qt::ElideRight, RENAME_WIDTH - 10));
+    m_labelText->setText(MusicUtils::Widget::elidedText(m_labelText->font(), text, Qt::ElideRight, RENAME_WIDTH - 10));
     m_labelText->setToolTip(text);
 }
 
@@ -68,12 +73,12 @@ QString MusicFunctionToolBoxTopWidget::getTitle(bool suffix)
     {
         const int index = text.lastIndexOf("[");
         m_suffixString = text.right(text.count() - index);
-        text = text.left( index );
+        text = text.left(index);
     }
     return text;
 }
 
-bool MusicFunctionToolBoxTopWidget::isItemEnable() const
+bool MusicFunctionToolBoxTopWidget::isItemEnabled() const
 {
     return false;
 }
@@ -88,10 +93,10 @@ void MusicFunctionToolBoxTopWidget::dragLeaveEvent(QDragLeaveEvent *event)
 
 void MusicFunctionToolBoxTopWidget::dragMoveEvent(QDragMoveEvent *event)
 {
-    if(event->mimeData()->hasFormat(DRAG_FORMAT) && isItemEnable())
+    if(event->mimeData()->hasFormat(DRAG_FORMAT) && isItemEnabled())
     {
         m_isDrawMoveState = true;
-        m_isDrawTopState = event->pos().y() < height()/2;
+        m_isDrawTopState = event->pos().y() < height() / 2;
         update();
     }
 }
@@ -114,9 +119,9 @@ void MusicFunctionToolBoxTopWidget::dropEvent(QDropEvent *event)
     m_isDrawMoveState = false;
     update();
 
-    if(event->mimeData()->hasFormat(DRAG_FORMAT) && isItemEnable())
+    if(event->mimeData()->hasFormat(DRAG_FORMAT) && isItemEnabled())
     {
-        emit swapDragItemIndex(event->mimeData()->data(DRAG_FORMAT).toInt(), m_index);
+        Q_EMIT swapDragItemIndex(event->mimeData()->data(DRAG_FORMAT).toInt(), m_index);
     }
 }
 
@@ -125,7 +130,7 @@ void MusicFunctionToolBoxTopWidget::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
     if(event->button() == Qt::LeftButton)
     {
-        emit mousePressAt(m_index);
+        Q_EMIT mousePressAt(m_index);
         m_pressPosAt = event->pos();
     }
 }
@@ -135,24 +140,24 @@ void MusicFunctionToolBoxTopWidget::mouseMoveEvent(QMouseEvent *event)
     QWidget::mouseMoveEvent(event);
 
     QRect itemRect(m_pressPosAt.x() - 2, m_pressPosAt.y() - 2, m_pressPosAt.x() + 2, m_pressPosAt.y() + 2);
-    if(!itemRect.contains(event->pos()) && isItemEnable())
+    if(!itemRect.contains(event->pos()) && isItemEnabled())
     {
         if(!m_isBlockMoveExpand && isItemExpand())
         {
-            emit mousePressAt(m_index);
+            Q_EMIT mousePressAt(m_index);
         }
 
         QMimeData *mimeData = new QMimeData;
         mimeData->setData(DRAG_FORMAT, QByteArray::number(m_index));
-        mimeData->setText( getTitle(true) );
+        mimeData->setText(getTitle(true));
 
         QDrag *drag = new QDrag(this);
         drag->setMimeData(mimeData);
-        drag->setHotSpot(QPoint(0, height()/2));
+        drag->setHotSpot(QPoint(0, height() / 2));
 #ifdef TTK_GREATER_NEW
-        drag->setPixmap( grab(rect()) );
+        drag->setPixmap(grab(rect()));
 #else
-        drag->setPixmap( QPixmap::grabWidget(this, rect()) );
+        drag->setPixmap(QPixmap::grabWidget(this, rect()));
 #endif
         drag->exec(Qt::MoveAction);
     }
@@ -256,7 +261,7 @@ int MusicFunctionToolBoxWidgetItem::count() const
     return m_itemList.count();
 }
 
-void MusicFunctionToolBoxWidgetItem::init()
+void MusicFunctionToolBoxWidgetItem::initialize()
 {
     connect(m_topWidget, SIGNAL(mousePressAt(int)), parent(), SLOT(mousePressAt(int)));
     connect(m_topWidget, SIGNAL(swapDragItemIndex(int,int)), SIGNAL(swapDragItemIndex(int,int)));
@@ -273,19 +278,13 @@ void MusicFunctionToolBoxWidgetItem::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event);
 }
 
-void MusicFunctionToolBoxWidgetItem::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-}
-
 
 
 MusicNormalToolBoxWidgetItem::MusicNormalToolBoxWidgetItem(int index, const QString &text, QWidget *parent)
     : MusicFunctionToolBoxWidgetItem(parent)
 {
     m_topWidget = new MusicFunctionToolBoxTopWidget(index, text, this);
-
-    init();
+    initialize();
 }
 
 
@@ -304,7 +303,7 @@ MusicFunctionToolBoxWidget::MusicFunctionToolBoxWidget(QWidget *parent)
 
     m_contentsWidget = new QWidget(this);
     m_contentsWidget->setObjectName("contentsWidget");
-    m_contentsWidget->setStyleSheet("#contentsWidget{background-color:transparent;}");
+    m_contentsWidget->setStyleSheet("#contentsWidget{background-color:transparent; }");
 
     m_layout = new QVBoxLayout(m_contentsWidget);
     m_layout->setContentsMargins(0, 0, 0 ,0);
@@ -450,7 +449,7 @@ void MusicFunctionToolBoxWidget::setCurrentIndex(int index)
     m_currentIndex = index;
     for(int i=0; i<m_itemList.count(); ++i)
     {
-        m_itemList[i].m_widgetItem->setItemExpand( i == index );
+        m_itemList[i].m_widgetItem->setItemExpand(i == index);
     }
 }
 
@@ -472,12 +471,12 @@ void MusicFunctionToolBoxWidget::setTransparent(int alpha)
     view->setStyleSheet(QString("#viewport{%1}").arg(alphaStr));
 
     m_scrollArea->verticalScrollBar()->setStyleSheet(" \
-            QScrollBar{ background:transparent; width:8px; padding-top:0px; padding-bottom:0px;} \
-            QScrollBar::handle:vertical{ border-radius:4px; background:#CFCFCF; min-height: 30px;} \
-            QScrollBar::handle:vertical::disabled{ background:#DBDBDB;} \
-            QScrollBar::handle:vertical:hover{ background:#BBBBBB;} \
-            QScrollBar::add-line, QScrollBar::sub-line{ background:none; border:none;} \
-            QScrollBar::add-page, QScrollBar::sub-page{ background:none;}");
+            QScrollBar{ background:transparent; width:8px; padding-top:0px; padding-bottom:0px; } \
+            QScrollBar::handle:vertical{ border-radius:4px; background:#CFCFCF; min-height: 30px; } \
+            QScrollBar::handle:vertical::disabled{ background:#DBDBDB; } \
+            QScrollBar::handle:vertical:hover{ background:#BBBBBB; } \
+            QScrollBar::add-line, QScrollBar::sub-line{ background:none; border:none; } \
+            QScrollBar::add-page, QScrollBar::sub-page{ background:none; }");
 }
 
 MusicFunctionToolBoxWidgetItem *MusicFunctionToolBoxWidget::createItem(QWidget *item, const QString &text)
@@ -489,11 +488,6 @@ MusicFunctionToolBoxWidgetItem *MusicFunctionToolBoxWidget::createItem(QWidget *
 }
 
 void MusicFunctionToolBoxWidget::mousePressEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event);
-}
-
-void MusicFunctionToolBoxWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
 }

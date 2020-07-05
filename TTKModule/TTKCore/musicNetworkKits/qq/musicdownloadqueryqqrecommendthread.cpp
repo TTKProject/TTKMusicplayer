@@ -1,8 +1,5 @@
 #include "musicdownloadqueryqqrecommendthread.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryQQRecommendThread::MusicDownLoadQueryQQRecommendThread(QObject *parent)
     : MusicDownLoadQueryRecommendThread(parent)
@@ -17,7 +14,7 @@ void MusicDownLoadQueryQQRecommendThread::startToSearch(const QString &id)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(id));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(id));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_RCM_URL, false);
@@ -42,8 +39,8 @@ void MusicDownLoadQueryQQRecommendThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -99,9 +96,9 @@ void MusicDownLoadQueryQQRecommendThread::downLoadFinished()
                     musicInfo.m_discNumber = value["index_cd"].toString();
                     musicInfo.m_trackNumber = value["index_album"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttributePlus(&musicInfo, value["file"].toMap());
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -114,13 +111,13 @@ void MusicDownLoadQueryQQRecommendThread::downLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

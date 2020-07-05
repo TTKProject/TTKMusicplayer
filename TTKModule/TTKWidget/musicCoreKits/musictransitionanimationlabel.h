@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,15 @@ class MUSIC_WIDGET_EXPORT MusicTransitionAnimationLabel : public QLabel
     Q_OBJECT
     TTK_DECLARE_MODULE(MusicTransitionAnimationLabel)
 public:
+    enum AnimationType
+    {
+        FadeEffect,
+        BlindsEffect,
+        CubeEffect,
+        LeftToRightEffect,
+        TopToBottomEffect
+    };
+
     /*!
      * Object contsructor.
      */
@@ -80,6 +89,7 @@ protected:
      */
     virtual void paintEvent(QPaintEvent *event) override;
 
+    AnimationType m_type;
     bool m_isAnimating;
     int m_currentValue;
     bool m_noAnimationSet;

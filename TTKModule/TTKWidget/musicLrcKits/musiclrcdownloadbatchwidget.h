@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 namespace Ui {
 class MusicLrcDownloadBatchWidget;
 }
-class MusicDownloadQueueCache;
 
 /*! @brief The class of the the lrc batch download table widget.
  * @author Greedysky <greedysky@163.com>
@@ -70,21 +69,7 @@ public:
 
     virtual ~MusicLrcDownloadBatchWidget();
 
-Q_SIGNALS:
-    /*!
-     * Get music datas from container.
-     */
-    void getMusicLists(MusicSongItems &songs);
-
 public Q_SLOTS:
-    /*!
-     * Modified item button clicked.
-     */
-    void modifiedItemButtonClicked();
-    /*!
-     * Item lists changed.
-     */
-    void itemListsChanged(const MIntList &items);
     /*!
      * Add button clicked.
      */
@@ -99,16 +84,9 @@ public Q_SLOTS:
     void show();
 
 protected:
-    /*!
-     * Get selected song items.
-     */
-    void getSelectedSongItems();
-
     Ui::MusicLrcDownloadBatchWidget *m_ui;
 
     MusicSongs m_localSongs;
-    bool m_selectedItemIdFlag;
-    MIntList m_selectedItemIds;
 
 };
 

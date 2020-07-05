@@ -1,4 +1,5 @@
 #include "musicpreviewlabel.h"
+#include "musicwidgetutils.h"
 
 #include <QPainter>
 
@@ -66,8 +67,8 @@ void MusicPreviewLabel::setLinearGradient(const MusicPreviewLabelItem &item)
 {
     m_font.setFamily(item.m_family);
     m_font.setPointSize(item.m_size);
-    m_font.setBold( (item.m_type == 1 || item.m_type == 3) );
-    m_font.setItalic( (item.m_type == 2 || item.m_type == 3) );
+    m_font.setBold((item.m_type == 1 || item.m_type == 3));
+    m_font.setItalic((item.m_type == 2 || item.m_type == 3));
 
     setLinearGradient(item.m_frontground, item.m_background);
 }
@@ -95,8 +96,8 @@ void MusicPreviewLabel::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    const int h = QFontMetrics(m_font).height();
-    const int begin = (rect().height() - h)/2;
+    const int h = MusicUtils::Widget::fontTextHeight(m_font);
+    const int begin = (rect().height() - h) / 2;
     m_linearGradient.setFinalStop(0, h + begin);
     m_maskLinearGradient.setFinalStop(0, h + begin);
 
@@ -111,4 +112,26 @@ void MusicPreviewLabel::paintEvent(QPaintEvent *)
 
     painter.setPen(QPen(m_maskLinearGradient, 0));
     painter.drawText(1, 1, 60, rect().height(), Qt::AlignLeft | Qt::AlignVCenter, "This is TTKMusicPlayer");
+}
+
+
+
+
+MusicThemeLineLabel::MusicThemeLineLabel(QWidget *parent)
+    : QLabel(parent)
+{
+
+}
+
+void MusicThemeLineLabel::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+    const int w = MusicUtils::Widget::fontTextWidth(font(), text()) + 15;
+
+    painter.setFont(font());
+    painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter, text());
+
+    painter.setPen(QPen(QColor(0, 0, 0, 25), 1));
+    painter.drawLine(w, height() / 2, width(), height() / 2);
 }

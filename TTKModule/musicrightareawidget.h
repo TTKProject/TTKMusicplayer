@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
 class MusicSettingWidget;
 class MusicVideoPlayWidget;
 class MusicDownloadStatusObject;
+
+class MusicLrcAnalysis;
 class MusicLrcContainerForInterior;
 class MusicLrcContainerForDesktop;
 class MusicLrcContainerForWallpaper;
@@ -63,7 +65,8 @@ public:
         KuiSheWidget,           /*!< insert kugou kuishe widget*/
         WebDJRadioWidget,       /*!< insert web dj radio widget*/
         WebMVRadioWidget,       /*!< insert web mv radio widget*/
-        CloudManagerWidget      /*!< insert cloud manager widget*/
+        CloudManagerWidget,     /*!< insert cloud manager widget*/
+        ScreenSaverWidget       /*!< insert screen saver widget*/
     };
 
     /*!
@@ -92,7 +95,7 @@ public:
     /*!
      * Set current play state button.
      */
-    void showPlayStatus(bool status) const;
+    void setCurrentPlayStatus(bool status) const;
     /*!
      * Get destop lrc visible state.
      */
@@ -106,13 +109,9 @@ public:
      */
     bool getInteriorLrcVisible() const;
     /*!
-     * Set setting parameter.
+     * Apply settings parameters.
      */
-    void setSettingParameter() const;
-    /*!
-     * Get setting parameter.
-     */
-    void getParameterSetting() const;
+    void applySettingParameter() const;
     /*!
      * Check the setting has open interior or desktop lrc on or not.
      */
@@ -133,7 +132,7 @@ public:
      * Check the current song already has lrc or not,
      * if not just download it.
      */
-    void musicCheckHasLrcAlready() const;
+    void checkLrcValid() const;
     /*!
      * Show setting widget.
      */
@@ -155,7 +154,7 @@ public:
      */
     void musicMovieRadioSearch(const QVariant &data);
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
 
@@ -310,6 +309,8 @@ protected:
     Ui::MusicApplication *m_ui;
     MusicSettingWidget *m_settingWidget;
     MusicVideoPlayWidget *m_videoPlayerWidget;
+
+    MusicLrcAnalysis *m_lrcAnalysis;
     MusicLrcContainerForInterior *m_musicLrcForInterior;
     MusicLrcContainerForDesktop *m_musicLrcForDesktop;
     MusicLrcContainerForWallpaper *m_musicLrcForWallpaper;

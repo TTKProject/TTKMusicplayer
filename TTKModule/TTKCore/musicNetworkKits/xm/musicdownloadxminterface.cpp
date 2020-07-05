@@ -1,11 +1,8 @@
 #include "musicdownloadxminterface.h"
 #include "musicnumberutils.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
 #include "musicalgorithmutils.h"
 #include "musicnetworkabstract.h"
-#///QJson import
-#include "qjson/parser.h"
 
 #include <QNetworkCookie>
 #include <QNetworkReply>
@@ -18,7 +15,7 @@ bool MusicDownLoadXMInterface::makeTokenQueryCookies(QString &tk, QString &tke)
     QNetworkAccessManager manager;
     QNetworkRequest request;
     request.setUrl(QUrl(MusicUtils::Algorithm::mdII(XM_COOKIE_URL, false)));
-    const QString &time = QString::number(MusicTime::timeStamp());
+    const QString &time = QString::number(MusicTime::timestamp());
     const QString &appkey = "12574478";
     const QString &sign = MusicUtils::Algorithm::md5((time + "&" + appkey).toUtf8()).toHex();
     const QString &base = MusicUtils::Algorithm::mdII(XM_COOKIE_DATA_URL, false);
@@ -54,7 +51,7 @@ void MusicDownLoadXMInterface::makeTokenQueryUrl(QNetworkRequest *request, const
         return;
     }
 
-    const QString time = QString::number(MusicTime::timeStamp());
+    const QString time = QString::number(MusicTime::timestamp());
     const QString appkey = "12574478";
     const QString token = tk.split("_").front();
     const QString data = MusicUtils::Algorithm::mdII(XM_QUERY_DATA_URL, false).arg(query);

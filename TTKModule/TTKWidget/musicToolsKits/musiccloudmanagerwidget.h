@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@
 #include "musicclouddataitem.h"
 #include "musicabstracttablewidget.h"
 
-class OSSListData;
-class OSSDeleteData;
-class OSSUploadData;
-class OSSDownloadData;
+class QSyncListData;
+class QSyncDeleteData;
+class QSyncUploadData;
+class QSyncDownloadData;
 class MusicOpenFileWidget;
 class MusicProgressBarDelegate;
 class QNetworkAccessManager;
@@ -51,7 +51,7 @@ public:
      */
     bool getKey();
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
 
@@ -79,19 +79,19 @@ public Q_SLOTS:
      */
     virtual void itemCellClicked(int row, int column) override;
     /*!
-     * Download key data from net finished.
+     * Send recieved data from net.
      */
-    void keyDownLoadFinished(const QByteArray &data);
+    void downLoadFinished(const QByteArray &data);
     /*!
-     * Receive data from alioss finshed.
+     * Receive data from sync finshed.
      */
-    void receiveDataFinshed(const OSSDataItems &items);
+    void receiveDataFinshed(const QSyncDataItems &items);
     /*!
-     * Upload data to alioss finshed.
+     * Upload data to sync finshed.
      */
     void uploadFileFinished(const QString &time);
     /*!
-     * Delete data to alioss finshed.
+     * Delete data to sync finshed.
      */
     void deleteFileFinished(bool state);
 
@@ -112,6 +112,10 @@ public Q_SLOTS:
      */
     void downloadFileToServer();
 
+    /*!
+     * Cancel upload files to server.
+     */
+    void cancelUploadFilesToServer();
     /*!
      * Upload files to server.
      */
@@ -169,12 +173,13 @@ protected:
     MusicCloudDataItem FindWaitedItemRow() const;
 
     bool m_uploading;
+    bool m_cancel;
     qint64 m_totalFileSzie;
-    OSSListData *m_ossListData;
-    OSSDeleteData *m_ossDeleteData;
-    OSSUploadData *m_ossUploadData;
-    OSSDownloadData *m_ossDownloadData;
-    QNetworkAccessManager *m_networkManager;
+    QSyncListData *m_syncListData;
+    QSyncDeleteData *m_syncDeleteData;
+    QSyncUploadData *m_syncUploadData;
+    QSyncDownloadData *m_syncDownloadData;
+    QNetworkAccessManager *m_manager;
     MusicOpenFileWidget *m_openFileWidget;
     MusicCloudDataItem m_currentDataItem;
     MusicProgressBarDelegate *m_progressBarDelegate;
@@ -199,9 +204,9 @@ public:
     ~MusicCloudManagerWidget();
 
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
-    void resizeWindow();
+    virtual void resizeWindow();
 
 public Q_SLOTS:
     /*!
@@ -220,6 +225,12 @@ public Q_SLOTS:
      * Upload files to server.
      */
     void uploadFilesToServer();
+
+protected:
+    /*!
+     * Override the widget event.
+     */
+    virtual void resizeEvent(QResizeEvent *event) override;
 
 protected:
     QLabel *m_sizeValueLabel;

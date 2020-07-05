@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,7 +131,7 @@ public:
      */
     void setCurrentIndex(int toolIndex, const MusicSong &song);
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
 
@@ -139,7 +139,7 @@ public Q_SLOTS:
     /*!
      * To popup menu.
      */
-    void popupMenu();
+    virtual void popupMenu() override;
     /*!
      * Delete item from list at current row.
      */

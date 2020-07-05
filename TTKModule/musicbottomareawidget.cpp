@@ -21,7 +21,7 @@ MusicBottomAreaWidget::MusicBottomAreaWidget(QWidget *parent)
     createSystemTrayIcon();
 
     m_musicWindowExtras = new MusicWindowExtras(parent);
-    m_musicRipplesObject = new MusicRippleSpecturmObject(this);
+    m_musicRippleObject = new MusicRippleSpecturmObject(this);
 }
 
 MusicBottomAreaWidget::~MusicBottomAreaWidget()
@@ -29,7 +29,7 @@ MusicBottomAreaWidget::~MusicBottomAreaWidget()
     delete m_systemTrayMenu;
     delete m_systemTray;
     delete m_musicWindowExtras;
-    delete m_musicRipplesObject;
+    delete m_musicRippleObject;
 }
 
 MusicBottomAreaWidget *MusicBottomAreaWidget::instance()
@@ -41,7 +41,7 @@ void MusicBottomAreaWidget::setupUi(Ui::MusicApplication* ui)
 {
     m_ui = ui;
 
-    m_musicRipplesObject->init(ui->backgroundLayout, ui->bottomWidget);
+    m_musicRippleObject->init(ui->backgroundLayout, ui->bottomWidget);
 
     ui->resizeLabelWidget->setPixmap(QPixmap(":/tiny/lb_resize_normal"));
     ui->showCurrentSong->setEffectOnResize(true);
@@ -87,11 +87,11 @@ void MusicBottomAreaWidget::setDestopLrcVisible(bool status) const
     m_systemTrayMenu->showDesktopLrc(status);
 }
 
-void MusicBottomAreaWidget::showPlayStatus(bool status) const
+void MusicBottomAreaWidget::setCurrentPlayStatus(bool status) const
 {
-    m_systemTrayMenu->showPlayStatus(status);
+    m_systemTrayMenu->setCurrentPlayStatus(status);
 #if defined Q_OS_WIN && defined TTK_WINEXTRAS
-    m_musicWindowExtras->showPlayStatus(status);
+    m_musicWindowExtras->setCurrentPlayStatus(status);
 #endif
 }
 
@@ -135,7 +135,7 @@ void MusicBottomAreaWidget::setWindowConcise()
     m_ui->bottomLeftContainWidget->setMinimumWidth(con ? CONCISE_WIDTH_MIN : 220);
 
     m_ui->musicWindowConcise->setParent(con ? m_ui->background : m_ui->topRightWidget);
-    m_ui->musicWindowConcise->setStyleSheet(con ? MusicUIObject::MKGBtnConciseOut : MusicUIObject::MKGBtnConciseIn);
+    m_ui->musicWindowConcise->setStyleSheet(con ? MusicUIObject::MQSSBtnConciseOut : MusicUIObject::MQSSBtnConciseIn);
     m_ui->minimization->setParent(con ? m_ui->background : m_ui->topRightWidget);
     m_ui->windowClose->setParent(con ? m_ui->background : m_ui->topRightWidget);
 
@@ -160,9 +160,9 @@ void MusicBottomAreaWidget::setWindowConcise()
         m_ui->windowClose->move(295, 20);
         m_ui->windowClose->show();
 
-        m_ui->musicPrevious->setStyleSheet(MusicUIObject::MKGTinyBtnPrevious);
-        m_ui->musicKey->setStyleSheet(app->isPlaying() ? MusicUIObject::MKGTinyBtnPause : MusicUIObject::MKGTinyBtnPlay);
-        m_ui->musicNext->setStyleSheet(MusicUIObject::MKGTinyBtnNext);
+        m_ui->musicPrevious->setStyleSheet(MusicUIObject::MQSSTinyBtnPrevious);
+        m_ui->musicKey->setStyleSheet(app->isPlaying() ? MusicUIObject::MQSSTinyBtnPause : MusicUIObject::MQSSTinyBtnPlay);
+        m_ui->musicNext->setStyleSheet(MusicUIObject::MQSSTinyBtnNext);
         m_ui->musicPrevious->setFixedSize(28, 28);
         m_ui->musicKey->setFixedSize(28, 28);
         m_ui->musicNext->setFixedSize(28, 28);
@@ -182,9 +182,9 @@ void MusicBottomAreaWidget::setWindowConcise()
         app->setMinimumSize(WINDOW_WIDTH_MIN, WINDOW_HEIGHT_MIN);
         app->setMaximumSize(size.width(), size.height());
 
-        m_ui->musicPrevious->setStyleSheet(MusicUIObject::MKGBtnPrevious);
-        m_ui->musicKey->setStyleSheet(app->isPlaying() ? MusicUIObject::MKGBtnPause : MusicUIObject::MKGBtnPlay);
-        m_ui->musicNext->setStyleSheet(MusicUIObject::MKGBtnNext);
+        m_ui->musicPrevious->setStyleSheet(MusicUIObject::MQSSBtnPrevious);
+        m_ui->musicKey->setStyleSheet(app->isPlaying() ? MusicUIObject::MQSSBtnPause : MusicUIObject::MQSSBtnPlay);
+        m_ui->musicNext->setStyleSheet(MusicUIObject::MQSSBtnNext);
         m_ui->musicPrevious->setFixedSize(44, 44);
         m_ui->musicKey->setFixedSize(44, 44);
         m_ui->musicNext->setFixedSize(44, 44);
@@ -202,7 +202,7 @@ void MusicBottomAreaWidget::setWindowConcise()
         m_ui->bottomCenterWidgetLayout->addWidget(m_ui->musicTimeWidget, 3, 0, 1, 6);
     }
 
-    m_musicWindowExtras->disableBlurBehindWindow( !con );
+    m_musicWindowExtras->disableBlurBehindWindow(!con);
 }
 
 void MusicBottomAreaWidget::resizeWindow()
@@ -212,15 +212,15 @@ void MusicBottomAreaWidget::resizeWindow()
     m_ui->lrcDisplayAllButton->move(m_ui->lrcDisplayAllButton->x(), h/2);
 }
 
-void MusicBottomAreaWidget::getParameterSetting()
+void MusicBottomAreaWidget::applySettingParameter()
 {
     bool config = M_SETTING_PTR->value(MusicSettingManager::CloseEvent).toBool();
     setSystemCloseConfig(config);
          config = M_SETTING_PTR->value(MusicSettingManager::ShowDesktopLrc).toBool();
     setDestopLrcVisible(config);
-         config = M_SETTING_PTR->value(MusicSettingManager::OtherRippleSpectrumEnable).toBool();
+         config = M_SETTING_PTR->value(MusicSettingManager::RippleSpectrumEnable).toBool();
 
-    m_musicRipplesObject->update(config);
+    m_musicRippleObject->update(config);
 }
 
 bool MusicBottomAreaWidget::isLrcWidgetShowFullScreen() const
@@ -241,7 +241,7 @@ void MusicBottomAreaWidget::lrcWidgetShowFullScreen()
     }
 
     m_lrcWidgetShowFullScreen = !m_lrcWidgetShowFullScreen;
-    m_musicRipplesObject->setVisible(m_lrcWidgetShowFullScreen);
+    m_musicRippleObject->setVisible(m_lrcWidgetShowFullScreen);
 
     m_ui->topWidget->setVisible(m_lrcWidgetShowFullScreen);
     m_ui->bottomWidget->setVisible(m_lrcWidgetShowFullScreen);

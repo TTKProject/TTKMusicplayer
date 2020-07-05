@@ -4,12 +4,12 @@ MusicAbstractTableWidget::MusicAbstractTableWidget(QWidget *parent)
     : QTableWidget(parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
-    setFont(QFont("Helvetica"));
     setColumnCount(3);
     setRowCount(0);
     setShowGrid(false);//Does not display the grid
 
     QHeaderView *headerview = horizontalHeader();
+    headerview->setMinimumSectionSize(0);
     headerview->setVisible(false);
     headerview->resizeSection(0, 20);
     headerview->resizeSection(1, 247);
@@ -19,7 +19,7 @@ MusicAbstractTableWidget::MusicAbstractTableWidget(QWidget *parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     setMouseTracking(true);  //Open the capture mouse function
-    setStyleSheet(MusicUIObject::MTableWidgetStyle01 + MusicUIObject::MScrollBarStyle01 + MusicUIObject::MLineEditStyle01);
+    setStyleSheet(MusicUIObject::MQSSTableWidgetStyle01 + MusicUIObject::MQSSScrollBarStyle01 + MusicUIObject::MQSSLineEditStyle01);
 
     QFont f = font();
     f.setBold(false);
@@ -53,17 +53,16 @@ void MusicAbstractTableWidget::clear()
     setRowCount(0);
 }
 
-MIntList MusicAbstractTableWidget::getMultiSelectedIndexs() const
+TTKIntList MusicAbstractTableWidget::getMultiSelectedIndexs() const
 {
-    MIntSet rows;
+    TTKIntSet rows;
     foreach(const QModelIndex& index, selectedIndexes())
     {
         rows.insert(index.row());
     }
 
-    MIntList rowsList = rows.toList();
-    qSort(rowsList);
-
+    TTKIntList rowsList = rows.values();
+    std::sort(rowsList.begin(), rowsList.end());
     return rowsList;
 }
 
@@ -89,7 +88,11 @@ void MusicAbstractTableWidget::setRowColor(int row, const QColor &color) const
         QTableWidgetItem *it = item(row, col);
         if(it)
         {
+#if TTK_QT_VERSION_CHECK(5,13,0)
+            it->setBackground(color);
+#else
             it->setBackgroundColor(color);
+#endif
         }
     }
 }

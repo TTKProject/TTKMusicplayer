@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,19 +54,19 @@ public:
     /*!
      * Set Geometric Stretch.
      */
-    inline void setGeometricStretch(bool g) { m_geometricStretch = g;}
+    inline void setGeometricStretch(bool g) { m_geometricStretch = g; }
     /*!
      * Get Geometric Stretch.
      */
-    inline bool getGeometricStretch() const { return m_geometricStretch;}
+    inline bool getGeometricStretch() const { return m_geometricStretch; }
     /*!
      * Set Cross Stretch.
      */
-    inline void setCrossStretch(bool c) { m_crossStretch = c;}
+    inline void setCrossStretch(bool c) { m_crossStretch = c; }
     /*!
      * Get Cross Stretch.
      */
-    inline bool gettCrossStretch() const { return m_crossStretch;}
+    inline bool gettCrossStretch() const { return m_crossStretch; }
 
 Q_SIGNALS:
     /*!
@@ -104,7 +104,7 @@ protected:
 };
 
 
-#if QT_VERSION < QT_VERSION_CHECK(5,3,0)
+#if !TTK_QT_VERSION_CHECK(5,3,0)
 inline QRect operator-(const QRect &rect, const QMargins &margins);
 #endif
 

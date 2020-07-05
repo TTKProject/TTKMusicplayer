@@ -1,7 +1,5 @@
 #include "musickwsongsuggestthread.h"
 #include "musicdownloadkwinterface.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicKWSongSuggestThread::MusicKWSongSuggestThread(QObject *parent)
     : MusicDownLoadSongSuggestThread(parent)
@@ -16,7 +14,7 @@ void MusicKWSongSuggestThread::startToSearch(const QString &text)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KW_SUGGEST_URL, false).arg(text);
@@ -40,7 +38,7 @@ void MusicKWSongSuggestThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_items.clear();
     m_interrupt = false;
 
@@ -76,6 +74,6 @@ void MusicKWSongSuggestThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

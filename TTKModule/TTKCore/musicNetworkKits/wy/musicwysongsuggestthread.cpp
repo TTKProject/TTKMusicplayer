@@ -1,6 +1,4 @@
 #include "musicwysongsuggestthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicWYSongSuggestThread::MusicWYSongSuggestThread(QObject *parent)
     : MusicDownLoadSongSuggestThread(parent)
@@ -15,17 +13,17 @@ void MusicWYSongSuggestThread::startToSearch(const QString &text)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     deleteAll();
 
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(WY_SUGGEST_N_URL, false),
                       MusicUtils::Algorithm::mdII(WY_SUGGEST_NDT_URL, false).arg(text));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->post(request, parameter);
@@ -41,7 +39,7 @@ void MusicWYSongSuggestThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_items.clear();
     m_interrupt = false;
 
@@ -87,6 +85,6 @@ void MusicWYSongSuggestThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-#include "musicnumberdefine.h"
 #include "musicglobaldefine.h"
 
 /*! @brief The namespace of the utils number.
@@ -53,15 +52,15 @@ namespace MusicUtils
         /*!
          * Transform value to kb entity.
          */
-        MUSIC_UTILS_EXPORT qreal sizeByte2KByte(qint64 size);
+        MUSIC_UTILS_EXPORT float sizeByte2KByte(qint64 size);
         /*!
          * Transform value to mb entity.
          */
-        MUSIC_UTILS_EXPORT qreal sizeByte2MByte(qint64 size);
+        MUSIC_UTILS_EXPORT float sizeByte2MByte(qint64 size);
         /*!
          * Transform value to tb entity.
          */
-        MUSIC_UTILS_EXPORT qreal sizeByte2TByte(qint64 size);
+        MUSIC_UTILS_EXPORT float sizeByte2TByte(qint64 size);
 
         /*!
          * Transform value to speed value base.
@@ -71,11 +70,11 @@ namespace MusicUtils
         /*!
          * Transfrom bitrate to quality.
          */
-        MUSIC_UTILS_EXPORT void transfromBitrateToQuality(int level, QString &bitString, QColor &color);
+        MUSIC_UTILS_EXPORT void transfromBitrateToQuality(int level, QString &bitrate, QColor &color);
         /*!
          * Transfrom bitrate to quality.
          */
-        MUSIC_UTILS_EXPORT void transfromBitrateToQuality(int level, QString &bitString);
+        MUSIC_UTILS_EXPORT void transfromBitrateToQuality(int level, QString &bitrate);
         /*!
          * Transfrom bitrate to quality.
          */

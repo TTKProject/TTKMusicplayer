@@ -1,6 +1,4 @@
 #include "musicmvradiocategorythread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicMVRadioCategoryThread::MusicMVRadioCategoryThread(QObject *parent)
     : MusicMVRadioThreadAbstract(parent)
@@ -58,13 +56,13 @@ void MusicMVRadioCategoryThread::downLoadFinished()
                         item.m_id = value["fmId"].toString();
                         item.m_coverUrl = value["imgUrlMv"].toString();
 
-                        emit createCategoryItem(item);
+                        Q_EMIT createCategoryItem(item);
                     }
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

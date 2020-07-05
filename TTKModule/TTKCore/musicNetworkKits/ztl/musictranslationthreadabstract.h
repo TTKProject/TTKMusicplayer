@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,15 +43,6 @@ public:
      * Subclass should implement this function.
      */
     virtual void startToDownload(const QString &data) = 0;
-
-Q_SIGNALS:
-    /*!
-     * Send translated data from net.
-     */
-    void downLoadDataChanged(const QString &data);
-
-protected:
-    QVariantMap m_rawData;
 
 };
 

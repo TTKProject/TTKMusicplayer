@@ -4,7 +4,7 @@ MusicNetworkAbstract::MusicNetworkAbstract(QObject *parent)
     : QObject(parent)
 {
     m_interrupt = false;
-    m_stateCode = MusicObject::NetworkInit;
+    m_stateCode = MusicObject::NetworkQuery;
     m_reply = nullptr;
     m_manager = nullptr;
 }
@@ -31,8 +31,8 @@ void MusicNetworkAbstract::deleteAll()
 
 void MusicNetworkAbstract::replyError(QNetworkReply::NetworkError)
 {
-    M_LOGGER_ERROR("Abnormal network connection");
-    emit downLoadDataChanged(QString());
+    TTK_LOGGER_ERROR("Abnormal network connection");
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -40,7 +40,7 @@ void MusicNetworkAbstract::replyError(QNetworkReply::NetworkError)
 void MusicNetworkAbstract::sslErrors(QNetworkReply* reply, const QList<QSslError> &errors)
 {
     sslErrorsString(reply, errors);
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -56,12 +56,13 @@ void MusicNetworkAbstract::sslErrorsString(QNetworkReply *reply, const QList<QSs
         errorString += error.errorString();
     }
 
-    M_LOGGER_ERROR(QString("sslErrors: %1").arg(errorString));
+    TTK_LOGGER_ERROR(QString("sslErrors: %1").arg(errorString));
     reply->ignoreSslErrors();
 }
 #endif
 
-namespace MusicObject {
+namespace MusicObject
+{
 void setSslConfiguration(QNetworkRequest *request, QSslSocket::PeerVerifyMode mode)
 {
     request->setRawHeader("Content-Type", "application/x-www-form-urlencoded");

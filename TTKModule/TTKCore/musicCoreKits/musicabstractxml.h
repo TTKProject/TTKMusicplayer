@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,41 @@ typedef struct MUSIC_CORE_EXPORT MusicXmlAttribute
     }
 }MusicXmlAttribute;
 TTK_DECLARE_LISTS(MusicXmlAttribute)
+
+/*! @brief The class of the xml node hepler.
+ * @author Greedysky <greedysky@163.com>
+ */
+class MUSIC_CORE_EXPORT MusicXmlNodeHelper
+{
+public:
+    /*!
+     * Object contsructor.
+     */
+    explicit MusicXmlNodeHelper(const QDomNode &root);
+
+    /*!
+     * Load xml node helper.
+     */
+    void load();
+    /*!
+     * Check xml has next node.
+     */
+    bool hasNext();
+
+    /*!
+     * Get xml next node.
+     */
+    QDomNode next() const;
+    /*!
+     * Get match node name case insensitive.
+     */
+    QString nodeName(const QString &name) const;
+
+private:
+    QDomNode m_root, m_current;
+    QSet<QString> m_nodeNames;
+
+};
 
 /*! @brief The class of the base class of xml interface.
  * @author Greedysky <greedysky@163.com>
@@ -97,7 +132,7 @@ public:
     /*!
      * Read xml attributes by tagName and default name "value".
      */
-    MVariantMap readXmlAttributesByTagName(const QString &tagName) const;
+    TTKVariantMap readXmlAttributesByTagName(const QString &tagName) const;
     /*!
      * Create processing instruction in header.
      */
@@ -146,6 +181,7 @@ public:
 protected:
     QFile *m_file;
     QDomDocument *m_document;
+    MusicXmlNodeHelper *m_nodeHelper;
 
 };
 

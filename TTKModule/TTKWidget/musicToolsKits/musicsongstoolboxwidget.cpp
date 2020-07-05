@@ -1,14 +1,11 @@
 #include "musicsongstoolboxwidget.h"
 #include "musicsongstoolitemrenamedwidget.h"
-#include "musicsonglistsharingwidget.h"
-#include "musicsonglistenhancelosslesswidget.h"
 #include "musicsettingmanager.h"
 #include "musicuiobject.h"
 #include "musictinyuiobject.h"
 #include "musicsong.h"
-#include "musicwidgetutils.h"
+#include "musicimageutils.h"
 #include "musicapplication.h"
-#include "musicotherdefine.h"
 #include "musictopareawidget.h"
 
 #include <QPainter>
@@ -21,21 +18,19 @@ MusicSongsToolBoxTopWidget::MusicSongsToolBoxTopWidget(int index, const QString 
 
     QPushButton *enhanceButton = new QPushButton(this);
     enhanceButton->setToolTip(tr("enhanceLossless"));
-    enhanceButton->setStyleSheet(MusicUIObject::MKGTinyBtnEnhanceLossless);
+    enhanceButton->setStyleSheet(MusicUIObject::MQSSTinyBtnEnhanceLossless);
     enhanceButton->setCursor(QCursor(Qt::PointingHandCursor));
     enhanceButton->setGeometry(240, 12, 16, 16);
-    connect(enhanceButton, SIGNAL(clicked()), SLOT(showEnhanceLosslessDialog()));
 
     QPushButton *shareListButton = new QPushButton(this);
     shareListButton->setToolTip(tr("shareList"));
-    shareListButton->setStyleSheet(MusicUIObject::MKGTinyBtnShare);
+    shareListButton->setStyleSheet(MusicUIObject::MQSSTinyBtnShare);
     shareListButton->setCursor(QCursor(Qt::PointingHandCursor));
     shareListButton->setGeometry(265, 12, 16, 16);
-    connect(shareListButton, SIGNAL(clicked()), SLOT(showShareListDialog()));
 
     QPushButton *menuButton = new QPushButton(this);
     menuButton->setToolTip(tr("listMenu"));
-    menuButton->setStyleSheet(MusicUIObject::MKGTinyBtnListMenu);
+    menuButton->setStyleSheet(MusicUIObject::MQSSTinyBtnListMenu);
     menuButton->setCursor(QCursor(Qt::PointingHandCursor));
     menuButton->setGeometry(290, 12, 16, 16);
     connect(menuButton, SIGNAL(clicked()), SLOT(showMenu()));
@@ -55,12 +50,12 @@ MusicSongsToolBoxTopWidget::~MusicSongsToolBoxTopWidget()
 
 void MusicSongsToolBoxTopWidget::deleteRowItem()
 {
-    emit deleteRowItem(m_index);
+    Q_EMIT deleteRowItem(m_index);
 }
 
 void MusicSongsToolBoxTopWidget::deleteRowItemAll()
 {
-    emit deleteRowItemAll(m_index);
+    Q_EMIT deleteRowItemAll(m_index);
 }
 
 void MusicSongsToolBoxTopWidget::changRowItemName()
@@ -77,7 +72,7 @@ void MusicSongsToolBoxTopWidget::changRowItemName()
 void MusicSongsToolBoxTopWidget::setChangItemName(const QString &name)
 {
     setTitle(name + m_suffixString);
-    emit changRowItemName(m_index, name);
+    Q_EMIT changRowItemName(m_index, name);
 
     m_renameLine->deleteLater();
     m_renameLine = nullptr;
@@ -85,12 +80,12 @@ void MusicSongsToolBoxTopWidget::setChangItemName(const QString &name)
 
 void MusicSongsToolBoxTopWidget::addNewFiles()
 {
-    emit addNewFiles(m_index);
+    Q_EMIT addNewFiles(m_index);
 }
 
 void MusicSongsToolBoxTopWidget::addNewDir()
 {
-    emit addNewDir(m_index);
+    Q_EMIT addNewDir(m_index);
 }
 
 void MusicSongsToolBoxTopWidget::exportSongsItemList()
@@ -101,7 +96,7 @@ void MusicSongsToolBoxTopWidget::exportSongsItemList()
 void MusicSongsToolBoxTopWidget::showMenu()
 {
     QMenu menu(this);
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     menu.addAction(tr("addNewItem"), this, SIGNAL(addNewRowItem()));
     menu.addSeparator();
 
@@ -137,7 +132,7 @@ void MusicSongsToolBoxTopWidget::showMenu()
     menu.addAction(tr("exportList"), this, SLOT(exportSongsItemList()));
     menu.addSeparator();
 
-    disable = isItemEnable();
+    disable = isItemEnabled();
     menu.addAction(tr("deleteAll"), this, SLOT(deleteRowItemAll()));
     menu.addAction(QIcon(":/contextMenu/btn_delete"), tr("deleteItem"), this, SLOT(deleteRowItem()))->setEnabled(disable);
     menu.addAction(tr("changItemName"), this, SLOT(changRowItemName()))->setEnabled(disable);
@@ -161,31 +156,21 @@ void MusicSongsToolBoxTopWidget::musicListSongSortBy(QAction *action)
         {
             m_musicSort->m_sortType = Qt::AscendingOrder;
         }
-        emit musicListSongSortBy(m_index);
+        Q_EMIT musicListSongSortBy(m_index);
     }
-}
-
-void MusicSongsToolBoxTopWidget::showShareListDialog()
-{
-    MusicSongListSharingWidget(this).exec();
-}
-
-void MusicSongsToolBoxTopWidget::showEnhanceLosslessDialog()
-{
-    MusicSongListEnhanceLosslessWidget(this).exec();
 }
 
 void MusicSongsToolBoxTopWidget::addToPlayLater()
 {
-    emit addToPlayLater(m_index);
+    Q_EMIT addToPlayLater(m_index);
 }
 
 void MusicSongsToolBoxTopWidget::addToPlayedList()
 {
-    emit addToPlayedList(m_index);
+    Q_EMIT addToPlayedList(m_index);
 }
 
-bool MusicSongsToolBoxTopWidget::isItemEnable() const
+bool MusicSongsToolBoxTopWidget::isItemEnabled() const
 {
     return !(m_index == MUSIC_NORMAL_LIST || m_index == MUSIC_LOVEST_LIST || m_index == MUSIC_NETWORK_LIST || m_index == MUSIC_RECENT_LIST);
 }
@@ -223,7 +208,7 @@ MusicSongsToolBoxMaskWidget::~MusicSongsToolBoxMaskWidget()
 void MusicSongsToolBoxMaskWidget::paintEvent(QPaintEvent *event)
 {
     int alpha = M_SETTING_PTR->value(MusicSettingManager::BackgroundListTransparent).toInt();
-        alpha = MusicUtils::Widget::reRenderValue<int>(0xFF, 0x1F, alpha);
+        alpha = MusicUtils::Image::reRenderValue<int>(0xFF, 0x1F, alpha);
     QWidget::paintEvent(event);
     QPainter painter(this);
 
@@ -258,12 +243,12 @@ MusicSongsToolBoxWidgetItem::MusicSongsToolBoxWidgetItem(int index, const QStrin
     connect(m_topWidget, SIGNAL(addToPlayLater(int)), SIGNAL(addToPlayLater(int)));
     connect(m_topWidget, SIGNAL(addToPlayedList(int)), SIGNAL(addToPlayedList(int)));
 
-    init();
+    initialize();
 }
 
 void MusicSongsToolBoxWidgetItem::setMusicSort(MusicSort *sort)
 {
-    MStatic_cast(MusicSongsToolBoxTopWidget*, m_topWidget)->setMusicSort(sort);
+    TTKStatic_cast(MusicSongsToolBoxTopWidget*, m_topWidget)->setMusicSort(sort);
 }
 
 
@@ -283,7 +268,7 @@ void MusicSongsToolBoxWidget::setMusicSort(QWidget *item, MusicSort *sort)
         {
             if(it->item(j) == item)
             {
-                MStatic_cast(MusicSongsToolBoxWidgetItem*, it)->setMusicSort(sort);
+                TTKStatic_cast(MusicSongsToolBoxWidgetItem*, it)->setMusicSort(sort);
                 return;
             }
         }

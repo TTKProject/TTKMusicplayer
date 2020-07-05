@@ -1,7 +1,5 @@
 #include "musicqqdiscoverlistthread.h"
 #include "musicdownloadqqinterface.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicQQDiscoverListThread::MusicQQDiscoverListThread(QObject *parent)
     : MusicDownLoadDiscoverListThread(parent)
@@ -16,7 +14,7 @@ void MusicQQDiscoverListThread::startToSearch()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_SONG_TOPLIST_C_URL, false).arg(4);
@@ -41,7 +39,7 @@ void MusicQQDiscoverListThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -58,7 +56,7 @@ void MusicQQDiscoverListThread::downLoadFinished()
             {
                 const QVariantList &datas = value["songlist"].toList();
                 int where = datas.count();
-                where = (where > 0) ? qrand()%where : 0;
+                where = (where > 0) ? MusicTime::random(where) : 0;
 
                 int counter = 0;
                 foreach(const QVariant &var, datas)
@@ -91,6 +89,6 @@ void MusicQQDiscoverListThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(m_toplistInfo);
+    Q_EMIT downLoadDataChanged(m_toplistInfo);
     deleteAll();
 }

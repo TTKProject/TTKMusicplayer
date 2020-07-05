@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@ msvc{
     CONFIG += staticlib
 }
 
-include(../TTKVersion.pri)
-unix:VERSION += $$TTKMusicPlayer
+include($$PWD/../TTKVersion.pri)
+CONFIG += warn_off plugin lib
 
-win32:TARGET = ../../bin/$$TTKMusicPlayer/TTKUi
-unix:TARGET = ../lib/$$TTKMusicPlayer/TTKUi
+DESTDIR = $$OUT_PWD/../bin/$$TTKMusicPlayer
+TARGET = TTKUi
 
 RESOURCES += \
     MusicPlayer.qrc \

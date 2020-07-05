@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musicsongstoolboxwidget.h \
     $$PWD/musicsongssummariziedwidget.h \
@@ -26,8 +25,8 @@ HEADERS  += \
     $$PWD/musicconnectmobilewidget.h \
     $$PWD/musicconnecttransferwidget.h \
     $$PWD/musicconnecttransfertablewidget.h \
-    $$PWD/musicwebmusicradiowidget.h \
-    $$PWD/musicwebmusicradioplaywidget.h \
+    $$PWD/musicwebfmradiowidget.h \
+    $$PWD/musicwebfmradioplaywidget.h \
     $$PWD/musicwebdjradiocategorywidget.h \
     $$PWD/musicwebdjradiowidget.h \
     $$PWD/musicwebdjradiofoundwidget.h \
@@ -43,9 +42,7 @@ HEADERS  += \
     $$PWD/musiccloudtoolboxwidget.h \
     $$PWD/musiccloudtablewidget.h
 
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
     $$PWD/musicsongstoolboxwidget.cpp \
     $$PWD/musicsongssummariziedwidget.cpp \
@@ -53,8 +50,8 @@ SOURCES += \
     $$PWD/musicconnectmobilewidget.cpp \
     $$PWD/musicconnecttransferwidget.cpp \
     $$PWD/musicconnecttransfertablewidget.cpp \
-    $$PWD/musicwebmusicradiowidget.cpp \
-    $$PWD/musicwebmusicradioplaywidget.cpp \
+    $$PWD/musicwebfmradiowidget.cpp \
+    $$PWD/musicwebfmradioplaywidget.cpp \
     $$PWD/musicwebdjradiocategorywidget.cpp \
     $$PWD/musicwebdjradiowidget.cpp \
     $$PWD/musicwebdjradiofoundwidget.cpp \
@@ -69,5 +66,3 @@ SOURCES += \
     $$PWD/musiccloudfileinformationwidget.cpp \
     $$PWD/musiccloudtoolboxwidget.cpp \
     $$PWD/musiccloudtablewidget.cpp
-
-}

@@ -8,6 +8,8 @@
 #include "qmmp.h"
 #include "visual.h"
 #include "visualfactory.h"
+#include "effect.h"
+#include "effectfactory.h"
 
 QString MusicUtils::QMMP::pluginPath(const QString &module, const QString &format)
 {
@@ -15,7 +17,7 @@ QString MusicUtils::QMMP::pluginPath(const QString &module, const QString &forma
 #ifdef Q_OS_WIN
     path = path + QString("plugins/%1/%2.dll").arg(module).arg(format);
 #elif defined Q_OS_UNIX
-    path = path + QString("qmmp/%1/lib%2.so").arg(module).arg(format);
+    path = path + QString("plugins/%1/lib%2.so").arg(module).arg(format);
 #endif
     return path;
 }
@@ -44,7 +46,7 @@ void MusicUtils::QMMP::updateMidConfigFile()
     file.close();
 }
 
-void MusicUtils::QMMP::enableVisualPlugin(const QString &name, bool enable)
+void MusicUtils::QMMP::enabledVisualPlugin(const QString &name, bool enable)
 {
     foreach(VisualFactory *v, Visual::factories())
     {
@@ -56,14 +58,51 @@ void MusicUtils::QMMP::enableVisualPlugin(const QString &name, bool enable)
     }
 }
 
+void MusicUtils::QMMP::enabledEffectPlugin(const QString &name, bool enable)
+{
+    foreach(EffectFactory *factory, Effect::factories())
+    {
+        if(factory->properties().shortName == name)
+        {
+            Effect::setEnabled(factory, enable);
+            break;
+        }
+    }
+}
+
+bool MusicUtils::QMMP::effectHasSetting(const QString &name)
+{
+    foreach(EffectFactory *factory, Effect::factories())
+    {
+        if(factory->properties().shortName == name)
+        {
+            return factory->properties().hasSettings;
+        }
+    }
+
+    return false;
+}
+
+void MusicUtils::QMMP::showEffectSetting(const QString &name, QWidget *parent)
+{
+    foreach(EffectFactory *factory, Effect::factories())
+    {
+        if(factory->properties().shortName == name)
+        {
+            factory->showSettings(parent);
+            break;
+        }
+    }
+}
+
 void MusicUtils::QMMP::updateRippleSpectrumConfigFile()
 {
     QSettings settings(Qmmp::configFile(), QSettings::IniFormat);
-    settings.beginGroup("OuterEWave");
+    settings.beginGroup("OuterBlurWave");
 
-    QString colors = M_SETTING_PTR->value(MusicSettingManager::OtherRippleSpectrumColor).toString();
+    QString colors = M_SETTING_PTR->value(MusicSettingManager::RippleSpectrumColor).toString();
     settings.setValue("colors", colors.remove(";"));
-    const double opacity = /*M_SETTING_PTR->value(MusicSettingManager::OtherRippleSpectrumOpacity).toInt()/100.0*/1.0;
+    const double opacity = 1.0;
     settings.setValue("opacity", opacity);
 
     settings.endGroup();

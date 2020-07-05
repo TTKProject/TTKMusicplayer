@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-#include "musicnumberdefine.h"
 #include "musicglobaldefine.h"
 
 /*! @brief The namespace of the utils string.
@@ -41,40 +40,40 @@ namespace MusicUtils
         /*!
          * Get string prefix path.
          */
-        MUSIC_UTILS_EXPORT QString StringPrefix(const QString &name);
+        MUSIC_UTILS_EXPORT QString stringPrefix(const QString &name);
         /*!
          * Get string prefix path.
          */
-        MUSIC_UTILS_EXPORT QString StringPrefix(const QString &name, const QString &prefix);
+        MUSIC_UTILS_EXPORT QString stringPrefix(const QString &name, const QString &prefix);
         /*!
          * Get string suffix path.
          */
-        MUSIC_UTILS_EXPORT QString StringSuffix(const QString &name);
+        MUSIC_UTILS_EXPORT QString stringSuffix(const QString &name);
         /*!
          * Get string suffix path.
          */
-        MUSIC_UTILS_EXPORT QString StringSuffix(const QString &name, const QString &suffix);
+        MUSIC_UTILS_EXPORT QString stringSuffix(const QString &name, const QString &suffix);
         /*!
          * Get string splite path.
          */
-        MUSIC_UTILS_EXPORT QString StringSplite(const QString &name);
+        MUSIC_UTILS_EXPORT QString stringSplitToken(const QString &name);
         /*!
          * Get string splite path.
          */
-        MUSIC_UTILS_EXPORT QString StringSplite(const QString &name, const QString &prefix, const QString &suffix);
-
-        /*!
-         * Get new line split string key.
-         */
-        MUSIC_UTILS_EXPORT QString splitLineKey();
-        /*!
-         * Remove given key in string, default is space.
-         */
-        MUSIC_UTILS_EXPORT QString removeStringBy(const QString &value, const QString &key = " ");
+        MUSIC_UTILS_EXPORT QString stringSplitToken(const QString &name, const QString &prefix, const QString &suffix, bool revert = true);
         /*!
          * Get split string value.
          */
-        MUSIC_UTILS_EXPORT QStringList splitString(const QString &value, const QString &key = "-");
+        MUSIC_UTILS_EXPORT QStringList stringSplit(const QString &value, const QString &key = "-");
+        /*!
+         * Remove given key in string, default is space.
+         */
+        MUSIC_UTILS_EXPORT QString removeStringToken(const QString &value, const QString &key = " ");
+
+        /*!
+         * Get new \r \n string key.
+         */
+        MUSIC_UTILS_EXPORT QString newlines();
 
         /*!
          * Check the given char is or not chinese character.

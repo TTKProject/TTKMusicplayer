@@ -1,6 +1,5 @@
 #include "musiclocalsongsearchpopwidget.h"
 #include "musiclocalsongsearchrecordconfigmanager.h"
-#include "musictime.h"
 #include "musicwidgetheaders.h"
 
 #include <QPainter>
@@ -33,21 +32,29 @@ void MusicLocalSongSearchPopTableWidget::createItems(int index, const QString &n
     QHeaderView *headerview = horizontalHeader();
     QTableWidgetItem *item = new QTableWidgetItem(MusicUtils::Widget::elidedText(font(), "  " + name, Qt::ElideRight, headerview->sectionSize(0) - 20));
     item->setToolTip(name);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(index, 0, item);
 
                       item = new QTableWidgetItem(time);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(index, 1, item);
 }
 
 void MusicLocalSongSearchPopTableWidget::itemCellClicked(int row, int)
 {
-    emit setText( item(row, 0)->toolTip().trimmed() );
+    Q_EMIT setText(item(row, 0)->toolTip().trimmed());
 
-    QWidget *widget = MStatic_cast(QWidget*, parent());
+    QWidget *widget = TTKStatic_cast(QWidget*, parent());
     widget->lower();
     widget->hide();
 }
@@ -67,14 +74,14 @@ MusicLocalSongSearchPopWidget::MusicLocalSongSearchPopWidget(QWidget *parent)
     m_clearButton = new QPushButton("   " + tr("clear"), this);
     m_clearButton->setCursor(Qt::PointingHandCursor);
     m_clearButton->setFixedHeight(35);
-    m_clearButton->setStyleSheet(MusicUIObject::MCustomStyle01 + MusicUIObject::MFontStyle02 + MusicUIObject::MColorStyle03 + MusicUIObject::MBorderStyle01 + MusicUIObject::MBackgroundStyle17);
+    m_clearButton->setStyleSheet(MusicUIObject::MQSSCustomStyle01 + MusicUIObject::MQSSFontStyle02 + MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSBorderStyle01 + MusicUIObject::MQSSBackgroundStyle17);
 #ifdef Q_OS_UNIX
     m_clearButton->setFocusPolicy(Qt::NoFocus);
 #endif
 
     QFrame *frame = new QFrame(this);
     frame->setFixedHeight(1);
-    frame->setStyleSheet(MusicUIObject::MBackgroundStyle03);
+    frame->setStyleSheet(MusicUIObject::MQSSBackgroundStyle03);
     frame->setFrameShape(QFrame::HLine);
 
     layout->addWidget(m_popTableWidget);
@@ -104,12 +111,12 @@ void MusicLocalSongSearchPopWidget::createItems()
     }
 
     MusicSearchRecords records;
-    search.readSearchData( records );
+    search.readSearchData(records);
 
     const int count = records.count();
-    resize(m_popTableWidget->width() + 2, count == 0 ? 0 : (count < 6 ? count*ITEM_ROW_HEIGHT_M + 45 : 7*ITEM_ROW_HEIGHT_M + 8) );
+    resize(m_popTableWidget->width() + 2, count == 0 ? 0 : (count < 6 ? count*ITEM_ROW_HEIGHT_M + 45 : 7*ITEM_ROW_HEIGHT_M + 8));
 
-    m_popTableWidget->setRowCount( count );
+    m_popTableWidget->setRowCount(count);
     for(int i=0; i<count; ++i)
     {
         m_popTableWidget->createItems(i, records[i].m_name, utcTimeToLocal(records[i].m_time));
@@ -122,9 +129,9 @@ void MusicLocalSongSearchPopWidget::createSuggestItems(const QStringList &names)
     m_popTableWidget->clearAllItems();
 
     const int count = names.count();
-    resize(m_popTableWidget->width() + 2, count == 0 ? 0 : (count < 6 ? count*ITEM_ROW_HEIGHT_M + 8 : 6*ITEM_ROW_HEIGHT_M + 8) );
+    resize(m_popTableWidget->width() + 2, count == 0 ? 0 : (count < 6 ? count*ITEM_ROW_HEIGHT_M + 8 : 6*ITEM_ROW_HEIGHT_M + 8));
 
-    m_popTableWidget->setRowCount( count );
+    m_popTableWidget->setRowCount(count);
     for(int i=0; i<count; ++i)
     {
         m_popTableWidget->createItems(i, names[i], QString());
@@ -133,7 +140,7 @@ void MusicLocalSongSearchPopWidget::createSuggestItems(const QStringList &names)
 
 QString MusicLocalSongSearchPopWidget::utcTimeToLocal(const QString &time) const
 {
-    const qint64 t = (MusicTime::timeStamp() - time.toLongLong()) / MT_S2MS;
+    const qint64 t = (MusicTime::timestamp() - time.toLongLong()) / MT_S2MS;
     return MusicTime::normalTime2Label(t);
 }
 
@@ -144,7 +151,7 @@ void MusicLocalSongSearchPopWidget::clearButtonClicked()
     {
         return;
     }
-    search.writeSearchData( MusicSearchRecords() );
+    search.writeSearchData(MusicSearchRecords());
     close();
 }
 

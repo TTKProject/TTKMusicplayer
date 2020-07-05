@@ -1,6 +1,6 @@
 #include "musicsongslistabstracttablewidget.h"
 #include "musicurlutils.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicfileinformationwidget.h"
 #include "musicrightareawidget.h"
 #include "musicsongsharingwidget.h"
@@ -60,7 +60,7 @@ void MusicSongsListAbstractTableWidget::musicPlayClicked()
         return;
     }
 
-    emit cellDoubleClicked(currentRow(), 0);
+    Q_EMIT cellDoubleClicked(currentRow(), 0);
 }
 
 void MusicSongsListAbstractTableWidget::setDeleteItemAt()
@@ -74,7 +74,7 @@ void MusicSongsListAbstractTableWidget::setDeleteItemAll()
     setDeleteItemAt();
 
     bool state = false;
-    emit isCurrentIndex(state);
+    Q_EMIT isCurrentIndex(state);
 
     if(rowCount() == 0 && state)
     {
@@ -96,11 +96,9 @@ void MusicSongsListAbstractTableWidget::musicOpenFileDir()
         return;
     }
 
-    if(!MusicUtils::Url::openUrl(QFileInfo(path).absoluteFilePath(), true))
+    if(!MusicUtils::Url::openUrl(QFileInfo(path).absoluteFilePath()))
     {
-        MusicMessageBox message;
-        message.setText(tr("The origin one does not exist!"));
-        message.exec();
+        MusicToastLabel::popup(tr("The origin one does not exist!"));
     }
 }
 
@@ -112,7 +110,7 @@ void MusicSongsListAbstractTableWidget::musicFileInformation()
     }
 
     MusicFileInformationWidget file;
-    file.setFileInformation( getCurrentSongPath() );
+    file.setFileInformation(getCurrentSongPath());
     file.exec();
 }
 
@@ -133,7 +131,7 @@ void MusicSongsListAbstractTableWidget::musicAlbumFoundWidget()
         return;
     }
 
-    MusicRightAreaWidget::instance()->musicAlbumFound( getCurrentSongName(), QString() );
+    MusicRightAreaWidget::instance()->musicAlbumFound(getCurrentSongName(), QString());
 }
 
 void MusicSongsListAbstractTableWidget::musicSimilarFoundWidget()
@@ -143,7 +141,7 @@ void MusicSongsListAbstractTableWidget::musicSimilarFoundWidget()
         return;
     }
 
-    MusicRightAreaWidget::instance()->musicSimilarFound( getCurrentSongName() );
+    MusicRightAreaWidget::instance()->musicSimilarFound(getCurrentSongName());
 }
 
 void MusicSongsListAbstractTableWidget::musicSongSharedWidget()
@@ -190,7 +188,7 @@ void MusicSongsListAbstractTableWidget::musicPlayedSimilarFoundWidget()
         return;
     }
 
-    MusicRightAreaWidget::instance()->musicSimilarFound( getSongName(m_playRowIndex) );
+    MusicRightAreaWidget::instance()->musicSimilarFound(getSongName(m_playRowIndex));
 }
 
 void MusicSongsListAbstractTableWidget::musicSongPlayedSharedWidget()
@@ -215,12 +213,12 @@ void MusicSongsListAbstractTableWidget::musicSongPlayedKMicroWidget()
         return;
     }
 
-    MusicLeftAreaWidget::instance()->createSoundKMicroWidget( getSongName(m_playRowIndex) );
+    MusicLeftAreaWidget::instance()->createSoundKMicroWidget(getSongName(m_playRowIndex));
 }
 
 void MusicSongsListAbstractTableWidget::createMoreMenu(QMenu *menu)
 {
-    menu->setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu->setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     QMenu *addMenu = menu->addMenu(QIcon(":/contextMenu/btn_add"), tr("addToList"));
     addMenu->addAction(tr("musicCloud"));
@@ -231,12 +229,12 @@ void MusicSongsListAbstractTableWidget::createMoreMenu(QMenu *menu)
 
 QString MusicSongsListAbstractTableWidget::getCurrentSongPath() const
 {
-    if(rowCount() == 0 || currentRow() < 0 )
+    if(rowCount() == 0 || currentRow() < 0)
     {
         return QString();
     }
 
-    return getSongPath( currentRow() );
+    return getSongPath(currentRow());
 }
 
 QString MusicSongsListAbstractTableWidget::getSongPath(int index) const
@@ -246,12 +244,12 @@ QString MusicSongsListAbstractTableWidget::getSongPath(int index) const
 
 QString MusicSongsListAbstractTableWidget::getCurrentSongName() const
 {
-    if(rowCount() == 0 || currentRow() < 0 )
+    if(rowCount() == 0 || currentRow() < 0)
     {
         return QString();
     }
 
-    return getSongName( currentRow() );
+    return getSongName(currentRow());
 }
 
 QString MusicSongsListAbstractTableWidget::getSongName(int index) const

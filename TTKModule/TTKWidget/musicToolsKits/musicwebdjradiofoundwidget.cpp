@@ -6,7 +6,7 @@
 #include "musicdownloadqueryfactory.h"
 #include "musicdownloadsourcethread.h"
 #include "musicwebdjradioinfowidget.h"
-#include "musicotherdefine.h"
+#include "musicimageutils.h"
 
 #include <qmath.h>
 
@@ -22,7 +22,7 @@ MusicWebDJRadioFoundItemWidget::MusicWebDJRadioFoundItemWidget(QWidget *parent)
     m_playButton = new QPushButton(this);
     m_playButton->setGeometry(110, 110, 30, 30);
     m_playButton->setCursor(Qt::PointingHandCursor);
-    m_playButton->setStyleSheet(MusicUIObject::MKGTinyBtnPlaylist);
+    m_playButton->setStyleSheet(MusicUIObject::MQSSTinyBtnPlaylist);
     connect(m_playButton, SIGNAL(clicked()), SLOT(currentItemClicked()));
 
 #ifdef Q_OS_UNIX
@@ -58,7 +58,7 @@ void MusicWebDJRadioFoundItemWidget::setMusicResultsItem(const MusicResultsItem 
     m_creatorLabel->setText(MusicUtils::Widget::elidedText(m_creatorLabel->font(), m_creatorLabel->toolTip(), Qt::ElideRight, WIDTH_LABEL_SIZE));
 
     MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-    connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+    connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
     if(!item.m_coverUrl.isEmpty() && item.m_coverUrl != COVER_URL_NULL)
     {
         download->startToDownload(item.m_coverUrl);
@@ -74,7 +74,7 @@ void MusicWebDJRadioFoundItemWidget::downLoadFinished(const QByteArray &data)
         QPixmap cv(":/image/lb_album_cover");
         cv = cv.scaled(m_iconLabel->size());
         pix = pix.scaled(m_iconLabel->size());
-        MusicUtils::Widget::fusionPixmap(pix, cv, QPoint(0, 0));
+        MusicUtils::Image::fusionPixmap(pix, cv, QPoint(0, 0));
         m_iconLabel->setPixmap(pix);
     }
     m_playButton->raise();
@@ -82,7 +82,7 @@ void MusicWebDJRadioFoundItemWidget::downLoadFinished(const QByteArray &data)
 
 void MusicWebDJRadioFoundItemWidget::currentItemClicked()
 {
-    emit currentItemClicked(m_itemData);
+    Q_EMIT currentItemClicked(m_itemData);
 }
 
 
@@ -156,7 +156,7 @@ void MusicWebDJRadioFoundWidget::createProgramItem(const MusicResultsItem &item)
 
         m_container->removeWidget(m_mainWindow);
         QScrollArea *scrollArea = new QScrollArea(this);
-        scrollArea->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+        scrollArea->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
         scrollArea->setWidgetResizable(true);
         scrollArea->setFrameShape(QFrame::NoFrame);
         scrollArea->setAlignment(Qt::AlignLeft);
@@ -164,7 +164,7 @@ void MusicWebDJRadioFoundWidget::createProgramItem(const MusicResultsItem &item)
         m_container->addWidget(scrollArea);
 
         m_firstInit = true;
-        QHBoxLayout *mainlayout = MStatic_cast(QHBoxLayout*, m_mainWindow->layout());
+        QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
         containTopLayout->setContentsMargins(30, 0, 30, 0);
@@ -172,7 +172,7 @@ void MusicWebDJRadioFoundWidget::createProgramItem(const MusicResultsItem &item)
 
         QPushButton *backButton = new QPushButton(tr("Back"), containTopWidget);
         backButton->setFixedSize(90, 30);
-        backButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+        backButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
         backButton->setCursor(QCursor(Qt::PointingHandCursor));
         connect(backButton, SIGNAL(clicked()), this, SIGNAL(backToMainMenu()));
         containTopLayout->addWidget(backButton);
@@ -181,7 +181,7 @@ void MusicWebDJRadioFoundWidget::createProgramItem(const MusicResultsItem &item)
 
         QFrame *line = new QFrame(m_mainWindow);
         line->setFrameShape(QFrame::HLine);
-        line->setStyleSheet(MusicUIObject::MColorStyle06);
+        line->setStyleSheet(MusicUIObject::MQSSColorStyle06);
 
         QWidget *containWidget = new QWidget(m_mainWindow);
         m_gridLayout = new QGridLayout(containWidget);
@@ -193,7 +193,7 @@ void MusicWebDJRadioFoundWidget::createProgramItem(const MusicResultsItem &item)
         mainlayout->addWidget(containWidget);
 
         m_pagingWidgetObject = new MusicPagingWidgetObject(m_mainWindow);
-        connect(m_pagingWidgetObject, SIGNAL(mapped(int)), SLOT(buttonClicked(int)));
+        connect(m_pagingWidgetObject, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
         const int total = ceil(m_downloadThread->getPageTotal()*1.0/m_downloadThread->getPageSize());
         mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, total));
@@ -230,7 +230,7 @@ void MusicWebDJRadioFoundWidget::backToMainMenuClicked()
 {
     if(!m_firstInit)
     {
-        emit backToMainMenu();
+        Q_EMIT backToMainMenu();
         return;
     }
     m_container->setCurrentIndex(PLAYLIST_WINDOW_INDEX_0);

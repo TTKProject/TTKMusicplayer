@@ -1,11 +1,9 @@
 #include "musicdownloadquerybdlearnthread.h"
 #include "musicdownloadbdinterface.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
 #include "musicurlutils.h"
 #include "musiccoreutils.h"
-#///QJson import
-#include "qjson/parser.h"
+
 #include "qalg/qaeswrap.h"
 
 MusicDownLoadQueryBDLearnThread::MusicDownLoadQueryBDLearnThread(QObject *parent)
@@ -22,7 +20,7 @@ void MusicDownLoadQueryBDLearnThread::startToSearch(QueryType type, const QStrin
     }
 
     Q_UNUSED(type);
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_SG_LEAEN_URL, false).arg(text).arg(1).arg(30);
@@ -46,8 +44,8 @@ void MusicDownLoadQueryBDLearnThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -83,11 +81,11 @@ void MusicDownLoadQueryBDLearnThread::downLoadFinished()
                     musicInfo.m_discNumber = "1";
                     musicInfo.m_trackNumber = value["album_no"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicLrcAttribute(&musicInfo);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -98,14 +96,14 @@ void MusicDownLoadQueryBDLearnThread::downLoadFinished()
                     item.m_songName = musicInfo.m_songName;
                     item.m_singerName = musicInfo.m_singerName;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -116,7 +114,7 @@ void MusicDownLoadQueryBDLearnThread::readFromMusicSongAttribute(MusicObject::Mu
         return;
     }
 
-    const QString &key = MusicUtils::Algorithm::mdII(BD_SG_LEAEN_PA_URL, false).arg(info->m_songId).arg(MusicTime::timeStamp());
+    const QString &key = MusicUtils::Algorithm::mdII(BD_SG_LEAEN_PA_URL, false).arg(info->m_songId).arg(MusicTime::timestamp());
     QString eKey = QString(QAesWrap().encryptCBC(key.toUtf8(), "4CC20A0C44FEB6FD", "2012061402992850"));
     MusicUtils::Url::urlEncode(eKey);
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_SG_LEAEN_INFO_URL, false).arg(key).arg(eKey);

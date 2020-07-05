@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,8 @@
 
 #include "qglobalshortcut.h"
 #include <QAbstractEventDispatcher>
-#include <QKeySequence>
 #include <QHash>
-#if(QT_VERSION>=0x050000)
+#ifdef TTK_GREATER_NEW
 #include <QAbstractNativeEventFilter>
 #endif
 
@@ -31,7 +30,7 @@
  * @author libqxt <foundation@libqxt.org>
  */
 class MUSIC_EXTRAS_EXPORT QGlobalShortcutPrivate : public TTKPrivate<QGlobalShortcut>
-#if(QT_VERSION>=0x050000)
+#ifdef TTK_GREATER_NEW
         , public QAbstractNativeEventFilter
 #endif
 {
@@ -44,16 +43,16 @@ public:
     Qt::Key key;
     Qt::KeyboardModifiers mods;
 
-    bool setShortcut(const QKeySequence& shortcut);
+    bool setShortcut(const QKeySequence &shortcut);
     bool unsetShortcut();
 
     static bool error;
     static int ref;
-#if(QT_VERSION<0x050000)
+#ifndef TTK_GREATER_NEW
     static QAbstractEventDispatcher::EventFilter prevEventFilter;
     static bool eventFilter(void* message);
 #else
-    bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+    virtual bool nativeEventFilter(const QByteArray &type, void *message, long *result) override;
 #endif
 
 private:

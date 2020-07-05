@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,46 +21,46 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the interior lrc button style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGInteriorTranslation = " \
+    const QString MQSSInteriorTranslation = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/btn_translation_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_translation_hover);}";
+            background-image: url(:/lrc/btn_translation_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_translation_hover); }";
 
-    const QString MKGInteriorMicrophone = " \
+    const QString MQSSInteriorMicrophone = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/btn_microphone_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_microphone_hover);}";
+            background-image: url(:/lrc/btn_microphone_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_microphone_hover); }";
 
-    const QString MKGInteriorMessage = " \
+    const QString MQSSInteriorMessage = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/btn_message_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_message_hover);}";
+            background-image: url(:/lrc/btn_message_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_message_hover); }";
 
-    const QString MKGInteriorMovie = " \
+    const QString MQSSInteriorMovie = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/btn_mv_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_mv_hover);}";
+            background-image: url(:/lrc/btn_mv_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_mv_hover); }";
             
-    const QString MKGInteriorStar = " \
+    const QString MQSSInteriorStar = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/btn_star_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_star_hover);} \
-            QPushButton:pressed{ background-image: url(:/lrc/btn_star_clicked);}";
+            background-image: url(:/lrc/btn_star_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_star_hover); } \
+            QPushButton:pressed{ background-image: url(:/lrc/btn_star_clicked); }";
             
-    const QString MKGInteriorMakeUp = " \
+    const QString MQSSInteriorMakeUp = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/lb_make_up_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_make_up_hover);}";
+            background-image: url(:/lrc/lb_make_up_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_make_up_hover); }";
             
-    const QString MKGInteriorMakeDown = " \
+    const QString MQSSInteriorMakeDown = " \
             QPushButton{ border:none; \
-            background-image: url(:/lrc/lb_make_down_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_make_down_hover);}";
+            background-image: url(:/lrc/lb_make_down_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_make_down_hover); }";
 
 }
 

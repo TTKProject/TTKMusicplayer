@@ -46,16 +46,15 @@ void MusicLrcContainerForDesktop::stopLrcMask()
     }
 }
 
-void MusicLrcContainerForDesktop::setSettingParameter()
+void MusicLrcContainerForDesktop::applySettingParameter()
 {
-    MusicLrcContainer::setSettingParameter();
+    MusicLrcContainer::applySettingParameter();
     foreach(MusicLrcManager *manager, m_musicLrcContainer)
     {
         m_currentLrcFontSize = M_SETTING_PTR->value(MusicSettingManager::DLrcSize).toInt();
         manager->setLrcFontSize(m_currentLrcFontSize);
     }
     m_windowLocked = M_SETTING_PTR->value(MusicSettingManager::DLrcLocked).toInt() == 1;
-    //Revert in function setSingleLineTypeChanged
     m_singleLineType = !(M_SETTING_PTR->value(MusicSettingManager::DLrcSingleLineType).toInt() == 1);
     setSingleLineTypeChanged();
 
@@ -74,14 +73,14 @@ void MusicLrcContainerForDesktop::initCurrentLrc() const
     }
 }
 
-void MusicLrcContainerForDesktop::showPlayStatus(bool status) const
+void MusicLrcContainerForDesktop::setCurrentPlayStatus(bool status) const
 {
-    m_toolPlayButton->setStyleSheet(status ? MusicUIObject::MKGDeskTopPlay : MusicUIObject::MKGDeskTopPause);
+    m_toolPlayButton->setStyleSheet(status ? MusicUIObject::MQSSDeskTopPlay : MusicUIObject::MQSSDeskTopPause);
 }
 
 bool MusicLrcContainerForDesktop::getPlayStatus() const
 {
-    return m_toolPlayButton->styleSheet().contains(MusicUIObject::MKGDeskTopPlay);
+    return m_toolPlayButton->styleSheet().contains(MusicUIObject::MQSSDeskTopPlay);
 }
 
 void MusicLrcContainerForDesktop::updateCurrentLrc(const QString &first, const QString &second, qint64 time)
@@ -89,8 +88,8 @@ void MusicLrcContainerForDesktop::updateCurrentLrc(const QString &first, const Q
     if(!m_singleLineType)
     {
         m_reverse = !m_reverse;
-        m_musicLrcContainer[ m_reverse]->reset();
-        m_musicLrcContainer[ m_reverse]->setText(second);
+        m_musicLrcContainer[m_reverse]->reset();
+        m_musicLrcContainer[m_reverse]->setText(second);
         m_musicLrcContainer[!m_reverse]->setText(first);
         m_musicLrcContainer[!m_reverse]->startLrcMask(time);
     }
@@ -109,7 +108,7 @@ void MusicLrcContainerForDesktop::setWindowLockedChanged()
     if(m_windowLocked)
     {
        m_toolBarWidget->hide();
-       setStyleSheet(MusicUIObject::MBackgroundStyle01);
+       setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
     }
     M_SETTING_PTR->setValue(MusicSettingManager::DLrcLocked,  m_windowLocked ? 1 : 0);
     MusicBottomAreaWidget::instance()->lockDesktopLrc(m_windowLocked);
@@ -136,7 +135,7 @@ void MusicLrcContainerForDesktop::setLrcSmallerChanged()
 void MusicLrcContainerForDesktop::toolStyleChanged()
 {
     QMenu menu(this);
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     createColorMenu(menu);
     menu.exec(QCursor::pos());
 }
@@ -197,7 +196,7 @@ void MusicLrcContainerForDesktop::creatToolBarWidget()
     m_toolBarLayout->addStretch(1);
 
     m_toolBarWidget->setObjectName("toolBarWidget");
-    m_toolBarWidget->setStyleSheet(QString("#toolBarWidget{%1}").arg(MusicUIObject::MBackgroundStyle08));
+    m_toolBarWidget->setStyleSheet(QString("#toolBarWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle08));
     m_toolBarWidget->setLayout(m_toolBarLayout);
 
     QPushButton *showMainWindow = new QPushButton(m_toolBarWidget);
@@ -297,21 +296,21 @@ void MusicLrcContainerForDesktop::creatToolBarWidget()
     toolSettingButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_toolPlayButton->setCursor(QCursor(Qt::PointingHandCursor));
 
-    showMainWindow->setStyleSheet(MusicUIObject::MPushButtonStyle02);
-    toolCloseButton->setStyleSheet(MusicUIObject::MKGBtnTClose);
-    toolStyleButton->setStyleSheet(MusicUIObject::MKGDeskTopStyle);
-    toolWindowLockedButton->setStyleSheet(MusicUIObject::MKGDeskTopLock);
-    toolLrcSmallerButton->setStyleSheet(MusicUIObject::MKGDeskTopSizeDown);
-    toolLrcBigerButton->setStyleSheet(MusicUIObject::MKGDeskTopSizeUp);
-    toolPreSongButton->setStyleSheet(MusicUIObject::MKGDeskTopPrevious);
-    toolNextSongButton->setStyleSheet(MusicUIObject::MKGDeskTopNext);
-    toolSettingButton->setStyleSheet(MusicUIObject::MKGDeskTopSetting);
-    m_toolPlayButton->setStyleSheet(MusicUIObject::MKGDeskTopPlay);
-    toolWindowTypeButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MKGDeskTopHorizontal : MusicUIObject::MKGDeskTopVertical);
-    toolMakeLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MKGDeskTopVMakeLrc : MusicUIObject::MKGDeskTopHMakeLrc);
-    toolSearchLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MKGDeskTopVSearchLrc : MusicUIObject::MKGDeskTopHSearchLrc);
-    toolUpdateLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MKGDeskTopVUpdateLrc : MusicUIObject::MKGDeskTopHUpdateLrc);
-    toolErrorLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MKGDeskTopVErrorLrc : MusicUIObject::MKGDeskTopHErrorLrc);
+    showMainWindow->setStyleSheet(MusicUIObject::MQSSPushButtonStyle02);
+    toolCloseButton->setStyleSheet(MusicUIObject::MQSSBtnTClose);
+    toolStyleButton->setStyleSheet(MusicUIObject::MQSSDeskTopStyle);
+    toolWindowLockedButton->setStyleSheet(MusicUIObject::MQSSDeskTopLock);
+    toolLrcSmallerButton->setStyleSheet(MusicUIObject::MQSSDeskTopSizeDown);
+    toolLrcBigerButton->setStyleSheet(MusicUIObject::MQSSDeskTopSizeUp);
+    toolPreSongButton->setStyleSheet(MusicUIObject::MQSSDeskTopPrevious);
+    toolNextSongButton->setStyleSheet(MusicUIObject::MQSSDeskTopNext);
+    toolSettingButton->setStyleSheet(MusicUIObject::MQSSDeskTopSetting);
+    m_toolPlayButton->setStyleSheet(MusicUIObject::MQSSDeskTopPlay);
+    toolWindowTypeButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MQSSDeskTopHorizontal : MusicUIObject::MQSSDeskTopVertical);
+    toolMakeLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MQSSDeskTopVMakeLrc : MusicUIObject::MQSSDeskTopHMakeLrc);
+    toolSearchLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MQSSDeskTopVSearchLrc : MusicUIObject::MQSSDeskTopHSearchLrc);
+    toolUpdateLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MQSSDeskTopVUpdateLrc : MusicUIObject::MQSSDeskTopHUpdateLrc);
+    toolErrorLrcTextButton->setStyleSheet(m_verticalWindow ? MusicUIObject::MQSSDeskTopVErrorLrc : MusicUIObject::MQSSDeskTopHErrorLrc);
 
     showMainWindow->setToolTip(tr("showMainWindow"));
     toolCloseButton->setToolTip(tr("hide"));
@@ -374,7 +373,7 @@ void MusicLrcContainerForDesktop::enterEvent(QEvent *event)
     }
     MusicLrcContainer::enterEvent(event);
     m_toolBarWidget->show();
-    setStyleSheet(QString("#desktopWidget{%1}").arg(MusicUIObject::MBackgroundStyle08));
+    setStyleSheet(QString("#desktopWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle08));
 }
 
 void MusicLrcContainerForDesktop::leaveEvent(QEvent *event)
@@ -385,7 +384,7 @@ void MusicLrcContainerForDesktop::leaveEvent(QEvent *event)
     }
     MusicLrcContainer::leaveEvent(event);
     m_toolBarWidget->hide();
-    setStyleSheet(QString("#desktopWidget{%1}").arg(MusicUIObject::MBackgroundStyle01));
+    setStyleSheet(QString("#desktopWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle01));
 }
 
 void MusicLrcContainerForDesktop::closeEvent(QCloseEvent *event)
@@ -399,7 +398,7 @@ void MusicLrcContainerForDesktop::contextMenuEvent(QContextMenuEvent *event)
     MusicLrcContainer::contextMenuEvent(event);
 
     QMenu menu;
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     menu.addAction(tr("searchLrcs"), this, SLOT(searchMusicLrcs()));
     menu.addAction(tr("updateLrc"), this, SIGNAL(currentLrcUpdated()));
     menu.addAction(tr("makeLrc"), this, SLOT(showLrcMakedWidget()));
@@ -411,8 +410,7 @@ void MusicLrcContainerForDesktop::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(tr("hide"), this, SLOT(close()));
     menu.addAction(QIcon(":/contextMenu/btn_lock"), m_windowLocked ? tr("unlockLrc"): tr("lockLrc"), this, SLOT(setWindowLockedChanged()));
 
-    QMenu changColorMenu(tr("changColorMenu"), this);
-    changColorMenu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    QMenu changColorMenu(tr("changColorMenu"), &menu);
     createColorMenu(changColorMenu);
     menu.addMenu(&changColorMenu);
 
@@ -457,7 +455,7 @@ void MusicLrcContainerHorizontalDesktop::initCurrentLrc() const
         const int width = m_musicLrcContainer[0]->x();
         if(m_singleLineType)
         {
-            m_musicLrcContainer[0]->setGeometry((m_widgetWidth - width)/2, 20, width, m_geometry.y());
+            m_musicLrcContainer[0]->setGeometry((m_widgetWidth - width) / 2, 20, width, m_geometry.y());
         }
         else
         {
@@ -473,7 +471,7 @@ void MusicLrcContainerHorizontalDesktop::setSingleLineTypeChanged()
     if(m_singleLineType)
     {
         const int width = m_musicLrcContainer[0]->x();
-        m_musicLrcContainer[0]->move((m_widgetWidth - width)/2, 20);
+        m_musicLrcContainer[0]->move((m_widgetWidth - width) / 2, 20);
     }
     else
     {
@@ -486,14 +484,14 @@ void MusicLrcContainerHorizontalDesktop::resizeLrcSizeArea()
     int width = m_musicLrcContainer[0]->x();
     if(m_singleLineType)
     {
-        m_musicLrcContainer[0]->setGeometry((m_widgetWidth - width)/2, 20, width, m_geometry.y());
+        m_musicLrcContainer[0]->setGeometry((m_widgetWidth - width) / 2, 20, width, m_geometry.y());
     }
     else
     {
         m_musicLrcContainer[0]->setGeometry(0, 20, width, m_geometry.y());
         width = m_musicLrcContainer[1]->x();
         int pos = m_geometry.x() - width;
-        if(pos < 0 )
+        if(pos < 0)
         {
             pos = 0;
         }
@@ -536,7 +534,7 @@ void MusicLrcContainerVerticalDesktop::initCurrentLrc() const
         const int height = m_musicLrcContainer[0]->x();
         if(m_singleLineType)
         {
-            m_musicLrcContainer[0]->setGeometry(20, (m_widgetWidth - height)/2, m_geometry.y(), height);
+            m_musicLrcContainer[0]->setGeometry(20, (m_widgetWidth - height) / 2, m_geometry.y(), height);
         }
         else
         {
@@ -552,7 +550,7 @@ void MusicLrcContainerVerticalDesktop::setSingleLineTypeChanged()
     if(m_singleLineType)
     {
         const int height = m_musicLrcContainer[0]->x();
-        m_musicLrcContainer[0]->move(20, (m_widgetWidth - height)/2);
+        m_musicLrcContainer[0]->move(20, (m_widgetWidth - height) / 2);
     }
     else
     {
@@ -565,7 +563,7 @@ void MusicLrcContainerVerticalDesktop::resizeLrcSizeArea()
     int height = m_musicLrcContainer[0]->x();
     if(m_singleLineType)
     {
-        m_musicLrcContainer[0]->setGeometry(20, (m_widgetWidth - height)/2, m_geometry.y(), height);
+        m_musicLrcContainer[0]->setGeometry(20, (m_widgetWidth - height) / 2, m_geometry.y(), height);
     }
     else
     {
@@ -573,7 +571,7 @@ void MusicLrcContainerVerticalDesktop::resizeLrcSizeArea()
 
         height = m_musicLrcContainer[1]->x();
         int pos = m_geometry.x() - height;
-        if(pos < 0 )
+        if(pos < 0)
         {
             pos = 0;
         }

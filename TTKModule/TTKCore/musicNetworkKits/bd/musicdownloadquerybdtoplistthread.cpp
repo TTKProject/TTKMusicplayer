@@ -1,7 +1,4 @@
 #include "musicdownloadquerybdtoplistthread.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryBDToplistThread::MusicDownLoadQueryBDToplistThread(QObject *parent)
     : MusicDownLoadQueryToplistThread(parent)
@@ -29,7 +26,7 @@ void MusicDownLoadQueryBDToplistThread::startToSearch(const QString &toplist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_SONG_TOPLIST_URL, false).arg(toplist).arg(m_pageSize).arg(0);
@@ -53,8 +50,8 @@ void MusicDownLoadQueryBDToplistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -77,7 +74,7 @@ void MusicDownLoadQueryBDToplistThread::downLoadFinished()
                 info.m_playCount = "-";
                 info.m_description = topInfo["comment"].toString();
                 info.m_updateTime = topInfo["update_date"].toString();
-                emit createToplistInfoItem(info);
+                Q_EMIT createToplistInfoItem(info);
                 //
                 const QVariantList &datas = value["song_list"].toList();
                 foreach(const QVariant &var, datas)
@@ -104,9 +101,9 @@ void MusicDownLoadQueryBDToplistThread::downLoadFinished()
                     musicInfo.m_discNumber = "1";
                     musicInfo.m_trackNumber = value["album_no"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo, value["all_rate"].toString(), m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -119,13 +116,13 @@ void MusicDownLoadQueryBDToplistThread::downLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

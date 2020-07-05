@@ -113,7 +113,7 @@ bool TTKLocalPeer::isClient()
     }
 
     bool res = d->m_server->listen(d->m_socketName);
-#if defined(Q_OS_UNIX) && (QT_VERSION >= QT_VERSION_CHECK(4,5,0))
+#if defined(Q_OS_UNIX) && TTK_QT_VERSION_CHECK(4,5,0)
     // ### Workaround
     if(!res && d->m_server->serverError() == QAbstractSocket::AddressInUseError)
     {
@@ -237,5 +237,5 @@ void TTKLocalPeer::receiveConnection()
     socket->waitForDisconnected(1000); // make sure client reads ack
     delete socket;
 
-    emit messageReceived(message); //### (might take a long time to return)
+    Q_EMIT messageReceived(message); //### (might take a long time to return)
 }

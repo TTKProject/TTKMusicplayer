@@ -1,8 +1,6 @@
 #include "musicextractwrap.h"
 #include "musicbackgroundconfigmanager.h"
-#include "musicnumberdefine.h"
-#include "musicotherdefine.h"
-#include "musicwidgetutils.h"
+#include "musicimageutils.h"
 #include "musiccoreutils.h"
 
 #include "ttkzip/zip.h"
@@ -18,7 +16,7 @@
 bool MusicExtractWrap::outputThunderSkin(QPixmap &image, const QString &path)
 {
     const unzFile &zFile = unzOpen64(path.toLocal8Bit().constData());
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }
@@ -80,7 +78,7 @@ bool MusicExtractWrap::outputThunderSkin(QPixmap &image, const QString &path)
 bool MusicExtractWrap::outputData(const QString &path)
 {
     const unzFile &zFile = unzOpen64(path.toLocal8Bit().constData());
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }
@@ -150,7 +148,7 @@ bool MusicExtractWrap::outputData(const QString &path)
 bool MusicExtractWrap::outputSkin(MusicBackgroundImage *image, const QString &path)
 {
     const unzFile &zFile = unzOpen64(path.toLocal8Bit().constData());
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }
@@ -235,7 +233,7 @@ bool MusicExtractWrap::outputSkin(MusicBackgroundImage *image, const QString &pa
 bool MusicExtractWrap::inputSkin(MusicBackgroundImage *image, const QString &path)
 {
     const zipFile &zFile = zipOpen64(path.toLocal8Bit().constData(), 0);
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }
@@ -247,7 +245,7 @@ bool MusicExtractWrap::inputSkin(MusicBackgroundImage *image, const QString &pat
     memset(&fileInfo, 0, sizeof(fileInfo));
 
     zipOpenNewFileInZip(zFile, (nPrefix + SKN_FILE).toLocal8Bit().constData(), &fileInfo, nullptr, 0, nullptr, 0, nullptr, Z_DEFLATED, level);
-    QByteArray data = MusicUtils::Widget::getPixmapData(image->m_pix);
+    QByteArray data = MusicUtils::Image::getPixmapData(image->m_pix);
     zipWriteInFileInZip(zFile, data.constData(), data.size());
     zipCloseFileInZip(zFile);
 
@@ -268,7 +266,7 @@ bool MusicExtractWrap::inputSkin(MusicBackgroundImage *image, const QString &pat
 bool MusicExtractWrap::outputText(QByteArray &data, const QString &path)
 {
     const unzFile &zFile = unzOpen64(path.toLocal8Bit().constData());
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }
@@ -325,7 +323,7 @@ bool MusicExtractWrap::outputText(QByteArray &data, const QString &path)
 bool MusicExtractWrap::inputText(const QByteArray &data, const QString &path)
 {
     const zipFile &zFile = zipOpen64(path.toLocal8Bit().constData(), 0);
-    if(nullptr == zFile)
+    if(!zFile)
     {
         return false;
     }

@@ -104,7 +104,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getQueryThread(QObj
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQThread(parent); break;
@@ -114,7 +114,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getQueryThread(QObj
         case 5:  thread = new MusicDownLoadQueryKGThread(parent); break;
         default: thread = new MusicDownLoadQueryWYThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -122,7 +122,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getMovieThread(QObj
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYMovieThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQMovieThread(parent); break;
@@ -132,7 +132,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getMovieThread(QObj
         case 5:  thread = new MusicDownLoadQueryKGMovieThread(parent); break;
         default: thread = new MusicDownLoadQueryWYMovieThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryMovieThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryMovieThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -140,7 +140,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getAlbumThread(QObj
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYAlbumThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQAlbumThread(parent); break;
@@ -150,7 +150,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getAlbumThread(QObj
         case 5:  thread = new MusicDownLoadQueryKGAlbumThread(parent); break;
         default: thread = new MusicDownLoadQueryWYAlbumThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryAlbumThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryAlbumThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -158,7 +158,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getArtistThread(QOb
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYArtistThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQArtistThread(parent); break;
@@ -168,7 +168,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getArtistThread(QOb
         case 5:  thread = new MusicDownLoadQueryKGArtistThread(parent); break;
         default: thread = new MusicDownLoadQueryWYArtistThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryArtistThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryArtistThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -176,7 +176,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getArtistListThread
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYArtistListThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQArtistListThread(parent); break;
@@ -186,7 +186,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getArtistListThread
         case 5:  thread = new MusicDownLoadQueryKGArtistListThread(parent); break;
         default: thread = new MusicDownLoadQueryWYArtistListThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryArtistListThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryArtistListThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -194,7 +194,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getToplistThread(QO
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYToplistThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQToplistThread(parent); break;
@@ -204,7 +204,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getToplistThread(QO
         case 5:  thread = new MusicDownLoadQueryKGToplistThread(parent); break;
         default: thread = new MusicDownLoadQueryWYToplistThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryToplistThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryToplistThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -212,7 +212,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getPlaylistThread(Q
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYPlaylistThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQPlaylistThread(parent); break;
@@ -222,7 +222,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getPlaylistThread(Q
         case 5:  thread = new MusicDownLoadQueryKGPlaylistThread(parent); break;
         default: thread = new MusicDownLoadQueryWYPlaylistThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryPlaylistThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryPlaylistThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -230,7 +230,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getRecommendThread(
 {
     MusicDownLoadQueryThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicDownLoadQueryWYRecommendThread(parent); break;
         case 1:  thread = new MusicDownLoadQueryQQRecommendThread(parent); break;
@@ -240,7 +240,7 @@ MusicDownLoadQueryThreadAbstract *MusicDownLoadQueryFactory::getRecommendThread(
         case 5:  thread = new MusicDownLoadQueryKGRecommendThread(parent); break;
         default: thread = new MusicDownLoadQueryWYRecommendThread(parent);
     }
-    M_LOGGER_INFO(QString("MusicDownLoadQueryRecommendThread server: %1").arg(thread->getQueryServer()));
+    TTK_LOGGER_INFO(QString("MusicDownLoadQueryRecommendThread server: %1").arg(thread->getQueryServer()));
     return thread;
 }
 
@@ -253,7 +253,7 @@ MusicDownLoadSimilarThread *MusicDownLoadQueryFactory::getSimilarArtistThread(QO
 {
     MusicDownLoadSimilarThread *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYArtistSimilarThread(parent); break;
         case 1:  thread = new MusicQQArtistSimilarThread(parent); break;
@@ -270,7 +270,7 @@ MusicDownLoadSongSuggestThread *MusicDownLoadQueryFactory::getSuggestThread(QObj
 {
     MusicDownLoadSongSuggestThread *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYSongSuggestThread(parent); break;
         case 1:  thread = new MusicQQSongSuggestThread(parent); break;
@@ -287,7 +287,7 @@ MusicDownLoadCommentsThread *MusicDownLoadQueryFactory::getSongCommentThread(QOb
 {
     MusicDownLoadCommentsThread *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYSongCommentsThread(parent); break;
         case 1:  thread = new MusicQQSongCommentsThread(parent); break;
@@ -304,7 +304,7 @@ MusicDownLoadCommentsThread *MusicDownLoadQueryFactory::getPlaylistCommentThread
 {
     MusicDownLoadCommentsThread *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYPlaylistCommentsThread(parent); break;
         case 1:  thread = new MusicQQPlaylistCommentsThread(parent); break;
@@ -321,7 +321,7 @@ MusicDownLoadDiscoverListThread *MusicDownLoadQueryFactory::getDiscoverListThrea
 {
     MusicDownLoadDiscoverListThread *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYDiscoverListThread(parent); break;
         case 1:  thread = new MusicQQDiscoverListThread(parent); break;
@@ -338,7 +338,7 @@ MusicTranslationThreadAbstract *MusicDownLoadQueryFactory::getTranslationThread(
 {
     MusicTranslationThreadAbstract *thread = nullptr;
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0:  thread = new MusicWYTranslationThread(parent); break;
         case 1:  thread = new MusicTranslationThread(parent); break;
@@ -356,7 +356,7 @@ MusicDownLoadThreadAbstract *MusicDownLoadQueryFactory::getDownloadSmallPicThrea
                                                                                   QObject *parent)
 {
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0: return (new MusicDataDownloadThread(url, save, type, parent));
         case 1: return (new MusicDataDownloadThread(url, save, type, parent));
@@ -373,7 +373,7 @@ MusicDownLoadThreadAbstract *MusicDownLoadQueryFactory::getDownloadLrcThread(con
                                                                              QObject *parent)
 {
     const int index = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
-    switch( index )
+    switch(index)
     {
         case 0: return (new MusicWYTextDownLoadThread(url, save, type, parent));
         case 1: return (new MusicQQTextDownLoadThread(url, save, type, parent));

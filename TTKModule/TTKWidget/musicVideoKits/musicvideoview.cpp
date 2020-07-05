@@ -2,7 +2,6 @@
 #include "musictoastlabel.h"
 #include "musiccoremplayer.h"
 #include "musicbarragewidget.h"
-#include "musicnumberdefine.h"
 #include "musicuiobject.h"
 
 #include <QMouseEvent>
@@ -29,7 +28,7 @@ void MusicViewWidget::mousePressEvent(QMouseEvent *event)
     if(event->button() == Qt::LeftButton)
     {
         m_leftPressed = true;
-        m_clickedTimer->start(300*MT_MS);
+        m_clickedTimer->start(300 * MT_MS);
     }
 }
 
@@ -54,7 +53,7 @@ void MusicViewWidget::mouseDoubleClickEvent(QMouseEvent *event)
         {
             m_clickedTimer->stop();
         }
-        emit setFullScreen();
+        Q_EMIT setFullScreen();
     }
 }
 
@@ -63,10 +62,10 @@ void MusicViewWidget::contextMenuEvent(QContextMenuEvent *event)
     Q_UNUSED(event);
     QWidget::contextMenuEvent(event);
     QMenu menu(this);
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     bool playing;
-    emit mediaIsPlaying(playing);
+    Q_EMIT mediaIsPlaying(playing);
 
     menu.addAction(tr("videoPlay"), parent(), SLOT(play()))->setText(playing ? tr("videoPause") : tr("videoPlay"));
     menu.addAction(tr("videoStop"), parent(), SLOT(stop()));
@@ -79,7 +78,7 @@ MusicVideoView::MusicVideoView(QWidget *parent)
     : QAbstractScrollArea(parent)
 {
     setObjectName("MusicVideoView");
-    setStyleSheet(QString("#MusicVideoView{%1}").arg(MusicUIObject::MBackgroundStyle02));
+    setStyleSheet(QString("#MusicVideoView{%1}").arg(MusicUIObject::MQSSBackgroundStyle02));
 
     m_mediaPlayer = new MusicCoreMPlayer(this);
     m_videoWidget = new MusicViewWidget(this);
@@ -115,7 +114,7 @@ void MusicVideoView::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     QMenu menu(this);
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     bool playing;
     mediaIsPlaying(playing);
@@ -192,8 +191,7 @@ void MusicVideoView::mediaAutionPlayError(int code)
     {
         stop();
 
-        MusicToastLabel *toast = new MusicToastLabel(this);
-        toast->defaultLabel(this, tr("Audio Play Time out!"));
+        MusicToastLabel::popup(tr("Audio Play Time out!"));
     }
 }
 

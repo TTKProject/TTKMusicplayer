@@ -61,7 +61,7 @@ void MusicNetworkConnectionItem::setUrl(const QString &url)
 void MusicNetworkConnectionItem::start()
 {
     m_stateText->setText(tr("Detecting"));
-    m_stateText->setStyleSheet(MusicUIObject::MColorStyle08);
+    m_stateText->setStyleSheet(MusicUIObject::MQSSColorStyle08);
     m_testThread->start();
 }
 
@@ -70,7 +70,7 @@ void MusicNetworkConnectionItem::stop()
     m_iconLabel->setPixmap(QPixmap(":/tiny/lb_question"));
 
     m_stateText->setText(tr("Not Detected"));
-    m_stateText->setStyleSheet(MusicUIObject::MColorStyle03);
+    m_stateText->setStyleSheet(MusicUIObject::MQSSColorStyle03);
     if(m_testThread->isRunning())
     {
         m_testThread->stopAndQuitThread();
@@ -83,16 +83,16 @@ void MusicNetworkConnectionItem::testFinshed(bool state)
     {
         m_stateText->setText(tr("Detected"));
         m_iconLabel->setPixmap(QPixmap(":/tiny/lb_right"));
-        m_stateText->setStyleSheet(MusicUIObject::MColorStyle07);
+        m_stateText->setStyleSheet(MusicUIObject::MQSSColorStyle07);
     }
     else
     {
         m_stateText->setText(tr("Detected Failed"));
         m_iconLabel->setPixmap(QPixmap(":/tiny/lb_error"));
-        m_stateText->setStyleSheet(MusicUIObject::MColorStyle05);
+        m_stateText->setStyleSheet(MusicUIObject::MQSSColorStyle05);
     }
 
-    emit networkConnectionTestChanged();
+    Q_EMIT networkConnectionTestChanged();
 }
 
 
@@ -101,19 +101,20 @@ MusicNetworkConnectionTestWidget::MusicNetworkConnectionTestWidget(QWidget *pare
       m_ui(new Ui::MusicNetworkConnectionTestWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     setAttribute(Qt::WA_DeleteOnClose, true);
     setAttribute(Qt::WA_QuitOnClose, true);
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
     m_ui->iconLabel->setType(MusicGifLabelWidget::Gif_Check_Blue);
-    m_ui->textLabel->setStyleSheet(MusicUIObject::MBackgroundStyle01);
-    m_ui->startButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->textLabel->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
+    m_ui->startButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 #ifdef Q_OS_UNIX
     m_ui->startButton->setFocusPolicy(Qt::NoFocus);
 #endif

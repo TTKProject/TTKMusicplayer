@@ -25,11 +25,11 @@ void MusicLocalSongsManagerThread::run()
     QFileInfoList list;
     foreach(const QString &path, m_path)
     {
-        if(m_run)
+        if(m_running)
         {
             list << MusicUtils::File::getFileListByDir(path, MusicFormats::supportFormatsFilterString(), true);
         }
     }
     ///The name and path search ended when sending the corresponding
-    emit setSongNamePath( list );
+    Q_EMIT setSongNamePath(list);
 }

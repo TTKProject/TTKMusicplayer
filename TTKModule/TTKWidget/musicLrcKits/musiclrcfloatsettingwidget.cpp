@@ -1,6 +1,6 @@
 #include "musiclrcfloatsettingwidget.h"
-#include "musiclrccontainerForInterior.h"
-#include "musicInteriorfloatuiobject.h"
+#include "musiclrccontainerforinterior.h"
+#include "musicinteriorfloatuiobject.h"
 #include "musiclrcdefines.h"
 
 #include <QTimer>
@@ -10,13 +10,13 @@ MusicLrcFloatSettingWidget::MusicLrcFloatSettingWidget(QWidget *parent)
     : MusicFloatAbstractWidget(parent)
 {
     setObjectName("MusicLrcFloatSettingWidget");
-    setStyleSheet(QString("#MusicLrcFloatSettingWidget{%1}").arg(MusicUIObject::MBackgroundStyle08));
+    setStyleSheet(QString("#MusicLrcFloatSettingWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle08));
 
     QLabel *colorLabel = new QLabel(tr("Color"), this);
     QLabel *sizeLabel = new QLabel(tr("Size"), this);
     QLabel *backLabel = new QLabel(tr("Background"), this);
 
-    const QString &labelStyle = MusicUIObject::MColorStyle01 + MusicUIObject::MCustomStyle02 + "image:url(:/lrc/lb_shadow);";
+    const QString &labelStyle = MusicUIObject::MQSSColorStyle01 + MusicUIObject::MQSSCustomStyle02 + "image:url(:/lrc/lb_shadow);";
 
     colorLabel->setStyleSheet(labelStyle);
     sizeLabel->setStyleSheet(labelStyle);
@@ -38,8 +38,8 @@ MusicLrcFloatSettingWidget::MusicLrcFloatSettingWidget(QWidget *parent)
 
     QPushButton *sizeBigerButton = new QPushButton(this);
     QPushButton *sizeSmallerButton = new QPushButton(this);
-    sizeBigerButton->setStyleSheet(MusicUIObject::MKGInteriorLrcBigger);
-    sizeSmallerButton->setStyleSheet(MusicUIObject::MKGInteriorLrcSmaller);
+    sizeBigerButton->setStyleSheet(MusicUIObject::MQSSInteriorLrcBigger);
+    sizeSmallerButton->setStyleSheet(MusicUIObject::MQSSInteriorLrcSmaller);
     sizeBigerButton->setGeometry(85, 70, 24, 24);
     sizeSmallerButton->setGeometry(125, 70, 24, 24);
     sizeBigerButton->setCursor(QCursor(Qt::PointingHandCursor));
@@ -53,15 +53,15 @@ MusicLrcFloatSettingWidget::MusicLrcFloatSettingWidget(QWidget *parent)
     QPushButton *artBackButton = new QPushButton(tr("ArtBg"), this);
     artBackButton->setCursor(QCursor(Qt::PointingHandCursor));
     connect(artBackButton, SIGNAL(clicked()), SLOT(lrcArtBackgroundChanged()));
-    musicBackButton->setStyleSheet(MusicUIObject::MKGInteriorFloatSetting + MusicUIObject::MPushButtonStyle08);
-    artBackButton->setStyleSheet(MusicUIObject::MKGInteriorFloatSetting + MusicUIObject::MPushButtonStyle08);
+    musicBackButton->setStyleSheet(MusicUIObject::MQSSInteriorFloatSetting + MusicUIObject::MQSSPushButtonStyle08);
+    artBackButton->setStyleSheet(MusicUIObject::MQSSInteriorFloatSetting + MusicUIObject::MQSSPushButtonStyle08);
     musicBackButton->setGeometry(15, 150, 60, 22);
     artBackButton->setGeometry(90, 150, 60, 22);
 
     QPushButton *settingButton = new QPushButton(tr("More"),this);
     settingButton->setCursor(QCursor(Qt::PointingHandCursor));
     connect(settingButton, SIGNAL(clicked()), parent, SIGNAL(changeCurrentLrcColorSetting()));
-    settingButton->setStyleSheet(MusicUIObject::MKGInteriorFloatSetting + MusicUIObject::MPushButtonStyle08);
+    settingButton->setStyleSheet(MusicUIObject::MQSSInteriorFloatSetting + MusicUIObject::MQSSPushButtonStyle08);
     settingButton->setGeometry(15, 175, 60, 22);
 
 #ifdef Q_OS_UNIX
@@ -101,7 +101,7 @@ QPushButton *MusicLrcFloatSettingWidget::createPushButton(int index)
 
 void MusicLrcFloatSettingWidget::lrcSizeUpChanged()
 {
-    MusicLrcContainerForInterior* line = MStatic_cast(MusicLrcContainerForInterior*, parent());
+    MusicLrcContainerForInterior* line = TTKStatic_cast(MusicLrcContainerForInterior*, parent());
     const MusicLrcDefines lrc;
     int v = lrc.findInteriorLrcIndex(line->getLrcSize());
         v = lrc.findInteriorNextSize(v);
@@ -110,7 +110,7 @@ void MusicLrcFloatSettingWidget::lrcSizeUpChanged()
 
 void MusicLrcFloatSettingWidget::lrcSizeLowChanged()
 {
-    MusicLrcContainerForInterior* line = MStatic_cast(MusicLrcContainerForInterior*, parent());
+    MusicLrcContainerForInterior* line = TTKStatic_cast(MusicLrcContainerForInterior*, parent());
     const MusicLrcDefines lrc;
     int v = lrc.findInteriorLrcIndex(line->getLrcSize());
         v = lrc.findInteriorPreSize(v);
@@ -119,7 +119,7 @@ void MusicLrcFloatSettingWidget::lrcSizeLowChanged()
 
 void MusicLrcFloatSettingWidget::lrcMusicBackgroundChanged()
 {
-    MusicLrcContainerForInterior* line = MStatic_cast(MusicLrcContainerForInterior*, parent());
+    MusicLrcContainerForInterior* line = TTKStatic_cast(MusicLrcContainerForInterior*, parent());
     if(line->artistBackgroundIsShow())
     {
         line->artistBackgroundChanged();
@@ -128,7 +128,7 @@ void MusicLrcFloatSettingWidget::lrcMusicBackgroundChanged()
 
 void MusicLrcFloatSettingWidget::lrcArtBackgroundChanged()
 {
-    MusicLrcContainerForInterior* line = MStatic_cast(MusicLrcContainerForInterior*, parent());
+    MusicLrcContainerForInterior* line = TTKStatic_cast(MusicLrcContainerForInterior*, parent());
     if(!line->artistBackgroundIsShow())
     {
         line->artistBackgroundChanged();

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,35 +21,35 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the video float button style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGVideoFloatDownload = " \
+    const QString MQSSVideoFloatDownload = " \
             QPushButton{ border:none;\
-            background-image: url(:/video/btn_download_normal);} \
-            QPushButton:hover{ background-image: url(:/video/btn_download_hover);}";
+            background-image: url(:/video/btn_download_normal); } \
+            QPushButton:hover{ background-image: url(:/video/btn_download_hover); }";
 
-    const QString MKGVideoFloatFresh = " \
+    const QString MQSSVideoFloatFresh = " \
             QPushButton{ border:none;\
-            background-image: url(:/video/btn_fresh_normal);} \
-            QPushButton:hover{ background-image: url(:/video/btn_fresh_hover);}";
+            background-image: url(:/video/btn_fresh_normal); } \
+            QPushButton:hover{ background-image: url(:/video/btn_fresh_hover); }";
 
-    const QString MKGVideoFloatFullscreen = " \
+    const QString MQSSVideoFloatFullscreen = " \
             QPushButton{ border:none;\
-            background-image: url(:/video/btn_fullscreen_normal);} \
-            QPushButton:hover{ background-image: url(:/video/btn_fullscreen_hover);}";
+            background-image: url(:/video/btn_fullscreen_normal); } \
+            QPushButton:hover{ background-image: url(:/video/btn_fullscreen_hover); }";
 
-    const QString MKGVideoFloatSearch = " \
+    const QString MQSSVideoFloatSearch = " \
             QPushButton{ border:none;\
-            background-image: url(:/video/btn_search_normal);} \
-            QPushButton:hover{ background-image: url(:/video/btn_search_hover);}";
+            background-image: url(:/video/btn_search_normal); } \
+            QPushButton:hover{ background-image: url(:/video/btn_search_hover); }";
 
-    const QString MKGVideoFloatShare = " \
+    const QString MQSSVideoFloatShare = " \
             QPushButton{ border:none;\
-            background-image: url(:/video/btn_share_normal);} \
-            QPushButton:hover{ background-image: url(:/video/btn_share_hover);}";
+            background-image: url(:/video/btn_share_normal); } \
+            QPushButton:hover{ background-image: url(:/video/btn_share_hover); }";
 
 }
 

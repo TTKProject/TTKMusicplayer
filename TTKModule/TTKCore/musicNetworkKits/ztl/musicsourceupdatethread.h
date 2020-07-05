@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ public:
     /*!
      * Get lasted version.
      */
-    QString getLastedVersion() const;
+    QString getVersion() const;
     /*!
      * Is lasted version.
      */
@@ -52,7 +52,7 @@ public:
     /*!
      * Get lasted version description.
      */
-    QString getLastedVersionDes() const;
+    QString getVersionDescription() const;
 
 Q_SIGNALS:
     /*!
@@ -62,7 +62,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     /*!
-     * Download data from kuwo net finished.
+     * Download data from net finished.
      */
     void downLoadFinished(const QByteArray &data);
 

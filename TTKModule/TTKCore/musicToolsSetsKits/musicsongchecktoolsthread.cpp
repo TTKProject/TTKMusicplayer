@@ -25,9 +25,9 @@ void MusicSongCheckToolsRenameThread::run()
             MusicSongTag tag;
             foreach(const MusicSong &song, *m_songItems)
             {
-                if(!m_run)
+                if(!m_running)
                 {
-                    emit finished(MusicSongCheckToolsRenames());
+                    Q_EMIT finished(MusicSongCheckToolsRenames());
                     return;
                 }
 
@@ -38,7 +38,7 @@ void MusicSongCheckToolsRenameThread::run()
 
                 if((!tag.getArtist().isEmpty() && !tag.getTitle().isEmpty()) &&
                     (tag.getArtist() != song.getMusicArtistFront() ||
-                     tag.getTitle() != song.getMusicArtistBack()) )
+                     tag.getTitle() != song.getMusicArtistBack()))
                 {
                     m_datas << MusicSongCheckToolsRename(song.getMusicName(), tag.getArtist() + " - " + tag.getTitle(), song.getMusicPath());
                 }
@@ -48,9 +48,9 @@ void MusicSongCheckToolsRenameThread::run()
         {
             foreach(const int index, m_itemIDs)
             {
-                if(!m_run)
+                if(!m_running)
                 {
-                    emit finished(MusicSongCheckToolsRenames());
+                    Q_EMIT finished(MusicSongCheckToolsRenames());
                     return;
                 }
 
@@ -60,7 +60,7 @@ void MusicSongCheckToolsRenameThread::run()
             }
         }
     }
-    emit finished(m_datas);
+    Q_EMIT finished(m_datas);
 }
 
 
@@ -90,7 +90,7 @@ void MusicSongCheckToolsDuplicateThread::run()
             {
                 if(!m_run)
                 {
-                    emit finished(MusicSongCheckToolsDuplicates());
+                    Q_EMIT finished(MusicSongCheckToolsDuplicates());
                     return;
                 }
 
@@ -108,7 +108,7 @@ void MusicSongCheckToolsDuplicateThread::run()
             {
                 if(!m_run)
                 {
-                    emit finished(MusicSongCheckToolsDuplicates());
+                    Q_EMIT finished(MusicSongCheckToolsDuplicates());
                     return;
                 }
 
@@ -117,7 +117,7 @@ void MusicSongCheckToolsDuplicateThread::run()
             }
         }
     }
-    emit finished(m_datas);
+    Q_EMIT finished(m_datas);
 }
 
 
@@ -143,9 +143,9 @@ void MusicSongCheckToolsQualityThread::run()
         MusicSongTag tag;
         foreach(const MusicSong &song, *m_songItems)
         {
-            if(!m_run)
+            if(!m_running)
             {
-                emit finished(MusicSongCheckToolsQualitys());
+                Q_EMIT finished(MusicSongCheckToolsQualitys());
                 return;
             }
 
@@ -157,5 +157,5 @@ void MusicSongCheckToolsQualityThread::run()
             items << MusicSongCheckToolsQuality(song, tag.getBitrate());
         }
     }
-    emit finished(items);
+    Q_EMIT finished(items);
 }

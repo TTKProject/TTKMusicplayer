@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QToolTip>
 #include <QMouseEvent>
+#include <QPainterPath>
 #include <QButtonGroup>
 
 MusicHlPalette::MusicHlPalette(QWidget *parent)
@@ -21,7 +22,7 @@ QColor MusicHlPalette::color() const
     return m_color;
 }
 
-void MusicHlPalette::init()
+void MusicHlPalette::initialize()
 {
     m_ptVernierPos = rect().center();
     calculateColor();
@@ -113,10 +114,10 @@ void MusicHlPalette::mouseMoveEvent(QMouseEvent *event)
 
 void MusicHlPalette::calculateColor()
 {
-    m_ptfVernierPercentPos.setX(m_ptVernierPos.x() / static_cast<double>(rect().right()));
-    m_ptfVernierPercentPos.setY(m_ptVernierPos.y() / static_cast<double>(rect().bottom()));
+    m_ptfVernierPercentPos.setX(m_ptVernierPos.x() / TTKStatic_cast(double, rect().right()));
+    m_ptfVernierPercentPos.setY(m_ptVernierPos.y() / TTKStatic_cast(double, rect().bottom()));
     m_color.setHslF(m_ptfVernierPercentPos.rx(), m_dblSaturation, 1 - m_ptfVernierPercentPos.ry());
-    emit colorChanged(m_color);
+    Q_EMIT colorChanged(m_color);
 }
 
 
@@ -209,7 +210,7 @@ void MusicHlSaturationPalette::mouseMoveEvent(QMouseEvent *event)
     }
     else
     {
-        const QPointF ptfCenter(m_dblVernierX, rect().bottom()/2.0);
+        const QPointF ptfCenter(m_dblVernierX, rect().bottom() / 2.0);
         QPainterPath path;
         path.addEllipse(ptfCenter, 7, 7);
         if(path.contains(event->pos()))
@@ -225,7 +226,7 @@ void MusicHlSaturationPalette::calculateSuration()
     m_dblSaturation = 1- m_dblVernierPercentX;
     m_color.setHslF(m_color.hslHueF(), m_dblSaturation, m_color.lightnessF());
 
-    emit saturationChanged(m_dblSaturation);
+    Q_EMIT saturationChanged(m_dblSaturation);
 }
 
 
@@ -235,15 +236,16 @@ MusicColorDialog::MusicColorDialog(QWidget *parent)
       m_ui(new Ui::MusicColorDialog)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
-    m_ui->confirmButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->cancelButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->confirmButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->cancelButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
     m_ui->confirmButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->cancelButton->setCursor(QCursor(Qt::PointingHandCursor));
 
@@ -256,7 +258,7 @@ MusicColorDialog::MusicColorDialog(QWidget *parent)
     connect(m_ui->wgtSaturationIndicator, SIGNAL(saturationChanged(double)), m_ui->wgtPalette, SLOT(setSaturation(double)));
 
     m_status = 0;
-    m_ui->wgtPalette->init();
+    m_ui->wgtPalette->initialize();
 
     QButtonGroup *groupButton = new QButtonGroup(this);
     groupButton->addButton(m_ui->topTitleCloseButton, 0);

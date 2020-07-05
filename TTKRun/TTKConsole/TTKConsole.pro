@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,18 @@
 # =================================================
 
 QT       += core
-unix:VERSION += 1.0.0.0
-include(../../TTKVersion.pri)
+include($$PWD/../../TTKVersion.pri)
 
 TEMPLATE = app
 CONFIG += console
 
-UI_DIR = ./.build/ui
-MOC_DIR = ./.build/moc
-OBJECTS_DIR = ./.build/obj
-RCC_DIR = ./.build/rcc
-
 DEFINES += TTK_LIBRARY
 
-win32{
-    TARGET = ../../../bin/$$TTKMusicPlayer/TTKConsole
-    LIBS += -L../../bin/$$TTKMusicPlayer -lTTKCore
-}
-unix{
-    TARGET = ../../lib/$$TTKMusicPlayer/TTKConsole
-    LIBS += -L../../lib/$$TTKMusicPlayer -lTTKCore -lqmmp -lTTKUi -lTTKExtras -lTTKWatcher -lzlib -lTTKZip
-}
+DESTDIR = $$OUT_PWD/../../bin/$$TTKMusicPlayer
+TARGET = TTKConsole
+
+LIBS += -L$$DESTDIR -lTTKCore
+unix:LIBS += -L$$DESTDIR -lqmmp -lTTKUi -lTTKExtras -lTTKWatcher -lzlib -lTTKZip
 
 win32:msvc{
     CONFIG +=c++11
@@ -48,7 +39,6 @@ win32:msvc{
 INCLUDEPATH += \
     $$PWD/../ \
     $$PWD/../../ \
-    $$PWD/../../TTKThirdParty \
     $$PWD/../../TTKThirdParty/TTKDumper \
     $$PWD/../../TTKModule/TTKCore/musicCoreKits \
     $$PWD/../../TTKModule/TTKCore/musicPlaylistKits \
@@ -59,7 +49,6 @@ SOURCES += \
     musicconsoleobject.cpp
 
 HEADERS += \
-    ../musicrunglobaldefine.h \
     musicconsoleobject.h
 
 win32{

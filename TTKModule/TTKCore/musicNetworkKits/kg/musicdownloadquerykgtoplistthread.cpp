@@ -1,7 +1,4 @@
 #include "musicdownloadquerykgtoplistthread.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryKGToplistThread::MusicDownLoadQueryKGToplistThread(QObject *parent)
     : MusicDownLoadQueryToplistThread(parent)
@@ -28,7 +25,7 @@ void MusicDownLoadQueryKGToplistThread::startToSearch(const QString &toplist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_SONG_TOPLIST_URL, false).arg(toplist);
@@ -52,8 +49,8 @@ void MusicDownLoadQueryKGToplistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -79,7 +76,7 @@ void MusicDownLoadQueryKGToplistThread::downLoadFinished()
                 value = value["songs"].toMap();
                 info.m_updateTime = QDateTime::fromMSecsSinceEpoch(value["timestamp"].toLongLong()*1000).toString(MUSIC_YEAR_FORMAT);
 
-                emit createToplistInfoItem(info);
+                Q_EMIT createToplistInfoItem(info);
                 //
                 const QVariantList &datas = value["list"].toList();
                 foreach(const QVariant &var, datas)
@@ -109,15 +106,15 @@ void MusicDownLoadQueryKGToplistThread::downLoadFinished()
                     musicInfo.m_trackNumber = "0";
 
                     MusicResultsItem albumInfo;
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAlbumInfo(&albumInfo, musicInfo.m_albumId);
                     musicInfo.m_albumName = albumInfo.m_nickName;
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     readFromMusicSongLrcAndPic(&musicInfo);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo, value, m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -130,13 +127,13 @@ void MusicDownLoadQueryKGToplistThread::downLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

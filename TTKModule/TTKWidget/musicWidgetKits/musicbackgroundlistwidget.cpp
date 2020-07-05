@@ -1,6 +1,7 @@
 #include "musicbackgroundlistwidget.h"
 #include "musicextractwrap.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
+#include "musicwidgetutils.h"
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -54,19 +55,19 @@ void MusicBackgroundListItem::setSelect(bool s)
     update();
 }
 
-void MusicBackgroundListItem::setSelectEnable(bool s)
+void MusicBackgroundListItem::setSelectEnabled(bool s)
 {
     m_selectedMask = s;
     update();
 }
 
-void MusicBackgroundListItem::setCloseEnable(bool s)
+void MusicBackgroundListItem::setCloseEnabled(bool s)
 {
     m_closeSet = s;
     update();
 }
 
-void MusicBackgroundListItem::setShowNameEnable(bool s)
+void MusicBackgroundListItem::setShowNameEnabled(bool s)
 {
     m_showNameMask = s;
     update();
@@ -78,11 +79,11 @@ void MusicBackgroundListItem::mousePressEvent(QMouseEvent *event)
 
     if(m_closeSet && QRect(width() - 16 - 6, 6, 16, 16).contains(event->pos()))
     {
-        emit closeClicked(this);
+        Q_EMIT closeClicked(this);
     }
     else
     {
-        emit itemClicked(this);
+        Q_EMIT itemClicked(this);
     }
 }
 
@@ -121,18 +122,17 @@ void MusicBackgroundListItem::paintEvent(QPaintEvent *event)
         QFont f = painter.font();
         f.setPixelSize(13);
         painter.setFont(f);
-        QFontMetrics metric(painter.font());
 
         painter.setPen(Qt::white);
         if(m_showNameMask)
         {
-            painter.drawText((width() - metric.width(m_name))/2, 32, m_name);
+            painter.drawText((width() - MusicUtils::Widget::fontTextWidth(painter.font(), m_name)) / 2, 32, m_name);
         }
 
         QString v = QString::number(m_imageInfo.m_useCount);
-        painter.drawText((width() - metric.width(v))/2, 50, v);
+        painter.drawText((width() - MusicUtils::Widget::fontTextWidth(painter.font(), v)) / 2, 50, v);
                 v = m_imageInfo.m_name;
-        painter.drawText((width() - metric.width(v))/2, 68, v);
+        painter.drawText((width() - MusicUtils::Widget::fontTextWidth(painter.font(), v)) / 2, 68, v);
     }
 
     if(m_closeSet && m_closeMask)
@@ -146,10 +146,10 @@ void MusicBackgroundListItem::paintEvent(QPaintEvent *event)
 MusicBackgroundListWidget::MusicBackgroundListWidget(QWidget *parent)
     : QWidget(parent)
 {
-    m_layout = new QGridLayout(this);
-    m_layout->setContentsMargins(7, 7, 7, 7);
-    setLayout(m_layout);
-
+    m_gridLayout = new QGridLayout(this);
+    m_gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    m_gridLayout->setContentsMargins(7, 7, 7, 7);
+    setLayout(m_gridLayout);
     m_currentItem = nullptr;
 }
 
@@ -160,7 +160,6 @@ MusicBackgroundListWidget::~MusicBackgroundListWidget()
 
 void MusicBackgroundListWidget::setCurrentItemName(const QString &name)
 {
-    //Set the current theme index
     foreach(MusicBackgroundListItem *item, m_items)
     {
         if(item->getFileName() == name)
@@ -189,24 +188,26 @@ void MusicBackgroundListWidget::clearAllItems()
 void MusicBackgroundListWidget::createItem(const QString &name, const QString &path, bool state)
 {
     MusicBackgroundListItem *item = new MusicBackgroundListItem(this);
-    item->setCloseEnable(state);
+    item->setCloseEnabled(state);
     item->setFileName(name);
     item->setFilePath(path);
     item->updatePixImage();
+
     connect(item, SIGNAL(itemClicked(MusicBackgroundListItem*)), SLOT(itemHasClicked(MusicBackgroundListItem*)));
     connect(item, SIGNAL(closeClicked(MusicBackgroundListItem*)), SLOT(itemCloseClicked(MusicBackgroundListItem*)));
-    m_layout->addWidget(item, m_items.count()/ITEM_COUNT, m_items.count()%ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
+    m_gridLayout->addWidget(item, m_items.count() / ITEM_COUNT, m_items.count() % ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
     m_items << item;
 }
 
 void MusicBackgroundListWidget::createItem(const QString &icon, bool state)
 {
     MusicBackgroundListItem *item = new MusicBackgroundListItem(this);
-    item->setCloseEnable(state);
+    item->setCloseEnabled(state);
     item->setPixmap(QPixmap(icon).scaled(item->size()));
+
     connect(item, SIGNAL(itemClicked(MusicBackgroundListItem*)), SLOT(itemHasClicked(MusicBackgroundListItem*)));
     connect(item, SIGNAL(closeClicked(MusicBackgroundListItem*)), SLOT(itemCloseClicked(MusicBackgroundListItem*)));
-    m_layout->addWidget(item, m_items.count()/ITEM_COUNT, m_items.count()%ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
+    m_gridLayout->addWidget(item, m_items.count() / ITEM_COUNT, m_items.count() % ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
     m_items << item;
 }
 
@@ -216,8 +217,8 @@ void MusicBackgroundListWidget::updateItem(const MusicBackgroundImage &image, co
     {
         if(item->getFileName().isEmpty())
         {
-            item->setShowNameEnable(false);
-            item->setSelectEnable(false);
+            item->setShowNameEnabled(false);
+            item->setSelectEnabled(false);
             item->setFileName(path);
             item->updatePixImage(image);
             break;
@@ -302,13 +303,11 @@ void MusicBackgroundListWidget::itemCloseClicked(MusicBackgroundListItem *item)
 {
     if(m_items.count() == 1)
     {
-        MusicMessageBox message;
-        message.setText(tr("Last One Item Can not be deleted!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Last One Item Can not be deleted!"));
         return;
     }
 
-    m_layout->removeWidget(item);
+    m_gridLayout->removeWidget(item);
     const int index = find(item);
     const int cIndex = find(m_currentItem);
     QFile::remove(item->getFilePath());
@@ -319,13 +318,13 @@ void MusicBackgroundListWidget::itemCloseClicked(MusicBackgroundListItem *item)
         m_currentItem = nullptr;
         if(!m_items.isEmpty())
         {
-            itemHasClicked( m_items[index == 0 ? 0 : index - 1] );
+            itemHasClicked(m_items[index == 0 ? 0 : index - 1]);
         }
     }
 
     for(int i=index; i<m_items.count(); ++i)
     {
-        m_layout->addWidget(m_items[i], i/ITEM_COUNT, i%ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
+        m_gridLayout->addWidget(m_items[i], i / ITEM_COUNT, i % ITEM_COUNT, Qt::AlignLeft | Qt::AlignTop);
     }
 }
 
@@ -338,5 +337,5 @@ void MusicBackgroundListWidget::itemHasClicked(MusicBackgroundListItem *item)
 
     m_currentItem = item;
     m_currentItem->setSelect(true);
-    emit itemClicked(item->getFileName());
+    Q_EMIT itemClicked(item->getFileName());
 }

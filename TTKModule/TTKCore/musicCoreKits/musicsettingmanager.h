@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,6 @@
 #include <QMetaEnum>
 #include "musicobject.h"
 #include "musicsingleton.h"
-
-#define M_SETTING_PTR (MusicSingleton<MusicSettingManager>::createInstance())
 
 /*! @brief The class of the paramater setting manager.
  * @author Greedysky <greedysky@163.com>
@@ -70,12 +68,16 @@ public:
         OtherSongFormat,                 /*!< Other Song Format Parameter*/
         OtherSideBy,                     /*!< Other App Side By Mode Parameter*/
         OtherSideByIn,                   /*!< Other App Side By In Mode Parameter*/
-        OtherLrcKTVMode,                 /*!< Other Lrc KTV Mode Mode Parameter*/
-        OtherRippleSpectrumEnable,       /*!< Other Ripple Spectrum Enable Parameter*/
-        OtherRippleSpectrumColor,        /*!< Other Ripple Spectrum Color Parameter*/
-        OtherRippleSpectrumOpacity,      /*!< Other Ripple Spectrum Opacity Parameter*/
+        OtherLrcKTVMode,                 /*!< Other Lrc KTV Mode Parameter*/
+        OtherScreenSaverEnable,          /*!< Other Screen Saver Enable Parameter*/
+        OtherScreenSaverTime,            /*!< Other Screen Saver Time Parameter*/
+        OtherScreenSaverIndex,           /*!< Other Screen Saver Index Parameter*/
+
+        RippleSpectrumEnable,            /*!< Ripple Spectrum Enable Parameter*/
+        RippleSpectrumColor,             /*!< Ripple Spectrum Color Parameter*/
 
         ShowInteriorLrc,                 /*!< Show Interior Lrc Parameter*/
+        ShowCortanaLrc,                  /*!< Show Cortana Lrc Parameter*/
         LrcColor,                        /*!< Lrc Color Parameter*/
         LrcSize,                         /*!< Lrc Size Parameter*/
         LrcType,                         /*!< Lrc Type Parameter*/
@@ -101,7 +103,6 @@ public:
         EqualizerValue,                  /*!< Equalizer Value Parameter*/
         EqualizerIndex,                  /*!< Equalizer Index Parameter*/
         EnhancedMusic,                   /*!< Enhanced Music Parameter*/
-        EnhancedBalance,                 /*!< Enhanced Balance Parameter*/
         EnhancedFadeEnable,              /*!< Enhanced Fade Enable Parameter*/
         EnhancedFadeInValue,             /*!< Enhanced Fade In Value Parameter*/
         EnhancedFadeOutValue,            /*!< Enhanced Fade Out Value Parameter*/
@@ -111,6 +112,8 @@ public:
         EnhancedLADSPA,                  /*!< Enhanced LADSPA Parameter*/
         EnhancedSOX,                     /*!< Enhanced SOX Parameter*/
         EnhancedSRC,                     /*!< Enhanced SRC Parameter*/
+        EnhancedMonoStereo,              /*!< Enhanced Mono Stereo Parameter*/
+        EnhancedMono,                    /*!< Enhanced Mono Parameter*/
 
         TimerAutoIndex,                  /*!< Timer Auto Index Parameter*/
         TimerAutoPlay,                   /*!< Timer Auto Play Parameter*/
@@ -213,7 +216,7 @@ protected:
         int index = staticMetaObject.indexOfEnumerator("ConfigType");
         QMetaEnum metaEnum = staticMetaObject.enumerator(index);
         int key = metaEnum.keyToValue(stype.toStdString().c_str());
-        return MStatic_cast(ConfigType, key);
+        return TTKStatic_cast(ConfigType, key);
     }
 
     QVariant m_variant;
@@ -222,6 +225,8 @@ protected:
     DECLARE_SINGLETON_CLASS(MusicSettingManager)
 };
 
+#define M_SETTING_PTR GetMusicSettingManager()
+MUSIC_CORE_EXPORT MusicSettingManager* GetMusicSettingManager();
 
 #endif // MUSICSETTINGMANAGER
 

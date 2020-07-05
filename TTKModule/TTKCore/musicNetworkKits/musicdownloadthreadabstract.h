@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #include <QTimer>
 #include "musicobject.h"
 #include "musicnetworkabstract.h"
-#include "musicnumberdefine.h"
 
 /*! @brief The class of abstract downloading data.
  * @author Greedysky <greedysky@163.com>
@@ -73,16 +72,15 @@ public Q_SLOTS:
 
 protected:
     /*!
-     * Transfer the enum type to string.
+     * Map the enum type to string.
      */
-    QString transferData() const;
+    QString mapCurrentQueryData() const;
 
     QFile *m_file;
-    QString m_url, m_savePathName;
+    QString m_url, m_savePath;
     MusicObject::DownloadType m_downloadType;
     qint64 m_hasReceived, m_currentReceived, m_totalSize;
-    QTimer m_timer;
-
+    QTimer m_speedTimer;
 };
 
 #endif // MUSICDOWNLOADTHREADABSTRACT_H

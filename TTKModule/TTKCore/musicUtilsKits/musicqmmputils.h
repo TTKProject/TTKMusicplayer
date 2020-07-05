@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,9 +37,21 @@ namespace MusicUtils
          */
         MUSIC_UTILS_EXPORT void updateMidConfigFile();
         /*!
-         * Enable visual wave control.
+         * Enable visual module control.
          */
-        MUSIC_UTILS_EXPORT void enableVisualPlugin(const QString &name, bool enable);
+        MUSIC_UTILS_EXPORT void enabledVisualPlugin(const QString &name, bool enable);
+        /*!
+         * Enable effect module control.
+         */
+        MUSIC_UTILS_EXPORT void enabledEffectPlugin(const QString &name, bool enable);
+        /*!
+         * Check effect has setting.
+         */
+        MUSIC_UTILS_EXPORT bool effectHasSetting(const QString &name);
+        /*!
+         * Show effect setting control.
+         */
+        MUSIC_UTILS_EXPORT void showEffectSetting(const QString &name, QWidget *parent);
         /*!
          * Update ripple spectrum config file transfer.
          */

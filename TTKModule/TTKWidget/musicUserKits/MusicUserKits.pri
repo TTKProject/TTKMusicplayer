@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musicuserdialog.h \
     $$PWD/musicuserlineedit.h \
@@ -26,14 +25,10 @@ HEADERS  += \
     $$PWD/musicuserwindow.h \
     $$PWD/musicuserrecordwidget.h
     
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
     $$PWD/musicuserdialog.cpp \
     $$PWD/musicuserlineedit.cpp \
     $$PWD/musicusermanagerdialog.cpp \
     $$PWD/musicuserwindow.cpp \
     $$PWD/musicuserrecordwidget.cpp
-
-}

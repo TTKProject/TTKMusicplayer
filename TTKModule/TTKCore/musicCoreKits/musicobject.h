@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,13 +31,16 @@
 
 //
 #define TTS_FILE_PREFIX         "ttks"
+#define CFG_FILE_PREFIX         "ttk"
+#define TEX_FILE_PREFIX         "tex"
+
+//
 #define SKN_FILE_PREFIX         "skn"
 #define JPG_FILE_PREFIX         "jpg"
 #define BMP_FILE_PREFIX         "bmp"
 #define PNG_FILE_PREFIX         "png"
 #define LRC_FILE_PREFIX         "lrc"
 #define KRC_FILE_PREFIX         "krc"
-#define CFG_FILE_PREFIX         "ttk"
 #define EXE_FILE_PREFIX         "exe"
 #define XML_FILE_PREFIX         "xml"
 #define COM_FILE_PREFIX         "com"
@@ -53,6 +56,9 @@
 #define FPL_FILE_PREFIX         "fpl"
 #define KWL_FILE_PREFIX         "kwl"
 #define KGL_FILE_PREFIX         "kgl"
+#define CSV_FILE_PREFIX         "csv"
+#define TXT_FILE_PREFIX         "txt"
+#define NFN_FILE_PREFIX         "nfn"
 
 //music ext
 #define AAC_FILE_PREFIX         "aac"
@@ -63,72 +69,73 @@
 #define FLC_FILE_PREFIX         "flac"
 
 
-#define TTS_FILE                STRCAT(DOT, TTS_FILE_PREFIX)
-#define SKN_FILE                STRCAT(DOT, SKN_FILE_PREFIX)
-#define JPG_FILE                STRCAT(DOT, JPG_FILE_PREFIX)
-#define BMP_FILE                STRCAT(DOT, BMP_FILE_PREFIX)
-#define PNG_FILE                STRCAT(DOT, PNG_FILE_PREFIX)
-#define LRC_FILE                STRCAT(DOT, LRC_FILE_PREFIX)
-#define KRC_FILE                STRCAT(DOT, KRC_FILE_PREFIX)
-#define MP3_FILE                STRCAT(DOT, MP3_FILE_PREFIX)
-#define CFG_FILE                STRCAT(DOT, CFG_FILE_PREFIX)
-#define LST_FILE                STRCAT(DOT, LST_FILE_PREFIX)
-#define EXE_FILE                STRCAT(DOT, EXE_FILE_PREFIX)
-#define XML_FILE                STRCAT(DOT, XML_FILE_PREFIX)
-#define COM_FILE                STRCAT(DOT, COM_FILE_PREFIX)
+#define TTS_FILE                TTK_STRCAT(DOT, TTS_FILE_PREFIX)
+#define CFG_FILE                TTK_STRCAT(DOT, CFG_FILE_PREFIX)
+#define TEX_FILE                TTK_STRCAT(DOT, TEX_FILE_PREFIX)
+//
+#define SKN_FILE                TTK_STRCAT(DOT, SKN_FILE_PREFIX)
+#define JPG_FILE                TTK_STRCAT(DOT, JPG_FILE_PREFIX)
+#define BMP_FILE                TTK_STRCAT(DOT, BMP_FILE_PREFIX)
+#define PNG_FILE                TTK_STRCAT(DOT, PNG_FILE_PREFIX)
+#define LRC_FILE                TTK_STRCAT(DOT, LRC_FILE_PREFIX)
+#define KRC_FILE                TTK_STRCAT(DOT, KRC_FILE_PREFIX)
+#define MP3_FILE                TTK_STRCAT(DOT, MP3_FILE_PREFIX)
+#define LST_FILE                TTK_STRCAT(DOT, LST_FILE_PREFIX)
+#define EXE_FILE                TTK_STRCAT(DOT, EXE_FILE_PREFIX)
+#define XML_FILE                TTK_STRCAT(DOT, XML_FILE_PREFIX)
+#define COM_FILE                TTK_STRCAT(DOT, COM_FILE_PREFIX)
 
 //music ext
-#define AAC_FILE                STRCAT(DOT, AAC_FILE_PREFIX)
-#define WMA_FILE                STRCAT(DOT, WMA_FILE_PREFIX)
-#define MP3_FILE                STRCAT(DOT, MP3_FILE_PREFIX)
-#define OGG_FILE                STRCAT(DOT, OGG_FILE_PREFIX)
-#define APE_FILE                STRCAT(DOT, APE_FILE_PREFIX)
-#define FLC_FILE                STRCAT(DOT, FLC_FILE_PREFIX)
+#define AAC_FILE                TTK_STRCAT(DOT, AAC_FILE_PREFIX)
+#define WMA_FILE                TTK_STRCAT(DOT, WMA_FILE_PREFIX)
+#define MP3_FILE                TTK_STRCAT(DOT, MP3_FILE_PREFIX)
+#define OGG_FILE                TTK_STRCAT(DOT, OGG_FILE_PREFIX)
+#define APE_FILE                TTK_STRCAT(DOT, APE_FILE_PREFIX)
+#define FLC_FILE                TTK_STRCAT(DOT, FLC_FILE_PREFIX)
 
 
 //
 #define APP_NAME                "TTKMusicPlayer"
-#define APP_DOT_NAME            STRCAT(APP_NAME, DOT)
-#define APP_COME_NAME           STRCAT(APP_NAME, COM_FILE)
-#define APP_EXE_NAME            STRCAT(APP_NAME, EXE_FILE)
+#define APP_DOT_NAME            TTK_STRCAT(APP_NAME, DOT)
+#define APP_COME_NAME           TTK_STRCAT(APP_NAME, COM_FILE)
+#define APP_EXE_NAME            TTK_STRCAT(APP_NAME, EXE_FILE)
 
 
 //
 #define APPDATA_DIR             "AppData/"
 #define DOWNLOADS_DIR           "Downloads/"
+#define APPCACHE_DIR            "AppCache/"
 
-
+//
 #define LRC_DIR                 "MLrc/"
 #define MUSIC_DIR               "Music/"
 #define MOVIE_DIR               "Movie/"
-#define THEME_DIR               "MTheme/"
-#define CACHE_DIR               "MCached/"
-#define ART_DIR                 "MArt/"
 #define UPDATE_DIR              "MUpdate/"
-#define RES_DIR                 "MRes/"
+//
+#define LANGUAGE_DIR            "MLanguage/"
+#define PLUGINS_DIR             "MPlugins/"
+#define THEME_DIR               "MTheme/"
+//
+#define ART_DIR                 "MArt/"
+#define BACKGROUND_DIR          "MArt/background/"
+#define CACHE_DIR               "MCached/"
+#define SCREEN_DIR              "MScreen/"
+//
 #define AVATAR_DIR              "avatar/"
 #define USER_THEME_DIR          "theme/"
-#define PLUGINS_DIR             "MPlugins/"
-#define BACKGROUND_DIR          "MArt/background/"
-#define LANGUAGE_DIR            "MLanguage/"
 
 
-#define MAKE_TRANSFORM_PREFIX   "avconv.dll"
-#define MAKE_KRC2LRC_PREFIX     "avk2l.dll"
-#define MAKE_PLAYER_PREFIX      "avplayer.dll"
-#define MAKE_GAIN_PREFIX        "avgain.dll"
-#define MAKE_SOUNDTOUCH_PREFIX  "avm2v.dll"
+#define MAKE_TRANSFORM_PREFIX   TTK_STRCAT("avconv", TEX_FILE)
+#define MAKE_KRC2LRC_PREFIX     TTK_STRCAT("avk2l", TEX_FILE)
+#define MAKE_PLAYER_PREFIX      TTK_STRCAT("avplayer", TEX_FILE)
+#define MAKE_GAIN_PREFIX        TTK_STRCAT("avgain", TEX_FILE)
 
 
-#define MAKE_CONFIG_DIR         STRCAT(PLUGINS_DIR, "config/")
-#define MAKE_TRANSFORM          STRCAT(PLUGINS_DIR, MAKE_TRANSFORM_PREFIX)
-#define MAKE_KRC2LRC            STRCAT(PLUGINS_DIR, MAKE_KRC2LRC_PREFIX)
-#define MAKE_PLAYER             STRCAT(PLUGINS_DIR, MAKE_PLAYER_PREFIX)
-#define MAKE_GAIN               STRCAT(PLUGINS_DIR, MAKE_GAIN_PREFIX)
-#define MAKE_SOUNDTOUCH         STRCAT(PLUGINS_DIR, MAKE_SOUNDTOUCH_PREFIX)
-#ifdef Q_OS_UNIX
-#define MAKE_NETS               STRCAT(PLUGINS_DIR, "avnets.dll")
-#endif
+#define MAKE_CONFIG_DIR         TTK_STRCAT(PLUGINS_DIR, "config/")
+#define MAKE_TRANSFORM          TTK_STRCAT(PLUGINS_DIR, MAKE_TRANSFORM_PREFIX)
+#define MAKE_KRC2LRC            TTK_STRCAT(PLUGINS_DIR, MAKE_KRC2LRC_PREFIX)
+#define MAKE_PLAYER             TTK_STRCAT(PLUGINS_DIR, MAKE_PLAYER_PREFIX)
+#define MAKE_GAIN               TTK_STRCAT(PLUGINS_DIR, MAKE_GAIN_PREFIX)
 
 
 #define TEMPPATH                "musictemp"
@@ -147,20 +154,24 @@
 #if defined (Q_OS_ANDROID)
 #  define APPDATA_DIR_FULL      MusicObject::getAppDir() + APPDATA_DIR
 #  define DOWNLOADS_DIR_FULL    MusicObject::getAppDir() + DOWNLOADS_DIR
+#  define APPCACHE_DIR_FULL     MusicObject::getAppDir() + APPCACHE_DIR
 #else
 #  define MAIN_DIR_FULL         MusicObject::getAppDir() + "../"
-#  define APPDATA_DIR_FULL      MAIN_DIR_FULL + APPDATA_DIR
+#  define APPDATA_DIR_FULL      MusicObject::getHomeDir() + APPDATA_DIR
 #  define DOWNLOADS_DIR_FULL    MAIN_DIR_FULL + DOWNLOADS_DIR
+#  define APPCACHE_DIR_FULL     MusicObject::getHomeDir() + APPCACHE_DIR
 #endif
 
 
 #define LRC_DIR_FULL            DOWNLOADS_DIR_FULL + LRC_DIR
 #define MUSIC_DIR_FULL          DOWNLOADS_DIR_FULL + MUSIC_DIR
 #define MOVIE_DIR_FULL          DOWNLOADS_DIR_FULL + MOVIE_DIR
-#define CACHE_DIR_FULL          DOWNLOADS_DIR_FULL + CACHE_DIR
-#define ART_DIR_FULL            DOWNLOADS_DIR_FULL + ART_DIR
-#define BACKGROUND_DIR_FULL     DOWNLOADS_DIR_FULL + BACKGROUND_DIR
 #define UPDATE_DIR_FULL         DOWNLOADS_DIR_FULL + UPDATE_DIR
+//
+#define CACHE_DIR_FULL          APPCACHE_DIR_FULL + CACHE_DIR
+#define ART_DIR_FULL            APPCACHE_DIR_FULL + ART_DIR
+#define BACKGROUND_DIR_FULL     APPCACHE_DIR_FULL + BACKGROUND_DIR
+#define SCREEN_DIR_FULL         APPCACHE_DIR_FULL + SCREEN_DIR
 
 
 #define COFIGPATH_FULL          APPDATA_DIR_FULL + COFIGPATH
@@ -187,10 +198,6 @@
 #define MAKE_KRC2LRC_FULL       MusicObject::getAppDir() + MAKE_KRC2LRC
 #define MAKE_PLAYER_FULL        MusicObject::getAppDir() + MAKE_PLAYER
 #define MAKE_GAIN_FULL          MusicObject::getAppDir() + MAKE_GAIN
-#define MAKE_SOUNDTOUCH_FULL    MusicObject::getAppDir() + MAKE_SOUNDTOUCH
-#ifdef Q_OS_UNIX
-#define MAKE_NETS_FULL          MusicObject::getAppDir() + MAKE_NETS
-#endif
 
 
 //
@@ -305,7 +312,7 @@ namespace MusicObject
         QAndroidJniObject mediaDir = QAndroidJniObject::callStaticObjectMethod("android/os/Environment",
                                                                            "getExternalStorageDirectory",
                                                                            "()Ljava/io/File;");
-        QAndroidJniObject mediaPath = mediaDir.callObjectMethod( "getAbsolutePath", "()Ljava/lang/String;" );
+        QAndroidJniObject mediaPath = mediaDir.callObjectMethod("getAbsolutePath", "()Ljava/lang/String;");
         QString path = mediaPath.toString() + "/TTKMobile/";
         if(!QDir().exists(path))
         {
@@ -317,6 +324,13 @@ namespace MusicObject
 #endif
     }
 
+    /*!
+     * Get application dir.
+     */
+    static QString getHomeDir()
+    {
+        return  QDir::homePath() +"/.ttkmp/";
+    }
 }
 
 #endif // MUSICOBJECT_H

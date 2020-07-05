@@ -22,7 +22,7 @@ void MusicDownloadSourceThread::startToDownload(const QString &url)
     MusicObject::setSslConfiguration(&request);
 #endif
 
-    m_reply = m_manager->get( request );
+    m_reply = m_manager->get(request);
     connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
 }
 
@@ -38,43 +38,22 @@ void MusicDownloadSourceThread::downLoadFinished()
         }
         else
         {
-            if(m_rawData.isEmpty())
-            {
-                emit downLoadByteDataChanged(m_reply->readAll());
-            }
-            else
-            {
-                emit downLoadExtDataChanged(m_reply->readAll(), m_rawData);
-            }
+            Q_EMIT downLoadRawDataChanged(m_reply->readAll());
             deleteAll();
         }
     }
     else
     {
-        M_LOGGER_ERROR("Download source data error");
-        if(m_rawData.isEmpty())
-        {
-            emit downLoadByteDataChanged(QByteArray());
-        }
-        else
-        {
-            emit downLoadExtDataChanged(QByteArray(), m_rawData);
-        }
+        TTK_LOGGER_ERROR("Download source data error");
+        Q_EMIT downLoadRawDataChanged(QByteArray());
         deleteAll();
     }
 }
 
 void MusicDownloadSourceThread::replyError(QNetworkReply::NetworkError)
 {
-    M_LOGGER_ERROR("Abnormal network connection");
-    if(m_rawData.isEmpty())
-    {
-        emit downLoadByteDataChanged(QByteArray());
-    }
-    else
-    {
-        emit downLoadExtDataChanged(QByteArray(), m_rawData);
-    }
+    TTK_LOGGER_ERROR("Abnormal network connection");
+    Q_EMIT downLoadRawDataChanged(QByteArray());
     deleteAll();
 }
 
@@ -82,14 +61,7 @@ void MusicDownloadSourceThread::replyError(QNetworkReply::NetworkError)
 void MusicDownloadSourceThread::sslErrors(QNetworkReply* reply, const QList<QSslError> &errors)
 {
     sslErrorsString(reply, errors);
-    if(m_rawData.isEmpty())
-    {
-        emit downLoadByteDataChanged(QByteArray());
-    }
-    else
-    {
-        emit downLoadExtDataChanged(QByteArray(), m_rawData);
-    }
+    Q_EMIT downLoadRawDataChanged(QByteArray());
     deleteAll();
 }
 #endif

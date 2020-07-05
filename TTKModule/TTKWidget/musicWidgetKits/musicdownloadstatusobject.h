@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public:
      * Check the current song already has lrc or not,
      * if not just download it.
      */
-    void musicCheckHasLrcAlready();
+    void checkLrcValid();
     /*!
      * Check the setting has open interior or desktop lrc on or not.
      */
@@ -52,7 +52,7 @@ public Q_SLOTS:
     /*!
      * Download current music lrc from net.
      */
-    void musicHaveNoLrcAlready();
+    void currentLrcDataDownload();
     /*!
      * Show download state type.
      * This is a slot by MusicSongSearchOnlineWidget's emit

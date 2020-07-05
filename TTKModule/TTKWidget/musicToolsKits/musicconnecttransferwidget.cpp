@@ -3,7 +3,7 @@
 #include "musicuiobject.h"
 #include "musicconnectionpool.h"
 #include "musicsettingmanager.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicdeviceinfoobject.h"
 #include "musicsongssummariziedwidget.h"
 #include "musicconnecttransferthread.h"
@@ -17,7 +17,9 @@ MusicConnectTransferWidget::MusicConnectTransferWidget(QWidget *parent)
       m_ui(new Ui::MusicConnectTransferWidget)
 {
     m_ui->setupUi(this);
-    setStyleSheet(MusicUIObject::MScrollBarStyle01);
+    setFixedSize(size());
+
+    setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
 
     m_currentIndex = -1;
     m_buttonGroup = nullptr;
@@ -26,21 +28,21 @@ MusicConnectTransferWidget::MusicConnectTransferWidget(QWidget *parent)
     m_selectCountLabel = m_ui->selectCountLabel->text();
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
-    m_ui->allSelectedcheckBox->setStyleSheet(MusicUIObject::MCheckBoxStyle03);
+    m_ui->allSelectedcheckBox->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle03);
     m_ui->allSelectedcheckBox->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->allSelectedcheckBox->setText(tr("allselected"));
     connect(m_ui->allSelectedcheckBox, SIGNAL(clicked(bool)), SLOT(selectedAllItems(bool)));
 
-    m_ui->transferUSBButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->transferUSBButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
     m_ui->transferUSBButton->setCursor(QCursor(Qt::PointingHandCursor));
     connect(m_ui->transferUSBButton, SIGNAL(clicked()), SLOT(startToTransferFiles()));
 
-    m_ui->searchLineEdit->setStyleSheet(MusicUIObject::MLineEditStyle05);
+    m_ui->searchLineEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle05);
     connect(m_ui->searchLineEdit, SIGNAL(cursorPositionChanged(int,int)), SLOT(musicSearchIndexChanged(int,int)));
 
     m_transferThread = new MusicConnectTransferThread(this);
@@ -79,15 +81,15 @@ void MusicConnectTransferWidget::setDeviceInfoItem(MusicDeviceInfoItem *item)
 void MusicConnectTransferWidget::initColumns()
 {
     MusicSongItems songs;
-    emit getMusicLists(songs);
+    Q_EMIT getMusicLists(songs);
 
-    m_ui->playListLayoutWidget->setStyleSheet(MusicUIObject::MBackgroundStyle01);
+    m_ui->playListLayoutWidget->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01);
     m_buttonGroup = new QButtonGroup(this);
     connect(m_buttonGroup, SIGNAL(buttonClicked(int)), SLOT(currentPlaylistSelected(int)));
     for(int i=0; i<songs.count(); ++i)
     {
         QPushButton *button = new QPushButton(QString("%1(%2)").arg(songs[i].m_itemName).arg(songs[i].m_songs.count()), this);
-        button->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+        button->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
         button->setCursor(QCursor(Qt::PointingHandCursor));
         button->setFixedSize(90, 25);
 #ifdef Q_OS_UNIX
@@ -119,12 +121,10 @@ void MusicConnectTransferWidget::createAllItems(const MusicSongs &songs)
 QStringList MusicConnectTransferWidget::getSelectedFiles()
 {
     QStringList paths;
-    const MIntList list(m_ui->listTableWidget->getSelectedItems());
+    const TTKIntList list(m_ui->listTableWidget->getSelectedItems());
     if(list.isEmpty())
     {
-        MusicMessageBox message;
-        message.setText(tr("please select one item"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return paths;
     }
 
@@ -148,12 +148,12 @@ QStringList MusicConnectTransferWidget::getSelectedFiles()
 
 void MusicConnectTransferWidget::itemSelectedChanged()
 {
-    const MIntList list(m_ui->listTableWidget->getSelectedItems());
+    const TTKIntList list(m_ui->listTableWidget->getSelectedItems());
     qint64 size = 0;
 
     for(int i=0; i<list.count(); ++i)
     {
-        size += m_currentSongs[ list[i] ].getMusicSize();
+        size += m_currentSongs[list[i]].getMusicSize();
     }
 
     double dSize = (size * 100 / MH_MB2B) * 1.0 / 100;
@@ -163,7 +163,7 @@ void MusicConnectTransferWidget::itemSelectedChanged()
 void MusicConnectTransferWidget::currentPlaylistSelected(int index)
 {
     MusicSongItems songs;
-    emit getMusicLists(songs);
+    Q_EMIT getMusicLists(songs);
 
     if(index >= songs.count() || index < 0)
     {
@@ -197,7 +197,7 @@ void MusicConnectTransferWidget::startToTransferFiles()
 
 void MusicConnectTransferWidget::musicSearchIndexChanged(int, int index)
 {
-    MIntList searchResult;
+    TTKIntList searchResult;
     for(int j=0; j<m_currentSongs.count(); ++j)
     {
         if(m_currentSongs[j].getMusicName().contains(m_ui->searchLineEdit->text().trimmed(), Qt::CaseInsensitive))

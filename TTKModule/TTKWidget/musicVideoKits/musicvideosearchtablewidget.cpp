@@ -1,11 +1,10 @@
 #include "musicvideosearchtablewidget.h"
 #include "musicdownloadqueryfactory.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicconnectionpool.h"
 #include "musicdownloadwidget.h"
 #include "musicitemdelegate.h"
 #include "musicgiflabelwidget.h"
-#include "musictime.h"
 
 MusicVideoSearchTableWidget::MusicVideoSearchTableWidget(QWidget *parent)
     : MusicQueryItemTableWidget(parent)
@@ -13,12 +12,12 @@ MusicVideoSearchTableWidget::MusicVideoSearchTableWidget(QWidget *parent)
     setColumnCount(9);
     resizeWindow(0);
 
-    viewport()->setStyleSheet(MusicUIObject::MBackgroundStyle02);
+    viewport()->setStyleSheet(MusicUIObject::MQSSBackgroundStyle02);
 
     m_defaultBkColor = Qt::black;
     m_singleRadioMode = false;
 
-    MusicTime::timeSRand();
+    MusicTime::initRandom();
     M_CONNECTION_PTR->setValue(getClassName(), this);
 }
 
@@ -33,13 +32,13 @@ void MusicVideoSearchTableWidget::startSearchQuery(const QString &text)
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        emit showDownLoadInfoFor(MusicObject::DW_DisConnection);
+        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
     //
     MusicDownLoadQueryThreadAbstract *d = M_DOWNLOAD_QUERY_PTR->getMovieThread(this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
-    setQueryInput( d );
+    setQueryInput(d);
     //
     m_singleRadioMode = false;
     m_loadingLabel->run(true);
@@ -51,13 +50,13 @@ void MusicVideoSearchTableWidget::startSearchSingleQuery(const QString &text)
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        emit showDownLoadInfoFor(MusicObject::DW_DisConnection);
+        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
     //
     MusicDownLoadQueryThreadAbstract *d = M_DOWNLOAD_QUERY_PTR->getMovieThread(this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
-    setQueryInput( d );
+    setQueryInput(d);
     //
     m_singleRadioMode = false;
     m_loadingLabel->run(true);
@@ -70,13 +69,13 @@ void MusicVideoSearchTableWidget::startSearchSingleQuery(const QVariant &data)
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        emit showDownLoadInfoFor(MusicObject::DW_DisConnection);
+        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
     //
     MusicDownLoadQueryThreadAbstract *d = M_DOWNLOAD_QUERY_PTR->getMovieThread(this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
-    setQueryInput( d );
+    setQueryInput(d);
     //
     m_singleRadioMode = true;
     d->setMusicSongInfos(MusicObject::MusicSongInformations() << data.value<MusicObject::MusicSongInformation>());
@@ -88,9 +87,7 @@ void MusicVideoSearchTableWidget::musicDownloadLocal(int row)
     {
         if(row < 0 || (row >= rowCount() - 1))
         {
-            MusicMessageBox message;
-            message.setText(tr("Please Select One Item First!"));
-            message.exec();
+            MusicToastLabel::popup(tr("Please Select One Item First!"));
             return;
         }
         downloadLocalMovie(row);
@@ -140,7 +137,11 @@ void MusicVideoSearchTableWidget::itemCellEntered(int row, int column)
     QTableWidgetItem *it = item(row, 0);
     if(it)
     {
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        it->setBackground(m_defaultBkColor);
+#else
         it->setBackgroundColor(m_defaultBkColor);
+#endif
     }
 }
 
@@ -174,26 +175,42 @@ void MusicVideoSearchTableWidget::createSearchedItem(const MusicSearchedItem &so
     QHeaderView *headerview = horizontalHeader();
 
     QTableWidgetItem *item = new QTableWidgetItem;
-    item->setData(MUSIC_CHECK_ROLE, false);
+    item->setData(MUSIC_CHECK_ROLE, Qt::Unchecked);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setBackground(m_defaultBkColor);
+#else
     item->setBackgroundColor(m_defaultBkColor);
+#endif
     setItem(count, 0, item);
 
                       item = new QTableWidgetItem;
     item->setToolTip(songItem.m_songName);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 5));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 1, item);
 
                       item = new QTableWidgetItem;
     item->setToolTip(songItem.m_singerName);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(2) - 5));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 2, item);
 
                       item = new QTableWidgetItem(songItem.m_time);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 3, item);
 
@@ -237,7 +254,7 @@ void MusicVideoSearchTableWidget::itemDoubleClicked(int row, int column)
         data.m_url = url;
         data.m_id = musicSongInfo.m_songId;
         data.m_server = m_downLoadManager->getQueryServer();
-        emit mediaUrlNameChanged(data);
+        Q_EMIT mediaUrlNameChanged(data);
     }
 }
 

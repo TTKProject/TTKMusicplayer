@@ -4,13 +4,14 @@
 #include "musicusermodel.h"
 #include "musicuserconfigmanager.h"
 #include "musicuserrecordwidget.h"
-#include "musicnumberdefine.h"
 
 MusicUserManagerDialog::MusicUserManagerDialog(QWidget *parent)
      : QDialog(parent),
        m_ui(new Ui::MusicUserManagerDialog)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
+
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
@@ -67,14 +68,14 @@ void MusicUserManagerDialog::createButtonPopMenu()
     m_popMenu.addAction(tr("Modifies"), this, SLOT(popupUserRecordWidget()));
     m_popMenu.addAction(tr("Switches"), this, SLOT(musicUserLogoff()));
     m_popMenu.addAction(tr("Spacing"));
-    m_popMenu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    m_popMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     m_ui->musicSettingButton->setMenu(&m_popMenu);
 }
 
 void MusicUserManagerDialog::musicUserLogoff()
 {
     m_userModel->updateUser(m_userUID, QString(), QString(), m_ui->userName->text(),
-                            QString::number(m_userModel->getUserLogTime(m_userUID).toLongLong() + m_time.elapsed()/(MT_S2MS*30) ));
+                            QString::number(m_userModel->getUserLogTime(m_userUID).toLongLong() + m_time.elapsed()/(MT_S2MS * 30)));
 
     MusicUserConfigManager xml;
     if(!xml.readConfig())
@@ -82,7 +83,7 @@ void MusicUserManagerDialog::musicUserLogoff()
         return;
     }
     MusicUserRecords records;
-    xml.readUserData( records );
+    xml.readUserData(records);
 
     int index = -1;
     for(int i=0; i<records.count(); ++i)
@@ -96,16 +97,16 @@ void MusicUserManagerDialog::musicUserLogoff()
     {
         records[index].m_autoFlag = false;  //auto login flag
     }
-    xml.writeUserData( records );
+    xml.writeUserData(records);
 
     m_userUID.m_uid.clear();
-    emit userStateChanged(MusicUserUIDItem(), QString());
+    Q_EMIT userStateChanged(MusicUserUIDItem(), QString());
     close();
 }
 
 int MusicUserManagerDialog::exec()
 {
-    QWidget *pa = MStatic_cast(QWidget*, parent());
+    QWidget *pa = TTKStatic_cast(QWidget*, parent());
     const QPoint &point = pa->mapToGlobal(QPoint(0, 0));
     move(point.x(), point.y() + 27);
     return QDialog::exec();

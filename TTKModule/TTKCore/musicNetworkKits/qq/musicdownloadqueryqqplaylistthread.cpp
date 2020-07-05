@@ -1,8 +1,5 @@
 #include "musicdownloadqueryqqplaylistthread.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 #define REFER_URL   "cmw5eWcwaXhCSDYvU1RoR3U5ZFV2NVppeDlyVkwxbFZtYnJZK3g5SzViaHFXc3FYQ09RblRYVHhORGVFVmFnN0RRUm5jZz09"
 
@@ -33,7 +30,7 @@ void MusicDownLoadQueryQQPlaylistThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_PLAYLIST_URL, false).arg(m_searchText).arg(m_pageSize*offset).arg(m_pageSize*(offset + 1) - 1);
@@ -58,7 +55,7 @@ void MusicDownLoadQueryQQPlaylistThread::startToSearch(const QString &playlist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(playlist));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(playlist));
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_PLAYLIST_ATTR_URL, false).arg(playlist);
     m_interrupt = true;
 
@@ -80,7 +77,7 @@ void MusicDownLoadQueryQQPlaylistThread::getPlaylistInfo(MusicResultsItem &item)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 getPlaylistInfo %2").arg(getClassName()).arg(item.m_id));
+    TTK_LOGGER_INFO(QString("%1 getPlaylistInfo %2").arg(getClassName()).arg(item.m_id));
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_PLAYLIST_ATTR_URL, false).arg(item.m_id);
 
     QNetworkRequest request;
@@ -151,8 +148,8 @@ void MusicDownLoadQueryQQPlaylistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -189,29 +186,29 @@ void MusicDownLoadQueryQQPlaylistThread::downLoadFinished()
                     item.m_description = value["introduction"].toString();
                     item.m_updateTime = value["commit_time"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     getMoreDetails(&item);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     value = value["creator"].toMap();
                     item.m_nickName = value["name"].toString();
 
-                    emit createPlaylistItem(item);
+                    Q_EMIT createPlaylistItem(item);
                 }
             }
         }
     }
 
-//    emit downLoadDataChanged(QString());
+//    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
 void MusicDownLoadQueryQQPlaylistThread::getDetailsFinished()
 {
-    QNetworkReply *reply = MObject_cast(QNetworkReply*, QObject::sender());
+    QNetworkReply *reply = TTKObject_cast(QNetworkReply*, QObject::sender());
 
-    M_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -273,9 +270,9 @@ void MusicDownLoadQueryQQPlaylistThread::getDetailsFinished()
                         musicInfo.m_discNumber = value["cdIdx"].toString();
                         musicInfo.m_trackNumber = value["belongCD"].toString();
 
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                         readFromMusicSongAttribute(&musicInfo, value, m_searchQuality, m_queryAllRecords);
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                         if(musicInfo.m_songAttrs.isEmpty())
                         {
@@ -288,7 +285,7 @@ void MusicDownLoadQueryQQPlaylistThread::getDetailsFinished()
                         item.m_albumName = musicInfo.m_albumName;
                         item.m_time = musicInfo.m_timeLength;
                         item.m_type = mapQueryServerString();
-                        emit createSearchedItem(item);
+                        Q_EMIT createSearchedItem(item);
                         m_musicSongInfos << musicInfo;
                     }
                 }
@@ -296,7 +293,7 @@ void MusicDownLoadQueryQQPlaylistThread::getDetailsFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
 }
 
 void MusicDownLoadQueryQQPlaylistThread::getMoreDetails(MusicResultsItem *item)
@@ -306,7 +303,7 @@ void MusicDownLoadQueryQQPlaylistThread::getMoreDetails(MusicResultsItem *item)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 getMoreDetails %2").arg(getClassName()).arg(item->m_id));
+    TTK_LOGGER_INFO(QString("%1 getMoreDetails %2").arg(getClassName()).arg(item->m_id));
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_PLAYLIST_ATTR_URL, false).arg(item->m_id);
 
     QNetworkRequest request;

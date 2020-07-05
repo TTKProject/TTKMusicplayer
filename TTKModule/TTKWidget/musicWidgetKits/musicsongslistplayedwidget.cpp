@@ -4,7 +4,6 @@
 #include "musicwidgetutils.h"
 #include "musicgiflabelwidget.h"
 #include "musicleftareawidget.h"
-#include "musicnumberdefine.h"
 #include "musicwidgetheaders.h"
 
 #include <QTimer>
@@ -20,7 +19,7 @@ MusicSongsListPlayedWidget::MusicSongsListPlayedWidget(int index, QWidget *paren
     m_currentPlayIndex = index;
 
     m_textLabel = new QLabel(this);
-    m_textLabel->setStyleSheet(MusicUIObject::MColorStyle11);
+    m_textLabel->setStyleSheet(MusicUIObject::MQSSColorStyle11);
     m_textLabel->setGeometry(23, 0, 170, 30);
 
     m_gifLabel = new MusicGifLabelWidget(MusicGifLabelWidget::Gif_Radio_Blue, this);
@@ -31,17 +30,17 @@ MusicSongsListPlayedWidget::MusicSongsListPlayedWidget(int index, QWidget *paren
     m_downloadButton->setGeometry(220, 7, 16, 16);
     m_downloadButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_downloadButton->setToolTip(tr("songDownload"));
-    m_downloadButton->setStyleSheet(MusicUIObject::MKGTinyBtnUnDownload);
+    m_downloadButton->setStyleSheet(MusicUIObject::MQSSTinyBtnUnDownload);
 
     m_deleteButton = new QPushButton(this);
     m_deleteButton->setGeometry(245, 7, 16, 16);
-    m_deleteButton->setStyleSheet(MusicUIObject::MKGTinyBtnDelete);
+    m_deleteButton->setStyleSheet(MusicUIObject::MQSSTinyBtnDelete);
     m_deleteButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_deleteButton->setToolTip(tr("deleteMusic"));
 
     m_moreButton = new QPushButton(this);
     m_moreButton->setGeometry(270, 7, 16, 16);
-    m_moreButton->setStyleSheet(MusicUIObject::MPushButtonStyle13 + MusicUIObject::MKGTinyBtnMore);
+    m_moreButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle13 + MusicUIObject::MQSSTinyBtnMore);
     m_moreButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_moreButton->setToolTip(tr("moreFunction"));
 
@@ -85,12 +84,12 @@ void MusicSongsListPlayedWidget::setDeleteItemAt()
 void MusicSongsListPlayedWidget::enterEvent(QEvent *event)
 {
     QWidget::enterEvent(event);
-    emit enterChanged(m_currentPlayIndex, -1);
+    Q_EMIT enterChanged(m_currentPlayIndex, -1);
 }
 
 void MusicSongsListPlayedWidget::createMoreMenu(QMenu *menu)
 {
-    menu->setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu->setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     QMenu *addMenu = menu->addMenu(QIcon(":/contextMenu/btn_add"), tr("addToList"));
     addMenu->addAction(tr("musicCloud"));

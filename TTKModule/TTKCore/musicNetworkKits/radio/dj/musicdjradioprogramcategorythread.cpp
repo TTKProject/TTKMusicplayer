@@ -1,9 +1,6 @@
 #include "musicdjradioprogramcategorythread.h"
 #include "musicdjradiothreadabstract.h"
 #include "musicsemaphoreloop.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDJRadioProgramCategoryThread::MusicDJRadioProgramCategoryThread(QObject *parent)
     : MusicDownLoadQueryThreadAbstract(parent)
@@ -32,7 +29,7 @@ void MusicDJRadioProgramCategoryThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     const QUrl &musicUrl(MusicUtils::Algorithm::mdII(DJ_RADIO_LIST_URL, false).arg(m_searchText));
@@ -55,15 +52,15 @@ void MusicDJRadioProgramCategoryThread::startToSearch(const QString &category)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(category));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(category));
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(DJ_DETAIL_N_URL, false),
                       MusicUtils::Algorithm::mdII(DJ_DETAIL_NDT_URL, false).arg(category));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     QNetworkReply *reply = m_manager->post(request, parameter);
@@ -78,14 +75,14 @@ void MusicDJRadioProgramCategoryThread::getProgramInfo(MusicResultsItem &item)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 getProgramInfo %2").arg(getClassName()).arg(item.m_id));
+    TTK_LOGGER_INFO(QString("%1 getProgramInfo %2").arg(getClassName()).arg(item.m_id));
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(DJ_PROGRAM_INFO_N_URL, false),
                       MusicUtils::Algorithm::mdII(DJ_PROGRAM_INFO_NDT_URL, false).arg(item.m_id));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     MusicSemaphoreLoop loop;
@@ -125,8 +122,8 @@ void MusicDJRadioProgramCategoryThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -155,29 +152,29 @@ void MusicDJRadioProgramCategoryThread::downLoadFinished()
                     MusicResultsItem info;
                     info.m_id = QString::number(value["id"].toInt());
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     info.m_coverUrl = value["picUrl"].toString();
                     info.m_name = value["name"].toString();
                     value = value["dj"].toMap();
                     info.m_nickName = value["nickname"].toString();
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
-                    emit createProgramItem(info);
+                    Q_EMIT createProgramItem(info);
                 }
             }
         }
     }
 
-//    emit downLoadDataChanged(QString());
+//    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
 void MusicDJRadioProgramCategoryThread::getDetailsFinished()
 {
-    QNetworkReply *reply = MObject_cast(QNetworkReply*, QObject::sender());
+    QNetworkReply *reply = TTKObject_cast(QNetworkReply*, QObject::sender());
 
-    M_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 getDetailsFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -216,9 +213,9 @@ void MusicDJRadioProgramCategoryThread::getDetailsFinished()
                     const QVariantMap &mainSongObject = value["mainSong"].toMap();
                     musicInfo.m_songId = QString::number(mainSongObject["id"].toInt());
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo, mainSongObject, m_searchQuality, true);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     //
                     if(!categoryFlag)
                     {
@@ -229,7 +226,7 @@ void MusicDJRadioProgramCategoryThread::getDetailsFinished()
                         info.m_coverUrl = musicInfo.m_smallPicUrl;
                         info.m_playCount = QString::number(radioObject["subCount"].toInt());
                         info.m_updateTime = QDateTime::fromMSecsSinceEpoch(value["createTime"].toULongLong()).toString(MUSIC_YEAR_FORMAT);
-                        emit createCategoryInfoItem(info);
+                        Q_EMIT createCategoryInfoItem(info);
                     }
                     //
                     if(musicInfo.m_songAttrs.isEmpty())
@@ -243,12 +240,12 @@ void MusicDJRadioProgramCategoryThread::getDetailsFinished()
                     item.m_albumName.clear();
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
 }

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #include "musicsingleton.h"
 
-#define M_HOTKEY_PTR (MusicSingleton<MusicHotKeyManager>::createInstance())
-
 class QGlobalShortcut;
 
 /*! @brief The class of the global hotkey setting manager.
@@ -34,10 +32,9 @@ class MUSIC_CORE_EXPORT MusicHotKeyManager : public QObject
     TTK_DECLARE_MODULE(MusicHotKeyManager)
 public:
     /*!
-     * To connect parent slot object.
+     * Set input connection.
      */
-    void connectParentObject(QObject *object);
-
+    void setInputObject(QObject *object);
     /*!
      * Set hotKey by given string list keys.
      */
@@ -71,7 +68,7 @@ public:
     /*!
      * Enable or disable the hotkey by index.
      */
-    void setEnabled(int index, bool enabled);
+    void setEnabled(int index, bool enable);
     /*!
      * check the given hotkey is enabled or not.
      */
@@ -79,7 +76,7 @@ public:
     /*!
      * Enable or disable all hotkeys.
      */
-    void enabledAll(bool enabled);
+    void enabledAll(bool enable);
 
     /*!
      * Mapping the virtual key to string key.
@@ -109,5 +106,8 @@ protected:
 
     DECLARE_SINGLETON_CLASS(MusicHotKeyManager)
 };
+
+#define M_HOTKEY_PTR GetMusicHotKeyManager()
+MUSIC_CORE_EXPORT MusicHotKeyManager* GetMusicHotKeyManager();
 
 #endif // MUSICHOTKEYMANAGER_H

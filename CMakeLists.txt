@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 add_definitions(-DTTK_LIBRARY)
+add_definitions(-DQMMP_LIBRARY)
 
-set(TTK_VERSION "2.9.0.0")
+set(TTK_MAJOR_VERSION "2.13.0")
+set(TTK_VERSION ${TTK_MAJOR_VERSION}.0)
 
 # Find includes in the build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Turn on automatic invocation of the MOC
 set(CMAKE_AUTOMOC OFF)
 # Add a compiler flag
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2 -pthread -fopenmp -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pthread -fopenmp -Wall")
 # Build Type
 set(CMAKE_BUILD_TYPE Release CACHE STRING "set build type to Release")  
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Release Debug)
@@ -94,13 +96,14 @@ include_directories(
     ${MUSIC_WIDGET_VIDEOKITS_DIR}
 )
 
-
-set(MUSIC_SCRIPT_DIR "${MUSIC_DIR}/TTKScript")
+set(MUSIC_CONFIG_DIR "${MUSIC_DIR}/TTKConfig")
 set(MUSIC_QRC_DIR "${MUSIC_DIR}/TTKQrc")
-set(MUSIC_LANGUAGE_DIR "${MUSIC_DIR}/TTKLanguage")
-set(MUSIC_RESOURCE_DIR "${MUSIC_DIR}/TTKResource")
 set(MUSIC_THIRDPARTY_DIR "${MUSIC_DIR}/TTKThirdParty")
 set(MUSIC_TTKSERVICE_DIR "${MUSIC_DIR}/TTKService")
+
+set(MUSIC_SCRIPT_DIR "${MUSIC_DIR}/TTKScript")
+set(MUSIC_LANGUAGE_DIR "${MUSIC_DIR}/TTKLanguage")
+set(MUSIC_RESOURCE_DIR "${MUSIC_DIR}/TTKResource")
 
 include_directories(
     ${MUSIC_THIRDPARTY_DIR}
@@ -109,12 +112,8 @@ include_directories(
     ${MUSIC_THIRDPARTY_DIR}/TTKDumper
     ${MUSIC_THIRDPARTY_DIR}/TTKExtras
 )
-if(WIN32)
-  set(MUSIC_INSTALL_DIR "${CMAKE_CACHEFILE_DIR}/bin")  
-else(UNIX)
-  set(MUSIC_INSTALL_DIR "${CMAKE_CACHEFILE_DIR}/lib")
-endif()
 
+set(MUSIC_INSTALL_DIR "${CMAKE_CACHEFILE_DIR}/bin")  
 set(LIBRARY_OUTPUT_PATH ${MUSIC_INSTALL_DIR}/${TTK_VERSION})
 set(EXECUTABLE_OUTPUT_PATH ${MUSIC_INSTALL_DIR}/${TTK_VERSION}) 
 
@@ -146,6 +145,7 @@ if(TTK_QT_VERSION VERSION_GREATER "4")
   find_package(Qt5MultimediaWidgets REQUIRED)
   find_package(Qt5Network REQUIRED)
   find_package(Qt5Xml REQUIRED)
+  find_package(Qt5OpenGL REQUIRED)
   if(WIN32)
     find_package(Qt5WinExtras REQUIRED)
   else(UNIX)
@@ -169,6 +169,7 @@ else()
     set(QT_USE_QTNETWORK ON)
     set(QT_USE_QTSQL ON)
     set(QT_USE_QTXML ON)
+    set(QT_USE_QTOPENGL ON)
     include(${QT_USE_FILE})
 
     if(WIN32)
@@ -184,14 +185,18 @@ find_program(QT_LRELEASE_EXECUTABLE lrelease ${QT_INSTALL_BINS})
 if(QT_LRELEASE_EXECUTABLE)
   message(STATUS "Message Found lrelease executable: " ${QT_LRELEASE_EXECUTABLE})
   if(WIN32)
-    execute_process(COMMAND ${MUSIC_SCRIPT_DIR}/win.bat ${QT_LRELEASE_EXECUTABLE} ${EXECUTABLE_OUTPUT_PATH})
+    execute_process(COMMAND ${MUSIC_SCRIPT_DIR}/ts_win.bat ${QT_LRELEASE_EXECUTABLE} ${EXECUTABLE_OUTPUT_PATH})
   else(UNIX)
-    execute_process(COMMAND ${MUSIC_SCRIPT_DIR}/linux.sh ${QT_LRELEASE_EXECUTABLE} ${MUSIC_DIR} ${EXECUTABLE_OUTPUT_PATH})
+    execute_process(COMMAND ${MUSIC_SCRIPT_DIR}/ts_linux.sh ${QT_LRELEASE_EXECUTABLE} ${MUSIC_DIR} ${EXECUTABLE_OUTPUT_PATH})
   endif()
 else()
   message(FATAL_ERROR "Message Could NOT find lrelease executable")
 endif()
 
+# copy run resource
+if(UNIX)
+  execute_process(COMMAND ${MUSIC_SCRIPT_DIR}/resource.sh ${MUSIC_RESOURCE_DIR} ${EXECUTABLE_OUTPUT_PATH})
+endif()
 
 find_library(QMMP_LIBRARY
   NAMES qmmp1
@@ -199,10 +204,8 @@ find_library(QMMP_LIBRARY
 )
 
 # qmmp include
-if(TTK_QT_VERSION VERSION_GREATER "4")
-  include_directories(${MUSIC_DIR}/TTKExtra/Qt5)
-else()
-  include_directories(${MUSIC_DIR}/TTKExtra/Qt4)
+include_directories(${MUSIC_DIR}/TTKExtra)
+if(NOT (TTK_QT_VERSION VERSION_GREATER "4"))
   if(UNIX)
     include_directories(
         /usr/include/QtMultimediaKit
@@ -211,11 +214,11 @@ else()
   endif()
 endif()
 
+add_subdirectory(TTKConfig)
 add_subdirectory(TTKQrc)
 add_subdirectory(TTKThirdParty)
 add_subdirectory(TTKModule)
 add_subdirectory(TTKService)
 add_subdirectory(TTKRun)
-add_subdirectory(TTKTest)
 
 install(FILES "${MUSIC_SCRIPT_DIR}/deploy/ttkmusicplayer.appdata.xml" DESTINATION "${MUSIC_INSTALL_DIR}/metainfo")

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,8 +83,8 @@ T* MusicSingleton<T>::createInstance()
 
 ////Class that will implement the singleton mode,
 ////must use the macro in it's delare file
-#define DECLARE_SINGLETON_CLASS( Class )             \
-    friend class MusicSingleton<Class>;              \
+#define DECLARE_SINGLETON_CLASS(Class)             \
+    friend class MusicSingleton<Class>;            \
     friend struct QScopedPointerDeleter<Class>;
 
 #endif // MUSICSINGLETON

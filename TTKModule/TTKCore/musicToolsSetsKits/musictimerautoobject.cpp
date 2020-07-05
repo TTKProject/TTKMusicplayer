@@ -1,7 +1,7 @@
 #include "musictimerautoobject.h"
 #include "musicsettingmanager.h"
-#include "musicnumberdefine.h"
 #include "musicapplication.h"
+#include "musiccoreutils.h"
 
 #include <QTime>
 #ifdef Q_OS_WIN
@@ -58,7 +58,7 @@ void MusicTimerAutoObject::runTimerAutoConfig()
 void MusicTimerAutoObject::timeout()
 {
     int hour = 0, minute = 0;
-    const QStringList &l = QTime::currentTime().toString(Qt::ISODate).split(':');
+    const QStringList &l = QTime::currentTime().toString(Qt::ISODate).split(":");
     if(l.count() != 3)
     {
         return;
@@ -82,8 +82,8 @@ void MusicTimerAutoObject::timeout()
                             M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoPlay, 1);
                         }
                         MusicApplication::instance()->setPlaySongChanged(M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlaySongIndex).toInt());
+                        break;
                     }
-                    break;
                 case 1:
                     {
                         if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoStopRepeat).toInt() == 0)
@@ -92,8 +92,8 @@ void MusicTimerAutoObject::timeout()
                             M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoStop, 1);
                         }
                         MusicApplication::instance()->setStopSongChanged();
+                        break;
                     }
-                    break;
                 case 2:
                     {
                         if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownRepeat).toInt() == 0)
@@ -102,8 +102,8 @@ void MusicTimerAutoObject::timeout()
                             M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoShutdown, 1);
                         }
                         setShutdown();
+                        break;
                     }
-                    break;
                 default: break;
             }
         }
@@ -120,7 +120,7 @@ void MusicTimerAutoObject::setShutdown()
         LookupPrivilegeValue(nullptr, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
         tkp.PrivilegeCount = 1;
         tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-        AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, MStatic_cast(PTOKEN_PRIVILEGES, nullptr), 0);
+        AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, TTKStatic_cast(PTOKEN_PRIVILEGES, nullptr), nullptr);
         ExitWindowsEx(EWX_SHUTDOWN | EWX_POWEROFF, 0);
     }
 #elif defined Q_OS_UNIX
@@ -131,13 +131,13 @@ void MusicTimerAutoObject::setShutdown()
     /* send signals to all processes  _except_ pid 1 */
     kill(-1, SIGTERM);
     sync();
-    sleep(3);
+    MusicUtils::Core::sleep(3 * MT_S2MS);
 
     kill(-1, SIGKILL);
     sync();
-    sleep(3);
+    MusicUtils::Core::sleep(3 * MT_S2MS);
     /* shutdown */
     reboot(RB_POWER_OFF);
 #endif
-    M_LOGGER_INFO("shutdown now");
+    TTK_LOGGER_INFO("shutdown now");
 }

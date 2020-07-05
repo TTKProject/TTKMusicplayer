@@ -15,6 +15,7 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_CORE_KITS_HEADERS
     ${MUSIC_WIDGET_CORE_DIR}/musicmessagebox.h
     ${MUSIC_WIDGET_CORE_DIR}/musicprogresswidget.h
     ${MUSIC_WIDGET_CORE_DIR}/musicclickedlabel.h
+    ${MUSIC_WIDGET_CORE_DIR}/musicclickedgroup.h
     ${MUSIC_WIDGET_CORE_DIR}/musicclickedslider.h
     ${MUSIC_WIDGET_CORE_DIR}/musicmovingclickedslider.h
     ${MUSIC_WIDGET_CORE_DIR}/musicmovinglabelslider.h
@@ -42,7 +43,8 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_CORE_KITS_HEADERS
     ${MUSIC_WIDGET_CORE_DIR}/musiccommentswidget.h
     ${MUSIC_WIDGET_CORE_DIR}/musicdownloadabstracttablewidget.h
     ${MUSIC_WIDGET_CORE_DIR}/musicfunctiontoolboxwidget.h
-    ${MUSIC_WIDGET_CORE_DIR}/musicsongitemselecteddialog.h
+    ${MUSIC_WIDGET_CORE_DIR}/musicsongitemselectedareawidget.h
+    ${MUSIC_WIDGET_CORE_DIR}/musicpagingwidgetobject.h
   )
 
 set_property(GLOBAL PROPERTY MUSIC_WIDGET_CORE_KITS_SOURCES
@@ -60,6 +62,7 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_CORE_KITS_SOURCES
     ${MUSIC_WIDGET_CORE_DIR}/musicmessagebox.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicprogresswidget.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicclickedlabel.cpp
+    ${MUSIC_WIDGET_CORE_DIR}/musicclickedgroup.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicclickedslider.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicmovingclickedslider.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicmovinglabelslider.cpp
@@ -87,6 +90,7 @@ set_property(GLOBAL PROPERTY MUSIC_WIDGET_CORE_KITS_SOURCES
     ${MUSIC_WIDGET_CORE_DIR}/musiccommentswidget.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicdownloadabstracttablewidget.cpp
     ${MUSIC_WIDGET_CORE_DIR}/musicfunctiontoolboxwidget.cpp
-    ${MUSIC_WIDGET_CORE_DIR}/musicsongitemselecteddialog.cpp
+    ${MUSIC_WIDGET_CORE_DIR}/musicsongitemselectedareawidget.cpp
+    ${MUSIC_WIDGET_CORE_DIR}/musicpagingwidgetobject.cpp
   )
   

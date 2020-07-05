@@ -2,7 +2,7 @@
 #include "ui_musicsongsharingwidget.h"
 #include "musicdownloadquerythreadabstract.h"
 #include "musicdownloadqueryfactory.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicuiobject.h"
 #include "musicobject.h"
 #include "musicurlutils.h"
@@ -10,7 +10,6 @@
 #include "musicwidgetutils.h"
 #include "musicsemaphoreloop.h"
 #include "musicdownloadsourcethread.h"
-#include "musicotherdefine.h"
 
 #include "qrencode/qrcodewidget.h"
 
@@ -19,15 +18,17 @@ MusicSongSharingWidget::MusicSongSharingWidget(QWidget *parent)
       m_ui(new Ui::MusicSongSharingWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
+
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
     m_type = Null;
 
     m_ui->qqButton->setChecked(true);
-    m_ui->textEdit->setStyleSheet(MusicUIObject::MTextEditStyle01);
+    m_ui->textEdit->setStyleSheet(MusicUIObject::MQSSTextEditStyle01);
 
     m_qrCodeWidget = new QRCodeQWidget(QByteArray(), QSize(90, 90), this);
     m_qrCodeWidget->setMargin(2);
@@ -74,7 +75,7 @@ void MusicSongSharingWidget::setData(Type type, const QVariantMap &data)
             {
                 const QString &smallUrl = data["smallUrl"].toString();
                 MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-                connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+                connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
                 if(!smallUrl.isEmpty() && smallUrl != COVER_URL_NULL)
                 {
                     download->startToDownload(smallUrl);
@@ -133,7 +134,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
                         break;
                     }
 
-                    downLoadDataChanged(server, info.m_smallPicUrl);
+                    downLoadFinished(server, info.m_smallPicUrl);
                 }
                 else
                 {
@@ -167,7 +168,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     break;
                 }
 
-                downLoadDataChanged(server, QString());
+                downLoadFinished(server, QString());
                 break;
             }
         case Artist:
@@ -191,7 +192,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     break;
                 }
 
-                downLoadDataChanged(server, m_data["smallUrl"].toString());
+                downLoadFinished(server, m_data["smallUrl"].toString());
                 break;
             }
         case Album:
@@ -215,7 +216,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     break;
                 }
 
-                downLoadDataChanged(server, m_data["smallUrl"].toString());
+                downLoadFinished(server, m_data["smallUrl"].toString());
                 break;
             }
         case Playlist:
@@ -239,7 +240,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     break;
                 }
 
-                downLoadDataChanged(server, m_data["smallUrl"].toString());
+                downLoadFinished(server, m_data["smallUrl"].toString());
                 break;
             }
         default: break;
@@ -248,12 +249,10 @@ void MusicSongSharingWidget::confirmButtonClicked()
 
 void MusicSongSharingWidget::queryUrlTimeout()
 {
-    MusicMessageBox message;
-    message.setText(tr("Song does not support sharing!"));
-    message.exec();
+    MusicToastLabel::popup(tr("Song does not support sharing!"));
 }
 
-void MusicSongSharingWidget::downLoadDataChanged(const QString &playUrl, const QString &imageUrl)
+void MusicSongSharingWidget::downLoadFinished(const QString &playUrl, const QString &imageUrl)
 {
     QString url;
     if(m_ui->qqButton->isChecked())

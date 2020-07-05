@@ -23,7 +23,7 @@ void MusicBackgroundManager::setArtistName(const QString &name)
             m_photos << filter.arg(i);
         }
     }
-    emit artistNameChanged();
+    Q_EMIT artistNameChanged();
 }
 
 void MusicBackgroundManager::clearArtistName()
@@ -73,7 +73,7 @@ QString MusicBackgroundManager::getArtistPhotoPathByIndex(int index) const
 {
     if((0 < index && index != -1) || index > m_photos.count() || m_photos.isEmpty())
     {
-        M_LOGGER_ERROR("index out of range");
+        TTK_LOGGER_ERROR("index out of range");
         return QString();
     }
     return (index == -1) ? m_photos[m_currentIndex < m_photos.count() ? m_currentIndex : 0] : m_photos[index];
@@ -92,7 +92,7 @@ void MusicBackgroundManager::setArtistPhotoPathList(const QStringList &list)
 void MusicBackgroundManager::setUserSelectArtistIndex(int index)
 {
     m_currentIndex = index;
-    emit userSelectIndexChanged();
+    Q_EMIT userSelectIndexChanged();
 }
 
 void MusicBackgroundManager::addObserver(QObject *object)
@@ -119,5 +119,5 @@ QString MusicBackgroundManager::getBackgroundUrl() const
 
 void MusicBackgroundManager::backgroundHasChanged()
 {
-    emit backgroundChanged();
+    Q_EMIT backgroundChanged();
 }

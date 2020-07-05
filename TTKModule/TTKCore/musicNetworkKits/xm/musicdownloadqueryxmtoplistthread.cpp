@@ -1,7 +1,4 @@
 #include "musicdownloadqueryxmtoplistthread.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryXMToplistThread::MusicDownLoadQueryXMToplistThread(QObject *parent)
     : MusicDownLoadQueryToplistThread(parent)
@@ -28,17 +25,17 @@ void MusicDownLoadQueryXMToplistThread::startToSearch(const QString &toplist)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
     deleteAll();
 
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_SONG_TOPLIST_DATA_URL, false).arg(toplist),
                       MusicUtils::Algorithm::mdII(XM_SONG_TOPLIST_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -54,8 +51,8 @@ void MusicDownLoadQueryXMToplistThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -80,7 +77,7 @@ void MusicDownLoadQueryXMToplistThread::downLoadFinished()
                 info.m_playCount = "-";
                 info.m_description = value["description"].toString();
                 info.m_updateTime = value["time"].toString();
-                emit createToplistInfoItem(info);
+                Q_EMIT createToplistInfoItem(info);
                 //
                 const QVariantList &datas = value["items"].toList();
                 foreach(const QVariant &var, datas)
@@ -107,9 +104,9 @@ void MusicDownLoadQueryXMToplistThread::downLoadFinished()
                     musicInfo.m_discNumber = "0";
                     musicInfo.m_trackNumber = value["track"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                     readFromMusicSongAttribute(&musicInfo, value["listenFiles"], m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
@@ -122,13 +119,13 @@ void MusicDownLoadQueryXMToplistThread::downLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
                     m_musicSongInfos << musicInfo;
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

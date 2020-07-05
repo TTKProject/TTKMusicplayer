@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@
 #include "musiclrcmanager.h"
 #include "musicobject.h"
 #include "musicuiobject.h"
+#include "musiclrcanalysis.h"
 #include "musicsettingmanager.h"
 
-class MusicLrcAnalysis;
 class MusicLrcSearchWidget;
 
 #define LRC_WALLPAPER_TPYE     "WALLPAPER"
@@ -69,16 +69,16 @@ public:
     /*!
      * Set setting parameter.
      */
-    virtual void setSettingParameter();
+    virtual void applySettingParameter();
 
     /*!
      * Set current song name.
      */
-    inline QString getCurrentSongName() const { return m_currentSongName;}
+    inline QString getCurrentSongName() const { return m_currentSongName; }
     /*!
      * Set current song name.
      */
-    inline void setCurrentSongName(const QString &name) { m_currentSongName = name;}
+    inline void setCurrentSongName(const QString &name) { m_currentSongName = name; }
     /*!
      * Set current play total time.
      */
@@ -91,11 +91,11 @@ public:
     /*!
      * Set lrc analysis model.
      */
-    inline void setLrcAnalysisModel(MusicLrcAnalysis *analysis)  { m_lrcAnalysis = analysis;}
+    inline void setLrcAnalysisModel(MusicLrcAnalysis *analysis)  { m_lrcAnalysis = analysis; }
     /*!
      * Get lrc analysis model.
      */
-    inline MusicLrcAnalysis* getLrcAnalysisModel() const { return m_lrcAnalysis;}
+    inline MusicLrcAnalysis* getLrcAnalysisModel() const { return m_lrcAnalysis; }
 
 Q_SIGNALS:
     /*!
@@ -157,7 +157,7 @@ protected:
     /*!
      * Set setting parameter by diff type.
      */
-    void setSettingParameter(const QString &t);
+    void applySettingParameter(const QString &t);
 
     bool m_linkLocalLrc;
     qint64 m_currentTime, m_totalTime;

@@ -30,11 +30,6 @@ MusicDownLoadQueryThreadAbstract *MusicQueryTableWidget::getQueryInput()
     return m_downLoadManager;
 }
 
-void MusicQueryTableWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-}
-
 
 
 MusicQueryItemTableWidget::MusicQueryItemTableWidget(QWidget *parent)
@@ -60,7 +55,7 @@ void MusicQueryItemTableWidget::startSearchQuery(const QString &text)
     Q_UNUSED(text);
     MusicDownLoadQueryThreadAbstract *d = M_DOWNLOAD_QUERY_PTR->getQueryThread(this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
-    setQueryInput( d );
+    setQueryInput(d);
 }
 
 void MusicQueryItemTableWidget::itemCellClicked(int row, int column)
@@ -102,12 +97,12 @@ void MusicQueryItemTableWidget::actionGroupClick(QAction *action)
     const QString &songName = (row != -1 && rowCount() > 0) ? item(row, 1)->toolTip() : QString();
     const QString &artistName = (row != -1 && rowCount() > 0) ? item(row, 2)->toolTip() : QString();
 
-    switch( action->data().toInt() )
+    switch(action->data().toInt())
     {
         case 0: musicDownloadLocal(row); break;
-        case 1: emit restartSearchQuery(songName); break;
-        case 2: emit restartSearchQuery(artistName); break;
-        case 3: emit restartSearchQuery(artistName + " - " + songName); break;
+        case 1: Q_EMIT restartSearchQuery(songName); break;
+        case 2: Q_EMIT restartSearchQuery(artistName); break;
+        case 3: Q_EMIT restartSearchQuery(artistName + " - " + songName); break;
         default: break;
     }
 }
@@ -141,7 +136,7 @@ void MusicQueryItemTableWidget::createContextMenu(QMenu &menu)
         return;
     }
 
-    menu.setStyleSheet(MusicUIObject::MMenuStyle02);
+    menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     m_actionGroup->addAction(menu.addAction(tr("musicDownload")))->setData(0);
 
     menu.addSeparator();
@@ -162,12 +157,12 @@ void MusicQueryItemTableWidget::createContextMenu(QMenu &menu)
 void MusicQueryItemTableWidget::resizeEvent(QResizeEvent *event)
 {
     MusicQueryTableWidget::resizeEvent(event);
-    m_loadingLabel->move((width() - m_loadingLabel->width())/2, (height() - m_loadingLabel->height())/2);
+    m_loadingLabel->move((width() - m_loadingLabel->width()) / 2, (height() - m_loadingLabel->height()) / 2);
 }
 
 QString MusicQueryItemTableWidget::randToGetStrength() const
 {
-    switch(qrand()%5)
+    switch(MusicTime::random(5))
     {
         case 0: return QString(":/video/lb_video_1");
         case 1: return QString(":/video/lb_video_2");

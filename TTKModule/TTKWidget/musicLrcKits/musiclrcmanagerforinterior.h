@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,15 +39,15 @@ public:
     /*!
      * Set lrc per width.
      */
-    inline void setLrcPerWidth(int width) { m_lrcPerWidth = width + LRC_PER_WIDTH;}
+    inline void setLrcPerWidth(int width) { m_lrcPerWidth = width + LRC_PER_WIDTH; }
     /*!
      * Set adjust font size.
      */
-    inline void setFontSize(int size) { m_gradientFontSize = size;}
+    inline void setFontSize(int size) { m_gradientFontSize = size; }
     /*!
      * Set adjust transparent by value.
      */
-    inline void setTransparent(int tran) { m_gradientTransparent = tran;}
+    inline void setTransparent(int tran) { m_gradientTransparent = tran; }
 
 protected:
     /*!

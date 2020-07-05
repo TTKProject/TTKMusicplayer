@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,12 @@ QT       += core
 
 TEMPLATE = lib
 
-include(../../TTKVersion.pri)
+include($$PWD/../../TTKVersion.pri)
 
-win32:TARGET = ../../../bin/$$TTKMusicPlayer/TTKWatcher
-unix:TARGET = ../../lib/$$TTKMusicPlayer/TTKWatcher
+DESTDIR = $$OUT_PWD/../../bin/$$TTKMusicPlayer
+TARGET = TTKWatcher
 
-CONFIG       += warn_off
-unix:VERSION += 2.1.0
+CONFIG += warn_off plugin lib
 
 unix{
     macx{
@@ -57,7 +56,7 @@ HEADERS += \
     $$PWD/qdevicewatcher.h
 
 #load extra define
-include(../TTKExtrasDefine.pri)
+include($$PWD/../TTKExtrasDefine.pri)
 
 win32{
     RC_FILE = TTKWatcher.rc

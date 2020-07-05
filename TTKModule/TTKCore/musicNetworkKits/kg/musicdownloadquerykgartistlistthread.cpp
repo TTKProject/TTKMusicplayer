@@ -1,6 +1,4 @@
 #include "musicdownloadquerykgartistlistthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryKGArtistListThread::MusicDownLoadQueryKGArtistListThread(QObject *parent)
     : MusicDownLoadQueryArtistListThread(parent)
@@ -17,7 +15,7 @@ void MusicDownLoadQueryKGArtistListThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     QString catId = "type=1&sextype=1";
@@ -34,7 +32,7 @@ void MusicDownLoadQueryKGArtistListThread::startToPage(int offset)
         int mIdx = dds[1].toInt();
         if(mIdx > -1 && mIdx < 26)
         {
-            m_rawData["initial"] = QString(MStatic_cast(char, mIdx + 65));
+            m_rawData["initial"] = QString(TTKStatic_cast(char, mIdx + 65));
         }
         else if(mIdx >= 26)
         {
@@ -69,8 +67,8 @@ void MusicDownLoadQueryKGArtistListThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -115,7 +113,7 @@ void MusicDownLoadQueryKGArtistListThread::downLoadFinished()
                             MusicResultsItem info;
                             info.m_id = QString::number(value["singerid"].toLongLong());
                             info.m_name = value["singername"].toString();
-                            emit createArtistListItem(info);
+                            Q_EMIT createArtistListItem(info);
                         }
                         break;
                     }
@@ -124,6 +122,6 @@ void MusicDownLoadQueryKGArtistListThread::downLoadFinished()
         }
     }
 
-//    emit downLoadDataChanged(QString());
+//    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

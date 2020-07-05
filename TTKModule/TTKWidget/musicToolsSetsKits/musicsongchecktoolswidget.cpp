@@ -3,11 +3,7 @@
 #include "musictoolsetsuiobject.h"
 #include "musicuiobject.h"
 #include "musicsongchecktoolsthread.h"
-#include "musicconnectionpool.h"
-#include "musicmessagebox.h"
-#include "musicsongssummariziedwidget.h"
-#include "musicsongitemselecteddialog.h"
-#include "musicotherdefine.h"
+#include "musictoastlabel.h"
 
 MusicSongCheckToolsWidget::MusicSongCheckToolsWidget(QWidget *parent)
     : MusicAbstractMoveWidget(parent),
@@ -18,51 +14,27 @@ MusicSongCheckToolsWidget::MusicSongCheckToolsWidget(QWidget *parent)
     Q_UNUSED(qRegisterMetaType<MusicSongCheckToolsQualitys>("MusicSongCheckToolsQualitys"));
 
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
-    connect(m_ui->modifiedItemButton, SIGNAL(clicked()), SLOT(modifiedItemButtonClicked()));
 
-    m_selectedItemIdFlag = false;
-
-    renameWidgetInit();
-    qualityWidgetInit();
-    duplicateWidgetInit();
+    initRenameWidget();
+    initQualityWidget();
+    initDuplicateWidget();
 
     switchToSelectedItemStyle(0);
-
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(getClassName(), MusicSongsSummariziedWidget::getClassName());
 }
 
 MusicSongCheckToolsWidget::~MusicSongCheckToolsWidget()
 {
-    M_CONNECTION_PTR->removeValue(getClassName());
     delete m_renameCore;
     delete m_duplicateCore;
     delete m_qualityCore;
     delete m_ui;
-}
-
-void MusicSongCheckToolsWidget::modifiedItemButtonClicked()
-{
-    MusicSongItems songs;
-    emit getMusicLists(songs);
-
-    m_selectedItemIdFlag = true;
-    MusicSongItemSelectedDialog dialog;
-    connect(&dialog, SIGNAL(itemListsChanged(MIntList)), SLOT(itemListsChanged(MIntList)));
-    dialog.createAllItems(&songs);
-    dialog.exec();
-}
-
-void MusicSongCheckToolsWidget::itemListsChanged(const MIntList &items)
-{
-    m_selectedItemIds = items;
-    m_ui->itemLabel->setText(tr("Custom Lists"));
 }
 
 void MusicSongCheckToolsWidget::renameButtonClicked()
@@ -108,7 +80,8 @@ void MusicSongCheckToolsWidget::renameReCheckButtonClicked()
 
     m_ui->renameTableWidget->clear();
     m_renameCore->stopAndQuitThread();
-    getSelectedSongItems();
+    m_localSongs = m_ui->selectedAreaWidget->getSelectedSongItems();
+
     m_renameCore->setMode(MusicObject::Check);
     m_renameCore->setRenameSongs(&m_localSongs);
     m_renameCore->start();
@@ -130,9 +103,7 @@ void MusicSongCheckToolsWidget::renameCheckFinished(const MusicSongCheckToolsRen
     else if(m_renameCore->getMode() == MusicObject::Apply &&
            !m_ui->renameTableWidget->getSelectedItems().isEmpty())
     {
-        MusicMessageBox message;
-        message.setText(tr("rename apply finished"));
-        message.exec();
+        MusicToastLabel::popup(tr("rename apply finished"));
     }
 }
 
@@ -170,7 +141,8 @@ void MusicSongCheckToolsWidget::qualityReCheckButtonClicked()
     m_ui->qualityCheckButton->setText(tr("StopCheck"));
 
     m_qualityCore->stopAndQuitThread();
-    getSelectedSongItems();
+    m_localSongs = m_ui->selectedAreaWidget->getSelectedSongItems();
+
     m_qualityCore->setQualitySongs(&m_localSongs);
     m_qualityCore->start();
 }
@@ -228,7 +200,8 @@ void MusicSongCheckToolsWidget::duplicateReCheckButtonClicked()
     m_ui->duplicateSelectAllButton->setChecked(false);
 
     m_qualityCore->stopAndQuitThread();
-    getSelectedSongItems();
+    m_localSongs = m_ui->selectedAreaWidget->getSelectedSongItems();
+
     m_duplicateCore->setMode(MusicObject::Check);
     m_duplicateCore->setDuplicateSongs(&m_localSongs);
     m_duplicateCore->start();
@@ -250,9 +223,7 @@ void MusicSongCheckToolsWidget::duplicateCheckFinished(const MusicSongCheckTools
     else if(m_duplicateCore->getMode() == MusicObject::Apply &&
            !m_ui->duplicateTableWidget->getSelectedItems().isEmpty())
     {
-        MusicMessageBox message;
-        message.setText(tr("duplicate apply finished"));
-        message.exec();
+        MusicToastLabel::popup(tr("duplicate apply finished"));
     }
 }
 
@@ -262,36 +233,10 @@ void MusicSongCheckToolsWidget::show()
     MusicAbstractMoveWidget::show();
 }
 
-void MusicSongCheckToolsWidget::getSelectedSongItems()
+void MusicSongCheckToolsWidget::initRenameWidget()
 {
-    m_localSongs.clear();
-
-    MusicSongItems songs;
-    emit getMusicLists(songs);
-
-    foreach(const MusicSongItem &item, songs)
-    {
-        if(m_selectedItemIdFlag)
-        {
-            if(m_selectedItemIds.contains(item.m_itemIndex))
-            {
-                m_localSongs << item.m_songs;
-            }
-        }
-        else
-        {
-            if(item.m_itemIndex != MUSIC_LOVEST_LIST && item.m_itemIndex != MUSIC_NETWORK_LIST && item.m_itemIndex != MUSIC_RECENT_LIST)
-            {
-                m_localSongs << item.m_songs;
-            }
-        }
-    }
-}
-
-void MusicSongCheckToolsWidget::renameWidgetInit()
-{
-    m_ui->renameSelectAllButton->setStyleSheet(MusicUIObject::MCheckBoxStyle01);
-    m_ui->renameCheckButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->renameSelectAllButton->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01);
+    m_ui->renameCheckButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
     connect(m_ui->renameButton, SIGNAL(clicked()), SLOT(renameButtonClicked()));
     connect(m_ui->renameCheckButton, SIGNAL(clicked()), SLOT(renameButtonCheckClicked()));
@@ -312,9 +257,9 @@ void MusicSongCheckToolsWidget::renameWidgetInit()
     connect(m_renameCore, SIGNAL(finished(MusicSongCheckToolsRenames)), SLOT(renameCheckFinished(MusicSongCheckToolsRenames)));
 }
 
-void MusicSongCheckToolsWidget::qualityWidgetInit()
+void MusicSongCheckToolsWidget::initQualityWidget()
 {
-    m_ui->qualityCheckButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->qualityCheckButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
     connect(m_ui->qualityButton, SIGNAL(clicked()), SLOT(qualityButtonClicked()));
     connect(m_ui->qualityCheckButton, SIGNAL(clicked()), SLOT(qualityButtonCheckClicked()));
@@ -332,10 +277,10 @@ void MusicSongCheckToolsWidget::qualityWidgetInit()
     connect(m_qualityCore, SIGNAL(finished(MusicSongCheckToolsQualitys)), SLOT(qualityCheckFinished(MusicSongCheckToolsQualitys)));
 }
 
-void MusicSongCheckToolsWidget::duplicateWidgetInit()
+void MusicSongCheckToolsWidget::initDuplicateWidget()
 {
-    m_ui->duplicateSelectAllButton->setStyleSheet(MusicUIObject::MCheckBoxStyle01);
-    m_ui->duplicateCheckButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->duplicateSelectAllButton->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01);
+    m_ui->duplicateCheckButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
     connect(m_ui->duplicateButton, SIGNAL(clicked()), SLOT(duplicateButtonClicked()));
     connect(m_ui->duplicateCheckButton, SIGNAL(clicked()), SLOT(duplicateButtonCheckClicked()));
@@ -358,16 +303,16 @@ void MusicSongCheckToolsWidget::duplicateWidgetInit()
 
 void MusicSongCheckToolsWidget::switchToSelectedItemStyle(int index)
 {
-    m_ui->renameButton->setStyleSheet(MusicUIObject::MKGCheckTestRename);
-    m_ui->qualityButton->setStyleSheet(MusicUIObject::MKGCheckTestQuality);
-    m_ui->duplicateButton->setStyleSheet(MusicUIObject::MKGCheckTestDuplicate);
+    m_ui->renameButton->setStyleSheet(MusicUIObject::MQSSCheckTestRename);
+    m_ui->qualityButton->setStyleSheet(MusicUIObject::MQSSCheckTestQuality);
+    m_ui->duplicateButton->setStyleSheet(MusicUIObject::MQSSCheckTestDuplicate);
 
     m_ui->stackedWidget->setCurrentIndex(index);
     switch(index)
     {
-        case 0: m_ui->renameButton->setStyleSheet(MusicUIObject::MKGCheckTestRenameClicked); break;
-        case 1: m_ui->duplicateButton->setStyleSheet(MusicUIObject::MKGCheckTestDuplicateClicked); break;
-        case 2: m_ui->qualityButton->setStyleSheet(MusicUIObject::MKGCheckTestQualityClicked); break;
+        case 0: m_ui->renameButton->setStyleSheet(MusicUIObject::MQSSCheckTestRenameClicked); break;
+        case 1: m_ui->duplicateButton->setStyleSheet(MusicUIObject::MQSSCheckTestDuplicateClicked); break;
+        case 2: m_ui->qualityButton->setStyleSheet(MusicUIObject::MQSSCheckTestQualityClicked); break;
         default: break;
     }
 }

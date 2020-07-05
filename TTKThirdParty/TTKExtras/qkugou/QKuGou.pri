@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -64,10 +64,10 @@ equals(Browser, 3): message("Found Qt web component, build in KuGou by Qt webeng
 INCLUDEPATH += $$PWD
 
 HEADERS  += \
-    $$PWD/kugouurl.h \
-    $$PWD/kugouwindow.h \
-    $$PWD/kugouuiobject.h
+    $$PWD/qkugouurl.h \
+    $$PWD/qkugouwindow.h \
+    $$PWD/qkugouuiobject.h
 
 SOURCES += \
-    $$PWD/kugouurl.cpp \
-    $$PWD/kugouwindow.cpp
+    $$PWD/qkugouurl.cpp \
+    $$PWD/qkugouwindow.cpp

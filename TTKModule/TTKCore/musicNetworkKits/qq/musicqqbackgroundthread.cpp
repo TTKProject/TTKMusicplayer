@@ -3,9 +3,6 @@
 #include "musicdatadownloadthread.h"
 #include "musicdownloadqqinterface.h"
 
-#///QJson import
-#include "qjson/parser.h"
-
 const QString BIG_ART_URL = "dGJmTlZOK1QvMDJENUxjMDk5UVhBWHVCb001eWtnQ1hKSnhsRWxLczNvRm9FV0kwbHhocTk4aml5SCs1Ym5mQU44SU05c1VZYVFzR2hLTEpGQ0hCNmM1ZUlZVnhnMm92QXNGMFN3PT0=";
 
 MusicQQBackgroundThread::MusicQQBackgroundThread(const QString &name, const QString &save, QObject *parent)
@@ -28,7 +25,7 @@ void MusicQQBackgroundThread::deleteAll()
 
 void MusicQQBackgroundThread::startToDownload()
 {
-    M_LOGGER_INFO(QString("%1 startToDownload").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 startToDownload").arg(getClassName()));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_SONG_SEARCH_URL, false).arg(m_artName).arg(0).arg(50);
@@ -51,7 +48,7 @@ void MusicQQBackgroundThread::downLoadDataFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadDataFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadDataFinished").arg(getClassName()));
     QString songId;
     if(m_reply->error() == QNetworkReply::NoError)
     {
@@ -95,7 +92,7 @@ void MusicQQBackgroundThread::downLoadUrlFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadUrlFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadUrlFinished").arg(getClassName()));
     if(m_reply->error() == QNetworkReply::NoError)
     {
         QStringList datas;
@@ -114,7 +111,7 @@ void MusicQQBackgroundThread::downLoadUrlFinished()
         {
             if(m_counter < 5)
             {
-                M_LOGGER_ERROR(url);
+                TTK_LOGGER_ERROR(url);
                 MusicDataDownloadThread *download = new MusicDataDownloadThread(url, QString("%1%2%3%4").arg(BACKGROUND_DIR_FULL)
                                                         .arg(m_savePath).arg(m_counter++).arg(SKN_FILE), MusicObject::DownloadBigBackground, this);
                 connect(download, SIGNAL(downLoadDataChanged(QString)), SLOT(downLoadFinished()));
@@ -126,7 +123,7 @@ void MusicQQBackgroundThread::downLoadUrlFinished()
 
 void MusicQQBackgroundThread::downLoadUrl(const QString &id)
 {
-    M_LOGGER_INFO(QString("%1 downLoadUrl %2").arg(getClassName()).arg(id));
+    TTK_LOGGER_INFO(QString("%1 downLoadUrl %2").arg(getClassName()).arg(id));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BIG_ART_URL, false).arg(id);

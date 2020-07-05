@@ -5,31 +5,36 @@
 #include "musiccoreutils.h"
 
 #include <QSslError>
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QNetworkAccessManager>
 
 MusicDownLoadThreadAbstract::MusicDownLoadThreadAbstract(const QString &url, const QString &save, MusicObject::DownloadType type, QObject *parent)
     : MusicNetworkAbstract(parent)
 {
     m_url = url;
-    m_savePathName = save;
+    m_savePath = save;
     m_downloadType = type;
     m_hasReceived = 0;
     m_currentReceived = 0;
 
-    if(QFile::exists(m_savePathName))
+    if(QFile::exists(m_savePath))
     {
-        QFile::remove(m_savePathName);
+        QFile::remove(m_savePath);
     }
-    m_file = new QFile(m_savePathName, this);
+    m_file = new QFile(m_savePath, this);
 
     M_DOWNLOAD_MANAGER_PTR->connectNetworkMultiValue(this);
-    m_timer.setInterval(MT_S2MS);
-    connect(&m_timer, SIGNAL(timeout()), SLOT(updateDownloadSpeed()));
+
+    m_speedTimer.setInterval(MT_S2MS);
+    connect(&m_speedTimer, SIGNAL(timeout()), SLOT(updateDownloadSpeed()));
 }
 
 MusicDownLoadThreadAbstract::~MusicDownLoadThreadAbstract()
 {
+    if(m_speedTimer.isActive())
+    {
+        m_speedTimer.stop();
+    }
     M_DOWNLOAD_MANAGER_PTR->removeNetworkMultiValue(this);
 }
 
@@ -46,8 +51,8 @@ void MusicDownLoadThreadAbstract::deleteAll()
 
 void MusicDownLoadThreadAbstract::replyError(QNetworkReply::NetworkError)
 {
-    M_LOGGER_ERROR("Abnormal network connection");
-    emit downLoadDataChanged("The file create failed");
+    TTK_LOGGER_ERROR("Abnormal network connection");
+    Q_EMIT downLoadDataChanged("The file create failed");
     deleteAll();
 }
 
@@ -55,7 +60,7 @@ void MusicDownLoadThreadAbstract::replyError(QNetworkReply::NetworkError)
 void MusicDownLoadThreadAbstract::sslErrors(QNetworkReply* reply, const QList<QSslError> &errors)
 {
     sslErrorsString(reply, errors);
-    emit downLoadDataChanged("The file create failed");
+    Q_EMIT downLoadDataChanged("The file create failed");
     deleteAll();
 }
 #endif
@@ -73,16 +78,16 @@ void MusicDownLoadThreadAbstract::updateDownloadSpeed()
     if(M_SETTING_PTR->value(MusicSettingManager::DownloadLimit).toInt() == 0)
     {
         const int limitValue = M_SETTING_PTR->value(MusicSettingManager::DownloadDLoadLimit).toInt();
-        if(limitValue != 0 && delta > limitValue*MH_KB)
+        if(limitValue != 0 && delta > limitValue * MH_KB)
         {
-            MusicUtils::Core::sleep(MT_S2MS - limitValue*MH_KB*MT_S2MS/delta);
-            delta = limitValue*MH_KB;
+            MusicUtils::Core::sleep(MT_S2MS - limitValue * MH_KB * MT_S2MS / delta);
+            delta = limitValue * MH_KB;
         }
     }
     m_hasReceived = m_currentReceived;
 }
 
-QString MusicDownLoadThreadAbstract::transferData() const
+QString MusicDownLoadThreadAbstract::mapCurrentQueryData() const
 {
     switch(m_downloadType)
     {

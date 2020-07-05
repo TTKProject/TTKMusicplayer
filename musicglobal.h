@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,10 @@
 
 ///
 #ifndef MUSIC_NAMESPACE
-#define MUSTTK_DEBUGE MUSIC
+#define MUSIC_NAMESPACE MUSIC
 #endif //MUSIC_NAMESPACE
 
-#if QT_VERSION <= QT_VERSION_CHECK(4,6,0)
+#if !TTK_QT_VERSION_CHECK(4,5,0)
 #define MUSIC_NO_NAMESPACE_SUPPORT
 #endif
 

@@ -14,18 +14,18 @@ MusicRemoteWidgetForSimpleStyle::MusicRemoteWidgetForSimpleStyle(QWidget *parent
     setLayout(vbox);
 
     m_songNameLabel = new MusicMarqueeWidget(this);
-    m_songNameLabel->setStyleSheet(MusicUIObject::MWidgetStyle01);
-    m_PreSongButton->hide();
-    m_NextSongButton->hide();
+    m_songNameLabel->setStyleSheet(MusicUIObject::MQSSWidgetStyle01);
+    m_preSongButton->hide();
+    m_nextSongButton->hide();
 
     QHBoxLayout *mhbox = new QHBoxLayout(m_mainWidget);
-    mhbox->setContentsMargins(0, 0, 0, 0);
+    mhbox->setContentsMargins(0, 0, 3, 0);
     mhbox->setSpacing(3);
-    mhbox->addWidget(m_showMainWindow);
-    mhbox->addWidget(m_PlayButton);
+    mhbox->addWidget(m_playButton);
     mhbox->addWidget(m_songNameLabel);
     mhbox->addWidget(m_volumeWidget);
-    mhbox->addWidget(m_SettingButton);
+    mhbox->addWidget(m_settingButton);
+    mhbox->addWidget(m_showMainWindowButton);
     m_mainWidget->setLayout(mhbox);
 }
 
@@ -36,5 +36,5 @@ MusicRemoteWidgetForSimpleStyle::~MusicRemoteWidgetForSimpleStyle()
 
 void MusicRemoteWidgetForSimpleStyle::setLabelText(const QString &value)
 {
-    m_songNameLabel->setText(MusicUtils::Widget::elidedText(font(), value, Qt::ElideRight, 350));
+    m_songNameLabel->setText(MusicUtils::Widget::elidedText(font(), value, Qt::ElideRight, width() - 20));
 }

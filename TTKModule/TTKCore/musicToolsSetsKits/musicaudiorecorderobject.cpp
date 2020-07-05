@@ -1,5 +1,4 @@
 #include "musicaudiorecorderobject.h"
-#include "musicmessagebox.h"
 #include "musiccodecutils.h"
 #include "musicobject.h"
 
@@ -17,7 +16,7 @@ MusicAudioRecorderObject::MusicAudioRecorderObject(QObject *parent)
     m_mpAudioOutputFile = nullptr;
 
     m_mpOutputFile = new QFile(this);
-    m_mpOutputFile->setFileName( MUSIC_RECORD_FILE );
+    m_mpOutputFile->setFileName(MUSIC_RECORD_FILE);
 
     m_mFormatFile.setSampleSize(16);
     m_mFormatFile.setSampleType(QAudioFormat::SignedInt);
@@ -27,20 +26,20 @@ MusicAudioRecorderObject::MusicAudioRecorderObject(QObject *parent)
     const QAudioDeviceInfo info(QAudioDeviceInfo::defaultInputDevice());
     if(!info.isFormatSupported(m_mFormatFile))
     {
-        M_LOGGER_WARN("input default mFormatFile not supported try to use nearest");
+        TTK_LOGGER_WARN("input default mFormatFile not supported try to use nearest");
         m_mFormatFile = info.nearestFormat(m_mFormatFile);
     }
 
     const QAudioDeviceInfo info1(QAudioDeviceInfo::defaultOutputDevice());
     if(!info1.isFormatSupported(m_mFormatFile))
     {
-        M_LOGGER_WARN("output default mFormatFile not supported - trying to use nearest");
-        M_LOGGER_WARN("output no support input mFormatFile.");
+        TTK_LOGGER_WARN("output default mFormatFile not supported - trying to use nearest");
+        TTK_LOGGER_WARN("output no support input mFormatFile.");
     }
 
     if(m_mFormatFile.sampleSize() != 16)
     {
-        M_LOGGER_INFO(QString("audio device doesn't support 16 bit support %d bit samples, example cannot run %1")
+        TTK_LOGGER_INFO(QString("audio device doesn't support 16 bit support %d bit samples, example cannot run %1")
                       .arg(m_mFormatFile.sampleSize()));
     }
 }
@@ -185,9 +184,7 @@ void MusicAudioRecorderObject::onRecordStart()
 
     if(m_mpAudioInputFile->error() != QAudio::NoError)
     {
-        MusicMessageBox message;
-        message.setText(tr("Audio Input Open Error"));
-        message.exec();
+        TTK_LOGGER_ERROR("Audio Input Open Error");
         return;
     }
 #ifdef TTK_GREATER_NEW
@@ -203,9 +200,7 @@ void MusicAudioRecorderObject::onRecordPlay()
     m_mpAudioOutputFile = new QAudioOutput(m_mFormatFile, this);
     if(m_mpAudioOutputFile->error() != QAudio::NoError)
     {
-        MusicMessageBox message;
-        message.setText(tr("Audio Output Open Error"));
-        message.exec();
+        TTK_LOGGER_ERROR("Audio Output Open Error");
         return;
     }
     connect(m_mpAudioOutputFile, SIGNAL(stateChanged(QAudio::State)), SLOT(onStateChange(QAudio::State)));

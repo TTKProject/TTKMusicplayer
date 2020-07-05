@@ -7,12 +7,13 @@
 #include "musicobject.h"
 #include "musictopareawidget.h"
 #include "musicapplicationobject.h"
-#include "musicotherdefine.h"
 #include "musicfileutils.h"
 #include "musicsettingmanager.h"
 #include "musicextractwrap.h"
 
 #include <QScrollBar>
+
+#define CURRENT_ITEMS_COUNT     47
 
 #define NEW_OPERATOR(ui, list)                                                  \
     ui->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);                   \
@@ -21,7 +22,7 @@
     ui->setFrameShadow(QFrame::Plain);                                          \
     ui->setAlignment(Qt::AlignVCenter);                                         \
     ui->setWidget(list);                                                        \
-    ui->verticalScrollBar()->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+    ui->verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
 
 
 MusicBackgroundSkinDialog::MusicBackgroundSkinDialog(QWidget *parent)
@@ -29,14 +30,15 @@ MusicBackgroundSkinDialog::MusicBackgroundSkinDialog(QWidget *parent)
       m_ui(new Ui::MusicBackgroundSkinDialog)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
-    m_ui->paletteButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->customSkin->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->paletteButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->customSkin->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
     m_ui->stackedWidget->setLength(m_ui->stackedWidget->width(), MusicAnimationStackedWidget::RightToLeft);
 #ifdef Q_OS_UNIX
     m_ui->paletteButton->setFocusPolicy(Qt::NoFocus);
@@ -63,13 +65,13 @@ MusicBackgroundSkinDialog::MusicBackgroundSkinDialog(QWidget *parent)
     addThemeListWidgetItem();
     backgroundListWidgetChanged(0);
     //
-    m_ui->resetWindowButton->setStyleSheet(MusicUIObject::MKGBtnResetWindow);
-    m_ui->skinTransparentButton->setStyleSheet(MusicUIObject::MToolButtonStyle06);
-    m_ui->listTransparentButton->setStyleSheet(MusicUIObject::MToolButtonStyle06);
+    m_ui->resetWindowButton->setStyleSheet(MusicUIObject::MQSSBtnResetWindow);
+    m_ui->skinTransparentButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle06);
+    m_ui->listTransparentButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle06);
 
     m_ui->skinTransparentButton->setEnabled(false);
-    m_ui->skinTransparentLabelBox->setStyleSheet(MusicUIObject::MCheckBoxStyle04);
-    m_ui->listTransparentLabel->setStyleSheet(MusicUIObject::MColorStyle03);
+    m_ui->skinTransparentLabelBox->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle04);
+    m_ui->listTransparentLabel->setStyleSheet(MusicUIObject::MQSSColorStyle03);
 
     connect(m_ui->skinTransparentLabelBox, SIGNAL(clicked(bool)), SLOT(windowTransparentChanged(bool)));
     connect(m_ui->skinTransparentButton, SIGNAL(valueChanged(int)), MusicTopAreaWidget::instance(), SLOT(musicBackgroundTransparentChanged(int)));
@@ -181,7 +183,7 @@ void MusicBackgroundSkinDialog::showPaletteDialog()
 
 void MusicBackgroundSkinDialog::showPaletteDialog(const QString &path)
 {
-    cpoyFileFromLocal( path );
+    cpoyFileFromLocal(path);
     m_myBackgroundList->updateLastedItem();
 }
 
@@ -206,7 +208,7 @@ void MusicBackgroundSkinDialog::showCustomSkinDialog()
     }
     else
     {
-        cpoyFileFromLocal( customSkinPath );
+        cpoyFileFromLocal(customSkinPath);
     }
     m_myBackgroundList->updateLastedItem();
 }
@@ -230,11 +232,11 @@ void MusicBackgroundSkinDialog::backgroundListWidgetChanged(int index)
     m_thunderBackgroundList->abort();
     if(index == 2)
     {
-        m_dailyBackgroundList->init();
+        m_dailyBackgroundList->initialize();
     }
     else if(index == 3)
     {
-        m_thunderBackgroundList->init();
+        m_thunderBackgroundList->initialize();
     }
     //
     m_ui->stackedWidget->setIndex(0, 0);
@@ -278,7 +280,7 @@ void MusicBackgroundSkinDialog::currentColorChanged(const QString &path)
         MusicTopAreaWidget::instance()->musicBackgroundSkinCustumChanged(QFileInfo(path).baseName());
     }
     M_BACKGROUND_PTR->setBackgroundUrl(path);
-    emit M_BACKGROUND_PTR->backgroundHasChanged();
+    Q_EMIT M_BACKGROUND_PTR->backgroundHasChanged();
 }
 
 void MusicBackgroundSkinDialog::windowTransparentChanged(bool state)
@@ -309,7 +311,7 @@ void MusicBackgroundSkinDialog::listWidgetItemClicked(MusicBackgroundListWidget 
     QString path = USER_THEME_DIR_FULL + s + TTS_FILE;
     MusicBackgroundSkinDialog::themeValidCheck(s, path);
     M_BACKGROUND_PTR->setBackgroundUrl(path);
-    emit M_BACKGROUND_PTR->backgroundHasChanged();
+    Q_EMIT M_BACKGROUND_PTR->backgroundHasChanged();
 }
 
 void MusicBackgroundSkinDialog::listWidgetItemClicked(MusicBackgroundRemoteWidget *item, const QString &name)
@@ -349,15 +351,15 @@ void MusicBackgroundSkinDialog::addThemeListWidgetItem()
 
 void MusicBackgroundSkinDialog::addThemeListWidgetItem(MusicBackgroundListWidget *item, const QString &dir, bool state)
 {
-   const  QStringList files(QDir(dir).entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name));
-    MIntList data;
+    const QStringList files(QDir(dir).entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name));
+    TTKIntList data;
     foreach(const QString &path, files)
     {
         QString fileName = QFileInfo(path).baseName();
                 fileName = fileName.split("-").last();
         data << fileName.trimmed().toInt();
     }
-    qSort(data.begin(), data.end(), qLess<int>());
+    std::sort(data.begin(), data.end(), std::less<int>());
 
     foreach(const int index, data)
     {
@@ -380,14 +382,14 @@ void MusicBackgroundSkinDialog::cpoyFileFromLocal(const QString &path)
 int MusicBackgroundSkinDialog::cpoyFileToLocalIndex()
 {
     const QList<QFileInfo> files(QDir(USER_THEME_DIR_FULL).entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name));
-    MIntList data;
+    TTKIntList data;
     foreach(const QFileInfo &info, files)
     {
         QString fileName = info.baseName();
                 fileName = fileName.split("-").last();
         data << fileName.trimmed().toInt();
     }
-    qSort(data.begin(), data.end(), qGreater<int>());
+    std::sort(data.begin(), data.end(), std::greater<int>());
 
     int index = CURRENT_ITEMS_COUNT;
     if(!data.isEmpty())

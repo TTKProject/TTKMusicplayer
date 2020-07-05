@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ public:
     /*!
      * Set current play state button.
      */
-    void showPlayStatus(bool status) const;
+    void setCurrentPlayStatus(bool status) const;
     /*!
      * Set current play volume.
      */
@@ -74,15 +74,15 @@ public:
     /*!
      * Set system close config or not.
      */
-    void setSystemCloseConfig(bool status) { m_systemCloseConfig = status;}
+    void setSystemCloseConfig(bool status) { m_systemCloseConfig = status; }
     /*!
      * Get system close config state.
      */
-    bool getSystemCloseConfig() { return m_systemCloseConfig;}
+    bool getSystemCloseConfig() { return m_systemCloseConfig; }
     /*!
      * Get system tray visible state.
      */
-    bool systemTrayIsVisible() { return m_systemTray->isVisible();}
+    bool systemTrayIsVisible() { return m_systemTray->isVisible(); }
     /*!
      * Set system tray message show title and context.
      */
@@ -103,13 +103,13 @@ public:
      */
     void setWindowConcise();
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
     /*!
-     * Get setting parameter.
+     * Apply settings parameters.
      */
-    void getParameterSetting();
+    void applySettingParameter();
     /*!
      * Current is show full container.
      */
@@ -145,7 +145,7 @@ protected:
     QSystemTrayIcon *m_systemTray;
     MusicSystemTrayMenu *m_systemTrayMenu;
     MusicWindowExtras *m_musicWindowExtras;
-    MusicRippleSpecturmObject *m_musicRipplesObject;
+    MusicRippleSpecturmObject *m_musicRippleObject;
 
     static MusicBottomAreaWidget *m_instance;
 };

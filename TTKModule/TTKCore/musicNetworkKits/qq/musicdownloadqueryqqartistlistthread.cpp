@@ -1,6 +1,4 @@
 #include "musicdownloadqueryqqartistlistthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryQQArtistListThread::MusicDownLoadQueryQQArtistListThread(QObject *parent)
     : MusicDownLoadQueryArtistListThread(parent)
@@ -16,7 +14,7 @@ void MusicDownLoadQueryQQArtistListThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     QString catId = "cn_man_", initial = "all";
@@ -32,7 +30,7 @@ void MusicDownLoadQueryQQArtistListThread::startToPage(int offset)
         const int mIdx = dds[1].toInt();
         if(mIdx > -1 && mIdx < 26)
         {
-            initial = QString(MStatic_cast(char, mIdx + 65));
+            initial = QString(TTKStatic_cast(char, mIdx + 65));
         }
         else if(mIdx >= 26)
         {
@@ -69,8 +67,8 @@ void MusicDownLoadQueryQQArtistListThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -103,12 +101,12 @@ void MusicDownLoadQueryQQArtistListThread::downLoadFinished()
                     MusicResultsItem info;
                     info.m_id = value["Fsinger_mid"].toString();
                     info.m_name = value["Fsinger_name"].toString();
-                    emit createArtistListItem(info);
+                    Q_EMIT createArtistListItem(info);
                 }
             }
         }
     }
 
-//    emit downLoadDataChanged(QString());
+//    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

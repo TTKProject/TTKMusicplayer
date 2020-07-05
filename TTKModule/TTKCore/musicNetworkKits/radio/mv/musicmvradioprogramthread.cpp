@@ -3,9 +3,6 @@
 #include "musicsemaphoreloop.h"
 #include "musicnumberutils.h"
 #include "musiccoreutils.h"
-#include "musictime.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicMVRadioProgramThread::MusicMVRadioProgramThread(QObject *parent)
     : MusicMVRadioThreadAbstract(parent)
@@ -65,7 +62,7 @@ void MusicMVRadioProgramThread::downLoadFinished()
                         item.m_id = value["fmId"].toString();
                         item.m_coverUrl = value["imgUrlMv"].toString();
 
-                        emit createCategoryItem(item);
+                        Q_EMIT createCategoryItem(item);
 
                         foreach(const QVariant &var, value["mvs"].toList())
                         {
@@ -92,9 +89,9 @@ void MusicMVRadioProgramThread::downLoadFinished()
                             musicInfo.m_timeLength = MusicTime::msecTime2LabelJustified(value["time"].toInt());
 
                             musicInfo.m_songId = value["mvhash"].toString();
-                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                             readFromMusicMVAttribute(&musicInfo);
-                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                             if(musicInfo.m_songAttrs.isEmpty())
                             {
@@ -107,7 +104,7 @@ void MusicMVRadioProgramThread::downLoadFinished()
                             item.m_time = musicInfo.m_timeLength;
                             item.m_albumName.clear();
                             item.m_type.clear();
-                            emit createSearchedItem(item);
+                            Q_EMIT createSearchedItem(item);
                             m_musicSongInfos << musicInfo;
                         }
                     }
@@ -116,7 +113,7 @@ void MusicMVRadioProgramThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -184,9 +181,9 @@ void MusicMVRadioProgramThread::readFromMusicMVAttribute(MusicObject::MusicSongI
     MusicObject::MusicSongAttribute attr;
     attr.m_url = key["downurl"].toString();
     attr.m_size = MusicUtils::Number::size2Label(key["filesize"].toInt());
-    attr.m_format = MusicUtils::String::StringSplite(attr.m_url);
+    attr.m_format = MusicUtils::String::stringSplitToken(attr.m_url);
 
-    int bitRate = key["bitrate"].toInt()/1000;
+    int bitRate = key["bitrate"].toInt() / 1000;
     if(bitRate <= 375)
         attr.m_bitrate = MB_250;
     else if(bitRate > 375 && bitRate <= 625)

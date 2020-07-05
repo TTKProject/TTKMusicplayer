@@ -1,6 +1,4 @@
 #include "musicdownloadquerybdthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownLoadQueryBDThread::MusicDownLoadQueryBDThread(QObject *parent)
     : MusicDownLoadQueryThreadAbstract(parent)
@@ -16,11 +14,11 @@ void MusicDownLoadQueryBDThread::startToSearch(QueryType type, const QString &te
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
     m_currentType = type;
     m_searchText = text.trimmed();
 
-    emit clearAllItems();
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
 
     startToPage(0);
@@ -33,7 +31,7 @@ void MusicDownLoadQueryBDThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_SONG_SEARCH_URL, false).arg(m_searchText).arg(offset + 1).arg(m_pageSize);
@@ -58,7 +56,7 @@ void MusicDownLoadQueryBDThread::startToSingleSearch(const QString &text)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSingleSearch %2").arg(getClassName()).arg(text));
+    TTK_LOGGER_INFO(QString("%1 startToSingleSearch %2").arg(getClassName()).arg(text));
     m_interrupt = true;
 
     QNetworkRequest request;
@@ -77,7 +75,7 @@ void MusicDownLoadQueryBDThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -123,9 +121,9 @@ void MusicDownLoadQueryBDThread::downLoadFinished()
                         musicInfo.m_smallPicUrl = value["pic_small"].toString().replace("_90", "_500");
                         musicInfo.m_albumName = MusicUtils::String::illegalCharactersReplaced(value["album_title"].toString());
 
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                         readFromMusicSongAttribute(&musicInfo, value["all_rate"].toString(), m_searchQuality, m_queryAllRecords);
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                         if(musicInfo.m_songAttrs.isEmpty())
                         {
@@ -139,7 +137,7 @@ void MusicDownLoadQueryBDThread::downLoadFinished()
                         item.m_albumName = musicInfo.m_albumName;
                         item.m_time = musicInfo.m_timeLength;
                         item.m_type = mapQueryServerString();
-                        emit createSearchedItem(item);
+                        Q_EMIT createSearchedItem(item);
                     }
                     m_musicSongInfos << musicInfo;
                 }
@@ -147,16 +145,16 @@ void MusicDownLoadQueryBDThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
 void MusicDownLoadQueryBDThread::singleDownLoadFinished()
 {
-    QNetworkReply *reply = MObject_cast(QNetworkReply*, QObject::sender());
+    QNetworkReply *reply = TTKObject_cast(QNetworkReply*, QObject::sender());
 
-    M_LOGGER_INFO(QString("%1 singleDownLoadFinished").arg(getClassName()));
-    emit clearAllItems();
+    TTK_LOGGER_INFO(QString("%1 singleDownLoadFinished").arg(getClassName()));
+    Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
     m_interrupt = false;
 
@@ -190,9 +188,9 @@ void MusicDownLoadQueryBDThread::singleDownLoadFinished()
                 musicInfo.m_discNumber = "1";
                 musicInfo.m_trackNumber = value["album_no"].toString();
 
-                if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
                 readFromMusicSongAttribute(&musicInfo, value["all_rate"].toString(), m_searchQuality, true);
-                if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkInit) return;
+                if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
 
                 if(!musicInfo.m_songAttrs.isEmpty())
                 {
@@ -203,7 +201,7 @@ void MusicDownLoadQueryBDThread::singleDownLoadFinished()
                     item.m_albumName = musicInfo.m_albumName;
                     item.m_time = musicInfo.m_timeLength;
                     item.m_type = mapQueryServerString();
-                    emit createSearchedItem(item);
+                    Q_EMIT createSearchedItem(item);
 
                     m_musicSongInfos << musicInfo;
                 }
@@ -211,6 +209,6 @@ void MusicDownLoadQueryBDThread::singleDownLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

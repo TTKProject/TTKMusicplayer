@@ -2,9 +2,6 @@
 #include "musicdownloadqueryxmthread.h"
 #include "musicsemaphoreloop.h"
 
-#///QJson import
-#include "qjson/parser.h"
-
 MusicXMSongCommentsThread::MusicXMSongCommentsThread(QObject *parent)
     : MusicDownLoadCommentsThread(parent)
 {
@@ -13,7 +10,7 @@ MusicXMSongCommentsThread::MusicXMSongCommentsThread(QObject *parent)
 
 void MusicXMSongCommentsThread::startToSearch(const QString &name)
 {
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
     MusicSemaphoreLoop loop;
     MusicDownLoadQueryXMThread *d = new MusicDownLoadQueryXMThread(this);
     d->setQueryAllRecords(false);
@@ -37,18 +34,18 @@ void MusicXMSongCommentsThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     m_pageTotal = 0;
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_SG_COMMIT_DATA_URL, false).arg(m_rawData["songID"].toInt()).arg(offset + 1).arg(m_pageSize),
                       MusicUtils::Algorithm::mdII(XM_COMMIT_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -64,7 +61,7 @@ void MusicXMSongCommentsThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -100,22 +97,22 @@ void MusicXMSongCommentsThread::downLoadFinished()
                     comment.m_nickName = value["nickName"].toString();
                     comment.m_coverUrl = value["avatar"].toString();
 
-                    if(comment.m_coverUrl.contains("https://"))
+                    if(comment.m_coverUrl.contains(TTK_HTTPS))
                     {
-                        comment.m_coverUrl.replace("https://", "http://");
+                        comment.m_coverUrl.replace(TTK_HTTPS, TTK_HTTP);
                     }
 
                     comment.m_playCount = QString::number(value["likes"].toLongLong());
                     comment.m_updateTime = QString::number(value["gmtCreate"].toLongLong());
                     comment.m_description = value["message"].toString();
 
-                    emit createSearchedItem(comment);
+                    Q_EMIT createSearchedItem(comment);
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
 
@@ -129,7 +126,7 @@ MusicXMPlaylistCommentsThread::MusicXMPlaylistCommentsThread(QObject *parent)
 
 void MusicXMPlaylistCommentsThread::startToSearch(const QString &name)
 {
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
 
     m_rawData["songID"] = name;
     startToPage(0);
@@ -142,18 +139,18 @@ void MusicXMPlaylistCommentsThread::startToPage(int offset)
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
+    TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
     deleteAll();
 
     m_pageTotal = 0;
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(XM_PL_COMMIT_DATA_URL, false).arg(m_rawData["songID"].toInt()).arg(offset + 1).arg(m_pageSize),
                       MusicUtils::Algorithm::mdII(XM_COMMIT_URL, false));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -169,7 +166,7 @@ void MusicXMPlaylistCommentsThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
 
     if(m_reply->error() == QNetworkReply::NoError)
@@ -205,21 +202,21 @@ void MusicXMPlaylistCommentsThread::downLoadFinished()
                     comment.m_nickName = value["nickName"].toString();
                     comment.m_coverUrl = value["avatar"].toString();
 
-                    if(comment.m_coverUrl.contains("https://"))
+                    if(comment.m_coverUrl.contains(TTK_HTTPS))
                     {
-                        comment.m_coverUrl.replace("https://", "http://");
+                        comment.m_coverUrl.replace(TTK_HTTPS, TTK_HTTP);
                     }
 
                     comment.m_playCount = QString::number(value["likes"].toLongLong());
                     comment.m_updateTime = QString::number(value["gmtCreate"].toLongLong());
                     comment.m_description = value["message"].toString();
 
-                    emit createSearchedItem(comment);
+                    Q_EMIT createSearchedItem(comment);
                 }
             }
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }

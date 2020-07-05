@@ -3,7 +3,6 @@
 #include "musiclrcfromkrc.h"
 #endif
 #include <qmath.h>
-#include "musictime.h"
 #include "musicstringutils.h"
 #include "musicapplication.h"
 #include "musicdownloadqueryfactory.h"
@@ -60,7 +59,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const QByteArray &data)
         m_lrcContainer.insert(0, QString());
     }
 
-    MIntStringMapIterator it(m_lrcContainer);
+    TTKIntStringMapIterator it(m_lrcContainer);
     while(it.hasNext())
     {
         it.next();
@@ -74,7 +73,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const QByteArray &data)
     return OpenFileSuccess;
 }
 
-MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const MIntStringMap &data)
+MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const TTKIntStringMap &data)
 {
     if(data.isEmpty())
     {
@@ -94,7 +93,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const MIntStringMap &data)
         m_lrcContainer.insert(0, QString());
     }
 
-    MIntStringMapIterator it(m_lrcContainer);
+    TTKIntStringMapIterator it(m_lrcContainer);
     while(it.hasNext())
     {
         it.next();
@@ -139,7 +138,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::transKrcFileToTime(const QString &krcF
 
     const QString &getAllText = QString(krc.getDecodeString());
     //The lyrics by line into the lyrics list
-    foreach(const QString &oneLine, getAllText.split( MusicUtils::String::splitLineKey() ))
+    foreach(const QString &oneLine, getAllText.split(MusicUtils::String::newlines()))
     {
         matchLrcLine(oneLine);
     }
@@ -159,7 +158,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::transKrcFileToTime(const QString &krcF
        m_lrcContainer.insert(0, QString());
     }
 
-    MIntStringMapIterator it(m_lrcContainer);
+    TTKIntStringMapIterator it(m_lrcContainer);
     while(it.hasNext())
     {
         it.next();
@@ -410,7 +409,7 @@ qint64 MusicLrcAnalysis::setSongSpeedChanged(qint64 time)
 //    {
 //        if(m_currentShowLrcContainer[i] == m_lrcContainer.value(time))
 //        {
-//            if((m_currentLrcIndex = i - getMiddle() - 1) < 0 )
+//            if((m_currentLrcIndex = i - getMiddle() - 1) < 0)
 //            {
 //                m_currentLrcIndex = 0;
 //            }
@@ -422,8 +421,8 @@ qint64 MusicLrcAnalysis::setSongSpeedChanged(qint64 time)
 
 void MusicLrcAnalysis::revertLrcTime(qint64 pos)
 {
-    MIntStringMapIterator it(m_lrcContainer);
-    MIntStringMap copy;
+    TTKIntStringMapIterator it(m_lrcContainer);
+    TTKIntStringMap copy;
     while(it.hasNext())
     {
         it.next();
@@ -434,7 +433,7 @@ void MusicLrcAnalysis::revertLrcTime(qint64 pos)
 
 void MusicLrcAnalysis::saveLrcTimeChanged()
 {
-    MIntStringMapIterator it(m_lrcContainer);
+    TTKIntStringMapIterator it(m_lrcContainer);
     QByteArray data;
     data.append(QString("[by: %1]\n[offset:0]\n").arg(APP_NAME));
     while(it.hasNext())
@@ -452,7 +451,12 @@ void MusicLrcAnalysis::saveLrcTimeChanged()
 
     QTextStream outstream(&file);
     outstream.setCodec("utf-8");
-    outstream << data << endl;
+    outstream << data;
+#if TTK_QT_VERSION_CHECK(5,15,0)
+    outstream << Qt::endl;
+#else
+    outstream << endl;
+#endif
     file.close();
 }
 
@@ -529,7 +533,7 @@ qint64 MusicLrcAnalysis::findTime(int index) const
 {
     if(index + m_lineMax < m_currentShowLrcContainer.count())
     {
-        MIntStringMapIterator it(m_lrcContainer);
+        TTKIntStringMapIterator it(m_lrcContainer);
         for(int i=0; i<index + 1; ++i)
         {
             if(it.hasNext())

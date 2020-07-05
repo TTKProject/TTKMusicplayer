@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -263,9 +263,9 @@ public Q_SLOTS:
      */
     void musicSearchIndexChanged(int row, int col);
     /*!
-     * Get settings parameters.
+     * Apply settings parameters.
      */
-    void getParameterSetting();
+    void applySettingParameter();
     /*!
      * Delete love item from indexs.
      */
@@ -310,6 +310,7 @@ protected:
     virtual void leaveEvent(QEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
     virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+    virtual bool eventFilter(QObject *object, QEvent *event) override;
 
     /*!
      * Set music current play index.

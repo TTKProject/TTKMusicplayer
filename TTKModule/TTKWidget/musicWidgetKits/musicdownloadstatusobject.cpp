@@ -15,7 +15,7 @@ MusicDownloadStatusObject::MusicDownloadStatusObject(QObject *parent)
     : QObject(parent)
 {
     m_previousState = true;
-    m_parentWidget = MStatic_cast(MusicApplication*, parent);
+    m_parentWidget = TTKStatic_cast(MusicApplication*, parent);
     m_downloadLrcThread = nullptr;
 
     M_CONNECTION_PTR->setValue(getClassName(), this);
@@ -87,7 +87,7 @@ bool MusicDownloadStatusObject::checkSettingParameterValue() const
     return M_SETTING_PTR->value(MusicSettingManager::ShowInteriorLrc).toBool() || M_SETTING_PTR->value(MusicSettingManager::ShowDesktopLrc).toBool();
 }
 
-void MusicDownloadStatusObject::musicCheckHasLrcAlready()
+void MusicDownloadStatusObject::checkLrcValid()
 {
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
@@ -117,12 +117,12 @@ void MusicDownloadStatusObject::musicCheckHasLrcAlready()
        ///Start the request query
        m_downloadLrcThread = M_DOWNLOAD_QUERY_PTR->getQueryThread(this);
        m_downloadLrcThread->startToSearch(MusicDownLoadQueryThreadAbstract::MusicQuery, filename);
-       connect(m_downloadLrcThread, SIGNAL(downLoadDataChanged(QString)), SLOT(musicHaveNoLrcAlready()));
+       connect(m_downloadLrcThread, SIGNAL(downLoadDataChanged(QString)), SLOT(currentLrcDataDownload()));
        showDownLoadInfoFor(MusicObject::DW_Buffing);
     }
 }
 
-void MusicDownloadStatusObject::musicHaveNoLrcAlready()
+void MusicDownloadStatusObject::currentLrcDataDownload()
 {
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
@@ -134,7 +134,7 @@ void MusicDownloadStatusObject::musicHaveNoLrcAlready()
     if(!musicSongInfos.isEmpty())
     {
         const QString &filename = m_parentWidget->getCurrentFileName();
-        const int count = MusicUtils::String::splitString(filename).count();
+        const int count = MusicUtils::String::stringSplit(filename).count();
         const QString &artistName = MusicUtils::String::artistName(filename);
         const QString &songName = MusicUtils::String::songName(filename);
 
@@ -153,7 +153,7 @@ void MusicDownloadStatusObject::musicHaveNoLrcAlready()
         ///download art picture
         M_DOWNLOAD_QUERY_PTR->getDownloadSmallPicThread(musicSongInfo.m_smallPicUrl, ART_DIR_FULL + artistName + SKN_FILE, MusicObject::DownloadSmallBackground, this)->startToDownload();
         ///download big picture
-        M_DOWNLOAD_QUERY_PTR->getDownloadBigPicThread( count == 1 ? musicSongInfo.m_singerName : artistName, artistName, this)->startToDownload();
+        M_DOWNLOAD_QUERY_PTR->getDownloadBigPicThread(count == 1 ? musicSongInfo.m_singerName : artistName, artistName, this)->startToDownload();
     }
     else
     {

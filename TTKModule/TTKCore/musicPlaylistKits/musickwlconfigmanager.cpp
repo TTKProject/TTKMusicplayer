@@ -1,5 +1,4 @@
 #include "musickwlconfigmanager.h"
-#include "musicotherdefine.h"
 
 MusicKWLConfigManager::MusicKWLConfigManager(QObject *parent)
     : MusicAbstractXml(parent)
@@ -11,7 +10,7 @@ MusicKWLConfigManager::MusicKWLConfigManager(QObject *parent)
 bool MusicKWLConfigManager::readConfig(const QString &name)
 {
     delete m_file;
-    m_file = new QFile( name );
+    m_file = new QFile(name);
     if(!m_file->open(QIODevice::ReadOnly | QIODevice::Text))
     {
         return false;
@@ -31,12 +30,12 @@ bool MusicKWLConfigManager::readConfig(const QString &name)
     return MusicAbstractXml::readConfig(name);
 }
 
-void MusicKWLConfigManager::readPlaylistData(MusicSongItems &items)
+bool MusicKWLConfigManager::readPlaylistData(MusicSongItems &items)
 {
     MusicSongItem item;
     item.m_itemName = QFileInfo(m_file->fileName()).baseName();
 
-    const QDomNodeList &nodes = m_document->elementsByTagName("so");
+    const QDomNodeList &nodes = m_document->elementsByTagName(m_nodeHelper->nodeName("so"));
     for(int i=0; i<nodes.count(); ++i)
     {
         if(i == 0) //Skip root node
@@ -61,10 +60,12 @@ void MusicKWLConfigManager::readPlaylistData(MusicSongItems &items)
     {
         items << item;
     }
+    return true;
 }
 
-void MusicKWLConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
+bool MusicKWLConfigManager::writePlaylistData(const MusicSongItems &items, const QString &path)
 {
     Q_UNUSED(items);
     Q_UNUSED(path);
+    return false;
 }

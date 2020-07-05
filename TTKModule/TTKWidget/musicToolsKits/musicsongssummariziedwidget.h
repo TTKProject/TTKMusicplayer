@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ public:
     /*!
      * Get current played tool index.
      */
-    inline int getCurrentPlayToolIndex() const { return m_currentPlayToolIndex;}
+    inline int getCurrentPlayToolIndex() const { return m_currentPlayToolIndex; }
     /*!
      * Set current music song tree index.
      */
@@ -197,7 +197,7 @@ public Q_SLOTS:
     /*!
      * Delete items from indexs and check remove file or not.
      */
-    void setDeleteItemAt(const MIntList &del, bool fileRemove);
+    void setDeleteItemAt(const TTKIntList &del, bool fileRemove);
     /*!
      * Swap the current play index when user drag and drop.
      */
@@ -271,11 +271,11 @@ protected:
      */
     void setItemTitle(MusicSongItem *item);
     /*!
-     * Connect music toolBox widget item.
+     * Set input connection.
      */
-    void connectMusicToolBoxWidgetItem(QObject *object);
+    void setInputObject(QObject *object) const;
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
     /*!
@@ -294,7 +294,7 @@ protected:
 
     MusicSongItems m_songItems;
     MusicSongsToolBoxMaskWidget *m_listMaskWidget;
-    MIntListMap m_searchfileListCache;
+    TTKIntListMap m_searchfileListCache;
     MusicSongCheckToolsWidget *m_songCheckToolsWidget;
     MusicSongsListFunctionWidget *m_listFunctionWidget;
     MusicLocalSongSearchDialog *m_musicSongSearchWidget;

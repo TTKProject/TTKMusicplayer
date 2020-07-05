@@ -1,5 +1,4 @@
 #include "musiclrcfromkrc.h"
-#include "musicnumberdefine.h"
 #include "musicobject.h"
 #include "musiccodecutils.h"
 
@@ -36,13 +35,13 @@ bool MusicLrcFromKrc::decode(const QString &input, const QString &output)
 
     if((fp = fopen(MusicUtils::Codec::toLocal8Bit(input), "rb")) == nullptr)
     {
-        M_LOGGER_ERROR("open file error !");
+        TTK_LOGGER_ERROR("open file error !");
         return false;
     }
 
     if(fstat(fileno(fp), &st))
     {
-        M_LOGGER_ERROR("fstat file error !");
+        TTK_LOGGER_ERROR("fstat file error !");
         fclose(fp);
         return false;
     }
@@ -50,7 +49,7 @@ bool MusicLrcFromKrc::decode(const QString &input, const QString &output)
     uchar *src = new uchar[st.st_size];
     if(fread(src, sizeof(uchar), st.st_size, fp) != st.st_size)
     {
-        M_LOGGER_ERROR("fread file error !");
+        TTK_LOGGER_ERROR("fread file error !");
         delete[] src;
         fclose(fp);
         return false;
@@ -58,7 +57,7 @@ bool MusicLrcFromKrc::decode(const QString &input, const QString &output)
 
     if(memcmp(src, "krc1", 4) != 0)
     {
-        M_LOGGER_ERROR("error file format !");
+        TTK_LOGGER_ERROR("error file format !");
         delete[] src;
         fclose(fp);
         return false;
@@ -71,7 +70,7 @@ bool MusicLrcFromKrc::decode(const QString &input, const QString &output)
     }
 
     decompression(src, st.st_size, &dstsize);
-    createLrc(m_resultBytes, MStatic_cast(int, dstsize));
+    createLrc(m_resultBytes, TTKStatic_cast(int, dstsize));
 
     delete[] src;
     fclose(fp);
@@ -83,7 +82,12 @@ bool MusicLrcFromKrc::decode(const QString &input, const QString &output)
         {
             QTextStream outstream(&file);
             outstream.setCodec("utf-8");
-            outstream << m_data << endl;
+            outstream << m_data;
+#if TTK_QT_VERSION_CHECK(5,15,0)
+            outstream << Qt::endl;
+#else
+            outstream << endl;
+#endif
             file.close();
         }
     }
@@ -132,31 +136,31 @@ int MusicLrcFromKrc::decompression(uchar *src, size_t srcsize, size_t *dstsize)
 
 int MusicLrcFromKrc::isfilter(char *tok)
 {
-    if(!sncasecmp(tok, const_cast<char*>(MString("[id").c_str()), 3))
+    if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[id").c_str()), 3))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[by").c_str()), 3))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[by").c_str()), 3))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[hash").c_str()), 5))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[hash").c_str()), 5))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[al").c_str()), 3))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[al").c_str()), 3))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[sign").c_str()), 5))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[sign").c_str()), 5))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[total").c_str()), 6))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[total").c_str()), 6))
     {
         return 1;
     }
-    else if(!sncasecmp(tok, const_cast<char*>(MString("[offset").c_str()), 7))
+    else if(!sncasecmp(tok, TTKConst_cast(char*, TTKString("[offset").c_str()), 7))
     {
         return 1;
     }

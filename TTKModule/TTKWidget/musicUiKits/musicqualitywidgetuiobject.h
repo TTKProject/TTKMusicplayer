@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the music quality widget style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGBtnQuality = " \
+    const QString MQSSBtnQuality = " \
             QToolButton{ border:none; \
-            background-image: url(:/quality/btn_quality_normal);} \
-            QToolButton:hover{ background-image: url(:/quality/btn_quality_hover);}";
+            background-image: url(:/quality/btn_quality_normal); } \
+            QToolButton:hover{ background-image: url(:/quality/btn_quality_hover); }";
 
 }
 

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,14 +35,17 @@ class MUSIC_WIDGET_EXPORT MusicSoundEffectsItemWidget : public QWidget
 public:
     enum Type
     {
-        Null,       /*!< sound null effect*/
-        BS2B,       /*!< sound BS2B effect*/
-        Crossfade,  /*!< sound Crossfade effect*/
-        Stereo,     /*!< sound Stereo effect*/
-        LADSPA,     /*!< sound LADSPA effect*/
-        SoX,        /*!< sound SoX Resampler effect*/
-        SRC         /*!< sound srconverter effect*/
+        Null,         /*!< sound null effect*/
+        BS2B,         /*!< sound BS2B effect*/
+        Crossfade,    /*!< sound Crossfade effect*/
+        Stereo,       /*!< sound Stereo effect*/
+        LADSPA,       /*!< sound LADSPA effect*/
+        Soxr,         /*!< sound SoX Resampler effect*/
+        SrcConverter, /*!< sound srconverter effect*/
+        MonoStereo,   /*!< sound mono stereo effect*/
+        Mono          /*!< sound mono effect*/
     };
+
     /*!
      * Object contsructor.
      */
@@ -62,11 +65,11 @@ public:
     /*!
      * Set plugin enable or not.
      */
-    void setPluginEnable(bool enable);
+    void setPluginEnabled(bool enable);
     /*!
      * Get plugin enable or not.
      */
-    bool pluginEnable() const;
+    bool pluginEnabled() const;
 
     /*!
      * Sound effect changed.
@@ -77,11 +80,7 @@ public Q_SLOTS:
     /*!
      * Set plugin enable or not.
      */
-    void setPluginEnable();
-    /*!
-     * Sound effect checkBox changed.
-     */
-    void soundEffectCheckBoxChanged(bool state);
+    void setPluginEnabled();
     /*!
      * Sound effect button value changed.
      */
@@ -117,15 +116,11 @@ public:
     virtual ~MusicSoundEffectsWidget();
 
     /*!
-     * Set parent connection.
+     * Set input connection.
      */
-    void setParentConnect(QObject *object);
+    void setInputObject(QObject *object);
 
 Q_SIGNALS:
-    /*!
-     * Set current player volume.
-     */
-    void volumeChanged(int value);
     /*!
      * Read equalizer effect from config file.
      */
@@ -144,10 +139,6 @@ public Q_SLOTS:
      * State combobox index changed.
      */
     void stateComboBoxChanged(int index);
-    /*!
-     * Volume slider changed.
-     */
-    void volumeSliderChanged(int value);
     /*!
      * Override exec function.
      */

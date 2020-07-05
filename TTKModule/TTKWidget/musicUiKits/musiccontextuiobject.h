@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,30 +21,30 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the context button style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGContextPlay = " \
+    const QString MQSSContextPlay = " \
             QToolButton{ border:none; \
-            background-image: url(:/contextMenu/btn_play_hover);} \
-            QToolButton:hover{ background-image: url(:/contextMenu/btn_play_normal);}";
+            background-image: url(:/contextMenu/btn_play_hover); } \
+            QToolButton:hover{ background-image: url(:/contextMenu/btn_play_normal); }";
 
-    const QString MKGContextPause = " \
+    const QString MQSSContextPause = " \
             QToolButton{ border:none; \
-            background-image: url(:/contextMenu/btn_pause_hover);} \
-            QToolButton:hover{ background-image: url(:/contextMenu/btn_pause_normal);}";
+            background-image: url(:/contextMenu/btn_pause_hover); } \
+            QToolButton:hover{ background-image: url(:/contextMenu/btn_pause_normal); }";
 
-    const QString MKGContextNext = " \
+    const QString MQSSContextNext = " \
             QToolButton{ border:none; \
-            background-image: url(:/contextMenu/btn_next_hover);} \
-            QToolButton:hover{ background-image: url(:/contextMenu/btn_next_normal);}";
+            background-image: url(:/contextMenu/btn_next_hover); } \
+            QToolButton:hover{ background-image: url(:/contextMenu/btn_next_normal); }";
 
-    const QString MKGContextPrevious = " \
+    const QString MQSSContextPrevious = " \
             QToolButton{ border:none; \
-            background-image: url(:/contextMenu/btn_previous_hover);} \
-            QToolButton:hover{ background-image: url(:/contextMenu/btn_previous_normal);}";
+            background-image: url(:/contextMenu/btn_previous_hover); } \
+            QToolButton:hover{ background-image: url(:/contextMenu/btn_previous_normal); }";
 
 }
 

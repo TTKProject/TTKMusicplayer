@@ -2,24 +2,25 @@
 #include "ui_musiclrcsearchwidget.h"
 #include "musicuiobject.h"
 #include "musiclrcsearchtablewidget.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 
 MusicLrcSearchWidget::MusicLrcSearchWidget(QWidget *parent)
     : MusicAbstractMoveDialog(parent),
       m_ui(new Ui::MusicLrcSearchWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
-    m_ui->label_checkBox->setStyleSheet(MusicUIObject::MCheckBoxStyle01);
-    m_ui->songSearchEdit->setStyleSheet(MusicUIObject::MLineEditStyle01);
-    m_ui->lrcSearchButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->lrcSearchDownload->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->closeButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->label_checkBox->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01);
+    m_ui->songSearchEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    m_ui->lrcSearchButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->lrcSearchDownload->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->closeButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->label_checkBox->setFocusPolicy(Qt::NoFocus);
@@ -32,7 +33,7 @@ MusicLrcSearchWidget::MusicLrcSearchWidget(QWidget *parent)
     m_ui->lrcSearchDownload->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->closeButton->setCursor(QCursor(Qt::PointingHandCursor));
 
-    m_ui->functionTopLabel->setStyleSheet(MusicUIObject::MColorStyle03 + MusicUIObject::MBackgroundStyle03);
+    m_ui->functionTopLabel->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSBackgroundStyle03);
 
     connect(m_ui->lrcSearchButton, SIGNAL(clicked()), SLOT(lrcSearchButtonClicked()));
     connect(m_ui->lrcSearchDownload, SIGNAL(clicked()), SLOT(lrcSearchDownloadClicked()));
@@ -69,19 +70,17 @@ void MusicLrcSearchWidget::lrcSearchButtonClicked() const
 {
     m_ui->stateLabel->setText(tr("lrc is searching now!"));
     const QString &text = m_ui->songSearchEdit->text().trimmed();
-    m_ui->tableWidget->startSearchQuery( text );
+    m_ui->tableWidget->startSearchQuery(text);
     m_ui->functionTopLabel->setText(tr("&nbsp;find <font color=#158FE1> %1 </font> result").arg(MusicUtils::Widget::elidedText(font(), text, Qt::ElideRight, 245)));
 }
 
 void MusicLrcSearchWidget::lrcSearchDownloadClicked()
 {
-    MIntList list = m_ui->tableWidget->getSelectedItems();
+    TTKIntList list = m_ui->tableWidget->getSelectedItems();
     list.removeOne(m_ui->tableWidget->rowCount() - 1);
     if(list.isEmpty())
     {
-        MusicMessageBox message;
-        message.setText(tr("Please Select One Item First!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return;
     }
 

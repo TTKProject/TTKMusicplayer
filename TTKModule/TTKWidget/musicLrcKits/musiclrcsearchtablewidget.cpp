@@ -1,5 +1,5 @@
 #include "musiclrcsearchtablewidget.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicitemdelegate.h"
 #include "musicdownloadqueryfactory.h"
 #include "musicgiflabelwidget.h"
@@ -29,7 +29,7 @@ void MusicLrcSearchTableWidget::startSearchQuery(const QString &text)
     if(!M_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        emit showDownLoadInfoFor(MusicObject::DW_DisConnection);
+        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
 
@@ -43,9 +43,7 @@ void MusicLrcSearchTableWidget::musicDownloadLocal(int row)
 {
     if(row < 0 || (row >= rowCount() - 1))
     {
-        MusicMessageBox message;
-        message.setText(tr("Please Select One Item First!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return;
     }
 
@@ -98,25 +96,37 @@ void MusicLrcSearchTableWidget::createSearchedItem(const MusicSearchedItem &song
 
     QHeaderView *headerview = horizontalHeader();
     QTableWidgetItem *item = new QTableWidgetItem;
-    item->setData(MUSIC_CHECK_ROLE, false);
+    item->setData(MUSIC_CHECK_ROLE, Qt::Unchecked);
     setItem(count, 0, item);
 
                       item = new QTableWidgetItem;
     item->setToolTip(songItem.m_songName);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 1, item);
 
                       item = new QTableWidgetItem;
     item->setToolTip(songItem.m_singerName);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(2) - 20));
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 2, item);
 
                       item = new QTableWidgetItem(songItem.m_time);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+    item->setForeground(QColor(100, 100, 100));
+#else
     item->setTextColor(QColor(100, 100, 100));
+#endif
     item->setTextAlignment(Qt::AlignCenter);
     setItem(count, 3, item);
 

@@ -16,12 +16,12 @@ MusicTimeSliderWidget::MusicTimeSliderWidget(QWidget *parent)
 
     m_slider = new MusicMovingLabelSlider(Qt::Horizontal, this);
     m_slider->setValue(0);
-    m_slider->setGeometry(15, m_label->width()/2, width() - m_label->width(), 10);
-    m_slider->setStyleSheet(MusicUIObject::MSliderStyle07);
+    m_slider->setGeometry(15, m_label->width() / 2, width() - m_label->width(), 10);
+    m_slider->setStyleSheet(MusicUIObject::MQSSSliderStyle07);
     m_slider->setCursor(QCursor(Qt::PointingHandCursor));
 }
 
-void MusicTimeSliderWidget::setObject(QObject *object) const
+void MusicTimeSliderWidget::setInputObject(QObject *object) const
 {
     connect(m_slider, SIGNAL(sliderMoved(int)), SLOT(sliderMovedAt(int)));
     connect(m_slider, SIGNAL(sliderReleasedAt(int)), object, SLOT(musicPlayAnyTimeAt(int)));
@@ -84,8 +84,8 @@ void MusicTimeSliderWidget::setSliderStyleByType(int type)
         default: break;
     }
     const QString &prefix = "QSlider::sub-page:Horizontal{background-color:qlineargradient("
-                            "spread:pad,x1:0,y1:0,x2:1,y2:0,stop:0 " + rgba1 + ", stop:1 " + rgba2 + ");}";
-    m_slider->setStyleSheet(MusicUIObject::MSliderStyle07 + prefix);
+                            "spread:pad,x1:0,y1:0,x2:1,y2:0,stop:0 " + rgba1 + ", stop:1 " + rgba2 + "); }";
+    m_slider->setStyleSheet(MusicUIObject::MQSSSliderStyle07 + prefix);
 }
 
 void MusicTimeSliderWidget::resizeEvent(QResizeEvent *event)

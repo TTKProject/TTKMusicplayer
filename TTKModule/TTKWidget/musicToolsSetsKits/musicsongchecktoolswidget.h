@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,21 +45,7 @@ public:
 
     virtual ~MusicSongCheckToolsWidget();
 
-Q_SIGNALS:
-    /*!
-     * Get music datas from container.
-     */
-    void getMusicLists(MusicSongItems &songs);
-
 public Q_SLOTS:
-    /*!
-     * Modified item button clicked.
-     */
-    void modifiedItemButtonClicked();
-    /*!
-     * Item lists changed.
-     */
-    void itemListsChanged(const MIntList &items);
     /*!
      * Rename button clicked.
      */
@@ -115,21 +101,17 @@ public Q_SLOTS:
 
 protected:
     /*!
-     * Get selected song items.
-     */
-    void getSelectedSongItems();
-    /*!
      * Rename widget init.
      */
-    void renameWidgetInit();
+    void initRenameWidget();
     /*!
      * Quality widget init.
      */
-    void qualityWidgetInit();
+    void initQualityWidget();
     /*!
      * Duplicate widget init.
      */
-    void duplicateWidgetInit();
+    void initDuplicateWidget();
     /*!
      * Switch to selected item style.
      */
@@ -138,8 +120,6 @@ protected:
     Ui::MusicSongCheckToolsWidget *m_ui;
 
     MusicSongs m_localSongs;
-    bool m_selectedItemIdFlag;
-    MIntList m_selectedItemIds;
     MusicSongCheckToolsRenameThread *m_renameCore;
     MusicSongCheckToolsDuplicateThread *m_duplicateCore;
     MusicSongCheckToolsQualityThread *m_qualityCore;

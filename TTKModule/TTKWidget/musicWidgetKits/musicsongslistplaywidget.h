@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,16 +61,16 @@ public:
     /*!
      * Get rename item artist label state.
      */
-    bool getItemRenameState() { return m_renameLine != nullptr;}
+    bool getItemRenameState() { return m_renameLine != nullptr; }
 
     /*!
      * Set current play index.
      */
-    inline void setCurrentPlayIndex(int index) { m_currentPlayIndex = index;}
+    inline void setCurrentPlayIndex(int index) { m_currentPlayIndex = index; }
     /*!
      * Get current play index.
      */
-    inline int getCurrentPlayIndex() const { return m_currentPlayIndex;}
+    inline int getCurrentPlayIndex() const { return m_currentPlayIndex; }
 
 Q_SIGNALS:
     /*!

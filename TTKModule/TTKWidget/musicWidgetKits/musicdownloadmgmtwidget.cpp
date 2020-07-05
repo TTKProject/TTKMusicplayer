@@ -11,20 +11,21 @@ MusicDownloadResetWidget::MusicDownloadResetWidget(QWidget *parent)
       m_ui(new Ui::MusicDownloadResetWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_parentClass = parent;
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
     setAttribute(Qt::WA_DeleteOnClose);
 
-    m_ui->downloadButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
-    m_ui->openDetailButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
-    m_ui->openDirButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+    m_ui->downloadButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
+    m_ui->openDetailButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
+    m_ui->openDirButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
 
 #ifdef Q_OS_UNIX
     m_ui->downloadButton->setFocusPolicy(Qt::NoFocus);
@@ -66,7 +67,7 @@ void MusicDownloadResetWidget::restartToDownload()
 void MusicDownloadResetWidget::openDetailInfo()
 {
     close();
-    emit openStackedDownloadWidget();
+    Q_EMIT openStackedDownloadWidget();
 }
 
 void MusicDownloadResetWidget::openFileLocation()
@@ -75,7 +76,7 @@ void MusicDownloadResetWidget::openFileLocation()
     const QString &path = MusicApplication::instance()->musicDownloadContains(exist);
     if(exist)
     {
-        MusicUtils::Url::openUrl( path, true );
+        MusicUtils::Url::openUrl(path);
     }
     close();
 }
@@ -84,7 +85,7 @@ void MusicDownloadResetWidget::openFileLocation()
 MusicDownloadMgmtWidget::MusicDownloadMgmtWidget(QObject *parent)
     : QObject(parent)
 {
-    m_parentClass = MStatic_cast(QWidget*, parent);
+    m_parentClass = TTKStatic_cast(QWidget*, parent);
 }
 
 void MusicDownloadMgmtWidget::setSongName(const QString &name, MusicDownLoadQueryThreadAbstract::QueryType type)

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
  ================================================= */
 
 #include "musicabstractxml.h"
-#include "musicotherdefine.h"
 
 /*! @brief The class of the remote skin item.
  * @author Greedysky <greedysky@163.com>
@@ -111,7 +110,7 @@ public Q_SLOTS:
     /*!
      * Download data from net finished.
      */
-    virtual void downLoadDataFinished(const QByteArray &bytes) = 0;
+    virtual void downLoadFinished(const QByteArray &bytes) = 0;
 
 };
 
@@ -138,7 +137,7 @@ public Q_SLOTS:
     /*!
      * Download data from net finished.
      */
-    virtual void downLoadDataFinished(const QByteArray &bytes) override;
+    virtual void downLoadFinished(const QByteArray &bytes) override;
 
 };
 
@@ -165,7 +164,7 @@ public Q_SLOTS:
     /*!
      * Download data from net finished.
      */
-    virtual void downLoadDataFinished(const QByteArray &bytes) override;
+    virtual void downLoadFinished(const QByteArray &bytes) override;
 
 };
 

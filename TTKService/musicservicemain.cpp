@@ -1,40 +1,37 @@
 #include "musicapplication.h"
 #include "musicruntimemanager.h"
-#include "musicotherdefine.h"
+#include "musicconfigobject.h"
+#include "musicplatformmanager.h"
 #include "ttkdumper.h"
 
-#include <QScreen>
 #include <QTranslator>
 #include <QApplication>
 
-#define TTK_DEBUG_CASE
+#define TTK_DEBUG
 
-void loadDXcbPlugin(int argc, char *argv[])
+void loadAppScaledFactor(int argc, char *argv[])
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-      Q_UNUSED(argc);
-      Q_UNUSED(argv);
+#if TTK_QT_VERSION_CHECK(5,4,0)
+    #if TTK_QT_VERSION_CHECK(5,12,0)
       QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    #elif TTK_QT_VERSION_CHECK(5,6,0)
+      MusicPlatformManager platform;
+      const float dpi = platform.getLogicalDotsPerInch() / 96.0;
+      qputenv("QT_SCALE_FACTOR", QByteArray::number(dpi < 1.0 ? 1.0 : dpi));
     #else
-      QApplication a(argc, argv);
       qputenv("QT_DEVICE_PIXEL_RATIO", "auto");
-      QScreen *screen = QApplication::primaryScreen();
-      const qreal dpi = screen->logicalDotsPerInch() / 96;
-      qputenv("QT_SCALE_FACTOR", QByteArray::number(dpi));
-      Q_UNUSED(a);
     #endif
-#else
+#endif
     Q_UNUSED(argc);
     Q_UNUSED(argv);
-#endif
 }
 
 int main(int argc, char *argv[])
 {
-    loadDXcbPlugin(argc, argv);
+    loadAppScaledFactor(argc, argv);
+    //
     QApplication a(argc, argv);
-#if !defined TTK_DEBUG_CASE && !defined Q_OS_UNIX
+#if !defined TTK_DEBUG && !defined Q_OS_UNIX
     if(argc <= 1 || QString(argv[1]) != APP_NAME)
     {
         return -1;
@@ -44,6 +41,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName(APP_NAME);
     QCoreApplication::setOrganizationDomain(APP_COME_NAME);
     QCoreApplication::setApplicationName(APP_NAME);
+
+    MusicConfigObject object;
+    object.checkValid();
 
     TTKDumper dumper;
     dumper.run();

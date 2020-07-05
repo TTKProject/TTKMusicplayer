@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ public:
      */
     bool isPopup() const;
     /*!
-     * Resize window bound by widgte resize called.
+     * Resize window bound by widget resize called.
      */
     void resizeWindow();
     /*!
@@ -145,7 +145,6 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void enterEvent(QEvent *event) override;
     virtual void leaveEvent(QEvent *event) override;
-    virtual void contextMenuEvent(QContextMenuEvent *event) override;
     /*!
      * Set current title text(song name).
      */

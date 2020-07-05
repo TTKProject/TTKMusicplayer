@@ -2,8 +2,7 @@
 #include "musicclickedlabel.h"
 #include "musicuiobject.h"
 #include "musicwidgetheaders.h"
-
-#include <QSignalMapper>
+#include "musicclickedgroup.h"
 
 #define ITEM_MAX_COLUMN     2
 #define ITEM_LABEL_WIDTH    20
@@ -20,7 +19,7 @@ void MusicWebMVRadioFoundCategoryItem::setCategory(const MusicResultsCategory &c
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     QLabel *label = new QLabel(category.m_category, this);
-    label->setStyleSheet(MusicUIObject::MColorStyle03 + MusicUIObject::MFontStyle03);
+    label->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSFontStyle03);
     label->setFixedSize(100, ITEM_LABEL_WIDTH);
     layout->addWidget(label, 0, Qt::AlignTop);
 
@@ -28,17 +27,17 @@ void MusicWebMVRadioFoundCategoryItem::setCategory(const MusicResultsCategory &c
     QGridLayout *itemlayout = new QGridLayout(item);
     itemlayout->setContentsMargins(0, 0, 0, 0);
 
-    QSignalMapper *group = new QSignalMapper(this);
-    connect(group, SIGNAL(mapped(int)), SLOT(buttonClicked(int)));
+    MusicClickedGroup *clickedGroup = new MusicClickedGroup(this);
+    connect(clickedGroup, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
     for(int i=0; i<m_category.m_items.count(); ++i)
     {
         MusicClickedLabel *l = new MusicClickedLabel(m_category.m_items[i].m_name, item);
-        l->setStyleSheet(QString("QLabel::hover{%1}").arg(MusicUIObject::MColorStyle08));
+        l->setStyleSheet(QString("QLabel::hover{%1}").arg(MusicUIObject::MQSSColorStyle08));
         l->setFixedSize(200, ITEM_LABEL_WIDTH);
-        connect(l, SIGNAL(clicked()), group, SLOT(map()));
-        group->setMapping(l, i);
+
         itemlayout->addWidget(l, i/ITEM_MAX_COLUMN, i%ITEM_MAX_COLUMN, Qt::AlignLeft);
+        clickedGroup->mapped(l);
     }
     item->setLayout(itemlayout);
 
@@ -50,7 +49,7 @@ void MusicWebMVRadioFoundCategoryItem::buttonClicked(int index)
 {
     if(0 <= index && index < m_category.m_items.count())
     {
-        emit categoryChanged(m_category.m_items[index]);
+        Q_EMIT categoryChanged(m_category.m_items[index]);
     }
 }
 
@@ -60,9 +59,6 @@ MusicWebMVRadioFoundCategoryPopWidget::MusicWebMVRadioFoundCategoryPopWidget(QWi
     : MusicToolMenuWidget(parent)
 {
     initWidget();
-
-    disconnect(this, SIGNAL(clicked()), this, SLOT(popupMenu()));
-    connect(this, SIGNAL(clicked()), SLOT(popupMenu()));
 }
 
 void MusicWebMVRadioFoundCategoryPopWidget::setCategory(const QString &server, QObject *obj)
@@ -74,12 +70,12 @@ void MusicWebMVRadioFoundCategoryPopWidget::setCategory(const QString &server, Q
 
     QVBoxLayout *layout = new QVBoxLayout(m_containWidget);
     QWidget *containWidget = new QWidget(m_containWidget);
-    containWidget->setStyleSheet(MusicUIObject::MBackgroundStyle17);
+    containWidget->setStyleSheet(MusicUIObject::MQSSBackgroundStyle17);
     QVBoxLayout *containLayout = new QVBoxLayout(containWidget);
     containWidget->setLayout(containLayout);
 
     QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+    scrollArea->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setAlignment(Qt::AlignLeft);
@@ -103,7 +99,7 @@ void MusicWebMVRadioFoundCategoryPopWidget::closeMenu()
 
 void MusicWebMVRadioFoundCategoryPopWidget::popupMenu()
 {
-    m_menu->exec( mapToGlobal(QPoint(0, 0)) );
+    m_menu->exec(mapToGlobal(QPoint(0, 0)));
 }
 
 void MusicWebMVRadioFoundCategoryPopWidget::initWidget()
@@ -112,14 +108,14 @@ void MusicWebMVRadioFoundCategoryPopWidget::initWidget()
     setTranslucentBackground();
     setText(tr("All"));
 
-    const QString &style = MusicUIObject::MBorderStyle04 + MusicUIObject::MBackgroundStyle17;
+    const QString &style = MusicUIObject::MQSSBorderStyle04 + MusicUIObject::MQSSBackgroundStyle17;
     setObjectName("mianWidget");
     setStyleSheet(QString("#mianWidget{%1}").arg(style));
 
-    m_containWidget->setFixedSize(600, 370);
+    m_containWidget->setFixedSize(480, 200);
     m_containWidget->setObjectName("containWidget");
     m_containWidget->setStyleSheet(QString("#containWidget{%1}").arg(style));
 
-    m_menu->setStyleSheet(MusicUIObject::MMenuStyle05);
+    m_menu->setStyleSheet(MusicUIObject::MQSSMenuStyle05);
 
 }

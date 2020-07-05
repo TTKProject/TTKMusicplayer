@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@
 
 #include "musicsingleton.h"
 #include "musicnetworkdefines.h"
-
-#define M_DOWNLOAD_MANAGER_PTR (MusicSingleton<MusicDownLoadManager>::createInstance())
 
 /*! @brief The class of the download manager pair.
  * @author Greedysky <greedysky@163.com>
@@ -106,5 +104,8 @@ protected:
     DECLARE_SINGLETON_CLASS(MusicDownLoadManager)
 
 };
+
+#define M_DOWNLOAD_MANAGER_PTR GetMusicDownLoadManager()
+MUSIC_NETWORK_EXPORT MusicDownLoadManager* GetMusicDownLoadManager();
 
 #endif // MUSICDOWNLOADMANAGER_H

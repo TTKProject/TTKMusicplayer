@@ -3,10 +3,10 @@
 #include "musicuserdialog.h"
 #include "musicusermodel.h"
 #include "musicusermanagerdialog.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicuiobject.h"
 #include "musicwidgetutils.h"
-#include "musicotherdefine.h"
+#include "musicimageutils.h"
 
 #include <QTimer>
 #include <QSqlQuery>
@@ -16,9 +16,10 @@ MusicUserWindow::MusicUserWindow(QWidget *parent)
      m_ui(new Ui::MusicUserWindow)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
-    m_ui->userNameL->setStyleSheet(MusicUIObject::MPushButtonStyle07);
-    m_ui->userNameU->setStyleSheet(MusicUIObject::MPushButtonStyle07);
+    m_ui->userNameL->setStyleSheet(MusicUIObject::MQSSPushButtonStyle07);
+    m_ui->userNameU->setStyleSheet(MusicUIObject::MQSSPushButtonStyle07);
     m_ui->userNameL->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->userNameU->setCursor(QCursor(Qt::PointingHandCursor));
 #ifdef Q_OS_UNIX
@@ -69,7 +70,7 @@ bool MusicUserWindow::disConnectDatabase()
             return false;
         }
     }
-    QSqlDatabase::removeDatabase( connectionName );
+    QSqlDatabase::removeDatabase(connectionName);
     return true;
 }
 
@@ -111,9 +112,7 @@ bool MusicUserWindow::connectDatabase()
     }
     catch(QString exception)
     {
-        MusicMessageBox message;
-        message.setText( exception );
-        message.exec();
+        MusicToastLabel::popup(exception);
         return false;
     }
     return true;
@@ -123,14 +122,14 @@ void MusicUserWindow::userStateChanged(const MusicUserUIDItem &uid, const QStrin
 {
     if(uid.m_uid.isEmpty())
     {
-        m_ui->userIconU->setPixmap(MusicUtils::Widget::pixmapToRound(QPixmap(":/image/lb_app_logo"), QPixmap(":/usermanager/lb_mask_30"), m_ui->userIconU->size()));
+        m_ui->userIconU->setPixmap(MusicUtils::Image::pixmapToRound(QPixmap(":/image/lb_app_logo"), QPixmap(":/usermanager/lb_mask_30"), m_ui->userIconU->size()));
         m_ui->userNameU->setText(tr("L|R"));
         setCurrentIndex(USER_WINDOW_INDEX_0);
     }
     else
     {
         m_userManager->setUserUID(uid);
-        m_ui->userIconL->setPixmap(MusicUtils::Widget::pixmapToRound(QPixmap(icon), QPixmap(":/usermanager/lb_mask_30"), m_ui->userIconL->size()));
+        m_ui->userIconL->setPixmap(MusicUtils::Image::pixmapToRound(QPixmap(icon), QPixmap(":/usermanager/lb_mask_30"), m_ui->userIconL->size()));
         m_ui->userNameL->setToolTip(m_userModel->getUserName(uid));
         m_ui->userNameL->setText(MusicUtils::Widget::elidedText(font(), m_ui->userNameL->toolTip(), Qt::ElideRight, 44));
         setCurrentIndex(USER_WINDOW_INDEX_1);

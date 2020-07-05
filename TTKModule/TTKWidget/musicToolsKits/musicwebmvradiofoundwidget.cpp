@@ -4,7 +4,7 @@
 #include "musicmvradiocategorythread.h"
 #include "musicdownloadsourcethread.h"
 #include "musictinyuiobject.h"
-#include "musicotherdefine.h"
+#include "musicimageutils.h"
 
 #define WIDTH_LABEL_SIZE   150
 #define HEIGHT_LABEL_SIZE  100
@@ -16,9 +16,9 @@ MusicWebMVRadioFoundItemWidget::MusicWebMVRadioFoundItemWidget(QWidget *parent)
     setFixedSize(WIDTH_LABEL_SIZE, HEIGHT_LABEL_SIZE);
 
     m_playButton = new QPushButton(this);
-    m_playButton->setGeometry((WIDTH_LABEL_SIZE - 30)/2, (HEIGHT_LABEL_SIZE - 30)/2, 30, 30);
+    m_playButton->setGeometry((WIDTH_LABEL_SIZE - 30) / 2, (HEIGHT_LABEL_SIZE - 30) / 2, 30, 30);
     m_playButton->setCursor(Qt::PointingHandCursor);
-    m_playButton->setStyleSheet(MusicUIObject::MKGTinyBtnPlaylist);
+    m_playButton->setStyleSheet(MusicUIObject::MQSSTinyBtnPlaylist);
     connect(m_playButton, SIGNAL(clicked()), SLOT(currentItemClicked()));
 
 #ifdef Q_OS_UNIX
@@ -31,7 +31,7 @@ MusicWebMVRadioFoundItemWidget::MusicWebMVRadioFoundItemWidget(QWidget *parent)
     m_nameLabel = new QLabel(this);
     m_nameLabel->setAlignment(Qt::AlignCenter);
     m_nameLabel->setGeometry(0, 0, WIDTH_LABEL_SIZE, HEIGHT_LABEL_SIZE);
-    m_nameLabel->setStyleSheet(MusicUIObject::MColorStyle01 + MusicUIObject::MFontStyle05 + MusicUIObject::MFontStyle01);
+    m_nameLabel->setStyleSheet(MusicUIObject::MQSSColorStyle01 + MusicUIObject::MQSSFontStyle05 + MusicUIObject::MQSSFontStyle01);
     m_nameLabel->setText(" - ");
 }
 
@@ -49,7 +49,7 @@ void MusicWebMVRadioFoundItemWidget::setMusicResultsItem(const MusicResultsItem 
     m_nameLabel->setText(MusicUtils::Widget::elidedText(m_nameLabel->font(), m_nameLabel->toolTip(), Qt::ElideRight, WIDTH_LABEL_SIZE));
 
     MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-    connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+    connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
     if(!item.m_coverUrl.isEmpty() && item.m_coverUrl != COVER_URL_NULL)
     {
         download->startToDownload(item.m_coverUrl);
@@ -67,7 +67,7 @@ void MusicWebMVRadioFoundItemWidget::downLoadFinished(const QByteArray &data)
         QPixmap cv(":/image/lb_album_cover");
         cv = cv.scaled(m_iconLabel->size());
         pix = pix.scaled(m_iconLabel->size());
-        MusicUtils::Widget::fusionPixmap(pix, cv, QPoint(0, 0));
+        MusicUtils::Image::fusionPixmap(pix, cv, QPoint(0, 0));
         m_iconLabel->setPixmap(pix);
     }
 
@@ -76,7 +76,7 @@ void MusicWebMVRadioFoundItemWidget::downLoadFinished(const QByteArray &data)
 
 void MusicWebMVRadioFoundItemWidget::currentItemClicked()
 {
-    emit currentItemClicked(m_itemData);
+    Q_EMIT currentItemClicked(m_itemData);
 }
 
 void MusicWebMVRadioFoundItemWidget::enterEvent(QEvent *event)
@@ -164,7 +164,7 @@ void MusicWebMVRadioFoundWidget::createCategoryItem(const MusicResultsItem &item
 
         m_container->removeWidget(m_mainWindow);
         QScrollArea *scrollArea = new QScrollArea(this);
-        scrollArea->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+        scrollArea->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
         scrollArea->setWidgetResizable(true);
         scrollArea->setFrameShape(QFrame::NoFrame);
         scrollArea->setAlignment(Qt::AlignLeft);
@@ -172,7 +172,7 @@ void MusicWebMVRadioFoundWidget::createCategoryItem(const MusicResultsItem &item
         m_container->addWidget(scrollArea);
 
         m_firstInit = true;
-        QHBoxLayout *mainlayout = MStatic_cast(QHBoxLayout*, m_mainWindow->layout());
+        QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
         containTopLayout->setContentsMargins(30, 0, 30, 0);
@@ -184,7 +184,7 @@ void MusicWebMVRadioFoundWidget::createCategoryItem(const MusicResultsItem &item
 
         QFrame *line = new QFrame(m_mainWindow);
         line->setFrameShape(QFrame::HLine);
-        line->setStyleSheet(MusicUIObject::MColorStyle06);
+        line->setStyleSheet(MusicUIObject::MQSSColorStyle06);
 
         QWidget *containWidget = new QWidget(m_mainWindow);
         m_gridLayout = new QGridLayout(containWidget);

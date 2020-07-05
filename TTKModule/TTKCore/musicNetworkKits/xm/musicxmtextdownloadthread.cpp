@@ -1,7 +1,5 @@
 #include "musicxmtextdownloadthread.h"
 #include "musicstringutils.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicXMTextDownLoadThread::MusicXMTextDownLoadThread(const QString &url, const QString &save, MusicObject::DownloadType  type, QObject *parent)
     : MusicDownLoadThreadAbstract(url, save, type, parent)
@@ -15,10 +13,10 @@ void MusicXMTextDownLoadThread::startToDownload()
     {
         if(m_file->open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
         {
-            m_timer.start(MT_S2MS);
+            m_speedTimer.start();
             m_manager = new QNetworkAccessManager(this);
 
-            m_lrcType = MusicUtils::String::StringSplite(m_url);
+            m_lrcType = MusicUtils::String::stringSplitToken(m_url);
 
             QNetworkRequest request;
             request.setUrl(m_url);
@@ -29,13 +27,13 @@ void MusicXMTextDownLoadThread::startToDownload()
 
             m_reply = m_manager->get(request);
             connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
-            connect(m_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(replyError(QNetworkReply::NetworkError)) );
+            connect(m_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(replyError(QNetworkReply::NetworkError)));
             connect(m_reply, SIGNAL(downloadProgress(qint64, qint64)), SLOT(downloadProgress(qint64, qint64)));
         }
         else
         {
-            emit downLoadDataChanged("The xiami text file create failed");
-            M_LOGGER_ERROR(QString("%1 file create failed!").arg(getClassName()));
+            Q_EMIT downLoadDataChanged("The xiami text file create failed");
+            TTK_LOGGER_ERROR(QString("%1 file create failed!").arg(getClassName()));
             deleteAll();
         }
     }
@@ -48,7 +46,7 @@ void MusicXMTextDownLoadThread::downLoadFinished()
         deleteAll();
         return;
     }
-    m_timer.stop();
+    m_speedTimer.stop();
 
     if(m_reply->error() == QNetworkReply::NoError)
     {
@@ -59,7 +57,12 @@ void MusicXMTextDownLoadThread::downLoadFinished()
             {
                 QTextStream outstream(m_file);
                 outstream.setCodec("utf-8");
-                outstream << QString(bytes).remove("\r").toUtf8() << endl;
+                outstream << QString(bytes).remove("\r").toUtf8();
+#if TTK_QT_VERSION_CHECK(5,15,0)
+                outstream << Qt::endl;
+#else
+                outstream << endl;
+#endif
             }
             else if(m_lrcType == "trc")
             {
@@ -67,23 +70,28 @@ void MusicXMTextDownLoadThread::downLoadFinished()
                 outstream.setCodec("utf-8");
                 QString data = QString(bytes).remove("\r");
                 data.remove(QRegExp("<[^>]*>"));
-                outstream << data.toUtf8() << endl;
+                outstream << data.toUtf8();
+#if TTK_QT_VERSION_CHECK(5,15,0)
+                outstream << Qt::endl;
+#else
+                outstream << endl;
+#endif
             }
             else if(m_lrcType == "txt")
             {
                 m_file->remove();
             }
             m_file->close();
-            M_LOGGER_INFO(QString("%1 download has finished!").arg(getClassName()));
+            TTK_LOGGER_INFO(QString("%1 download has finished!").arg(getClassName()));
         }
         else
         {
-            M_LOGGER_ERROR(QString("%1 download file error!").arg(getClassName()));
+            TTK_LOGGER_ERROR(QString("%1 download file error!").arg(getClassName()));
             m_file->remove();
             m_file->close();
         }
     }
 
-    emit downLoadDataChanged( transferData() );
+    Q_EMIT downLoadDataChanged(mapCurrentQueryData());
     deleteAll();
 }

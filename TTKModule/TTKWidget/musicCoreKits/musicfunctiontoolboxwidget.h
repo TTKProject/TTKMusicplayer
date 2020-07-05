@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ protected:
     /*!
      * Check the item is enable or not.
      */
-    virtual bool isItemEnable() const;
+    virtual bool isItemEnabled() const;
     /*!
      * Override the widget event.
      */
@@ -166,12 +166,11 @@ protected:
     /*!
      * Init parameter.
      */
-    void init();
+    void initialize();
     /*!
      * Override the widget event.
      */
     virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
     QVBoxLayout *m_layout;
     QList<QWidget*> m_itemList;
@@ -287,7 +286,6 @@ protected:
      * Override the widget event.
      */
     virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void contextMenuEvent(QContextMenuEvent *event) override;
     /*!
      * Found mapped index in container.
      */

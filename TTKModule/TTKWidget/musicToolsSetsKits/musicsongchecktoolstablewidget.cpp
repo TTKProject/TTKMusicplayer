@@ -32,7 +32,7 @@ void MusicSongCheckToolsRenameTableWidget::createAllItems(const MusicSongCheckTo
     {
         const MusicSongCheckToolsRename &song = items[i];
         QTableWidgetItem *item = new QTableWidgetItem;
-        item->setData(MUSIC_CHECK_ROLE, false);
+        item->setData(MUSIC_CHECK_ROLE, Qt::Unchecked);
         setItem(i, 0, item);
 
                           item = new QTableWidgetItem;
@@ -66,7 +66,7 @@ void MusicSongCheckToolsRenameTableWidget::selectedAllItems(bool check)
 {
     for(int i=0; i<rowCount(); ++i)
     {
-        item(i, 0)->setData(MUSIC_CHECK_ROLE, check);
+        item(i, 0)->setData(MUSIC_CHECK_ROLE, check ? Qt::Checked : Qt::Unchecked);
     }
 
     if(!check)
@@ -132,7 +132,7 @@ void MusicSongCheckToolsDuplicateTableWidget::createAllItems(const MusicSongChec
     {
         const MusicSongCheckToolsDuplicate &song = songs[i];
         QTableWidgetItem *item = new QTableWidgetItem;
-        item->setData(MUSIC_CHECK_ROLE, false);
+        item->setData(MUSIC_CHECK_ROLE, Qt::Unchecked);
         setItem(i, 0, item);
 
                           item = new QTableWidgetItem;
@@ -182,7 +182,7 @@ void MusicSongCheckToolsDuplicateTableWidget::selectedAllItems(bool check)
 {
     for(int i=0; i<rowCount(); ++i)
     {
-        item(i, 0)->setData(MUSIC_CHECK_ROLE, check);
+        item(i, 0)->setData(MUSIC_CHECK_ROLE, check ? Qt::Checked : Qt::Unchecked);
     }
 
     if(!check)
@@ -207,7 +207,7 @@ void MusicSongCheckToolsDuplicateTableWidget::musicPlay()
     if(it)
     {
         const QString &path = it->data(MUSIC_DATAS_ROLE).toString();
-        emit addSongToPlay(QStringList( QFile::exists(path) ? path : QString() ));
+        Q_EMIT addSongToPlay(QStringList(QFile::exists(path) ? path : QString()));
     }
 }
 
@@ -264,7 +264,7 @@ void MusicSongCheckToolsQualityTableWidget::createAllItems(const MusicSongCheckT
     {
         const MusicSongCheckToolsQuality &song = songs[i];
         QTableWidgetItem *item = new QTableWidgetItem;
-        item->setData(MUSIC_CHECK_ROLE, false);
+        item->setData(MUSIC_CHECK_ROLE, Qt::Unchecked);
         setItem(i, 0, item);
 
                           item = new QTableWidgetItem;
@@ -294,7 +294,11 @@ void MusicSongCheckToolsQualityTableWidget::createAllItems(const MusicSongCheckT
         MusicUtils::Number::transfromBitrateToQuality(MusicUtils::Number::transfromBitrateToLevel(song.m_bitRate), bitrate, color);
         item->setText(bitrate);
         item->setTextAlignment(Qt::AlignCenter);
+#if TTK_QT_VERSION_CHECK(5,13,0)
+        item->setForeground(color);
+#else
         item->setTextColor(color);
+#endif
         setItem(i, 5, item);
 
                 item = new QTableWidgetItem;
@@ -323,7 +327,7 @@ void MusicSongCheckToolsQualityTableWidget::selectedAllItems(bool check)
 {
     for(int i=0; i<rowCount(); ++i)
     {
-        item(i, 0)->setData(MUSIC_CHECK_ROLE, check);
+        item(i, 0)->setData(MUSIC_CHECK_ROLE, check ? Qt::Checked : Qt::Unchecked);
     }
 
     if(!check)
@@ -348,7 +352,7 @@ void MusicSongCheckToolsQualityTableWidget::musicPlay()
     if(it)
     {
         const QString &path = it->data(MUSIC_DATAS_ROLE).toString();
-        emit addSongToPlay(QStringList( QFile::exists(path) ? path : QString() ));
+        Q_EMIT addSongToPlay(QStringList(QFile::exists(path) ? path : QString()));
     }
 }
 

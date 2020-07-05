@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,17 +60,25 @@ public Q_SLOTS:
      */
     void tabIndexChanged(int index);
     /*!
-     * Spectrum Type Changed.
+     * Spectrum Normal Type Changed.
      */
-    void spectrumTypeChanged(int index);
+    void spectrumNormalTypeChanged(bool &state, const QString &name);
     /*!
      * Spectrum Plus Type Changed.
      */
-    void spectrumPlusTypeChanged(int index);
+    void spectrumPlusTypeChanged(bool &state, const QString &name);
+    /*!
+     * Spectrum Wave Type Changed.
+     */
+    void spectrumWaveTypeChanged(bool &state, const QString &name);
+    /*!
+     * Spectrum Flow Type Changed.
+     */
+    void spectrumFlowTypeChanged(bool &state, const QString &name);
     /*!
      * Spectrum Florid Type Changed.
      */
-    void spectrumFloridTypeChanged(int index);
+    void spectrumFloridTypeChanged(bool &state, const QString &name);
     /*!
      * Override show function.
      */
@@ -83,32 +91,32 @@ public Q_SLOTS:
      * Open file button clicked.
      */
     void openFileButtonClicked();
+    /*!
+     * Emitted when visual widget is show fullscreen by user.
+     */
+    void fullscreenByUser(QWidget *widget, bool state);
 
 protected:
     /*!
-     * Spectrum types list.
-     */
-    static QStringList spectrumTypeList();
-    /*!
-     * Spectrum plus types list.
-     */
-    static QStringList spectrumPlusTypeList();
-    /*!
-     * Spectrum florid types list.
-     */
-    static QStringList spectrumFloridTypeList();
-    /*!
      * Create spectrum widget.
      */
-    void createSpectrumWidget(QAbstractButton *box, const QString &name, QLayout *layout);
+    void createSpectrumWidget(bool &state, const QString &name, QLayout *layout);
     /*!
-     * Create light widget.
+     * Create flow widget.
      */
-    void createLightWidget(QAbstractButton *box, const QString &name, QLayout *layout, const QString &url = QString());
+    void createFlowWidget(bool &state, const QString &name, QLayout *layout);
     /*!
      * Create florid widget.
      */
-    void createFloridWidget(QAbstractButton *box, const QString &name, QLayout *layout);
+    void createFloridWidget(bool &state, const QString &name, QLayout *layout);
+    /*!
+     * Create module widget.
+     */
+    void createModuleWidget(bool &state, const QString &name, QLayout *layout, QString &module);
+    /*!
+     * Create light widget.
+     */
+    void createLightWidget(bool &state, const QString &name, QLayout *layout, const QString &url = QString());
     /*!
      * Adjust widget layout.
      */
@@ -120,8 +128,11 @@ protected:
     /*!
      * Show message box widget.
      */
-    void showMessageBoxWidget(QAbstractButton *box);
+    void showMessageBoxWidget();
 
+    QLayout *m_spectrumLayout;
+    QString m_lastFlowName;
+    QString m_lastFloridName;
     MusicSpectrums m_types;
     Ui::MusicSpectrumWidget *m_ui;
 

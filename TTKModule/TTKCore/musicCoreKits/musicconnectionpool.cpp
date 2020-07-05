@@ -16,14 +16,13 @@
 #include "musicdownloadmgmtwidget.h"
 #include "musicconnecttransferwidget.h"
 #include "musicsoundeffectswidget.h"
-#include "musicsongchecktoolswidget.h"
 #include "musicsongchecktoolstablewidget.h"
 #include "musicqueryfoundtablewidget.h"
 #include "musicdownloadabstracttablewidget.h"
 #include "musiccloudtablewidget.h"
 #include "musiccloudmanagerwidget.h"
-#include "musiclrcdownloadbatchwidget.h"
 #include "musicsongdlnatransferwidget.h"
+#include "musicsongitemselectedareawidget.h"
 #endif
 
 MusicConnectionPool::MusicConnectionPool()
@@ -59,16 +58,15 @@ void MusicConnectionPool::poolConnect(const QString &from, const QString &to)
     }
     else if(from == MusicEqualizerDialog::getClassName() && to == MusicPlayer::getClassName())
     {
-        QObject::connect(first, SIGNAL(setEqEffect(MIntList)), second, SLOT(setEqEffect(MIntList)));
-        QObject::connect(first, SIGNAL(setEnaleEffect(bool)), second, SLOT(setEnaleEffect(bool)));
+        QObject::connect(first, SIGNAL(setEqEffect(TTKIntList)), second, SLOT(setEqEffect(TTKIntList)));
+        QObject::connect(first, SIGNAL(setEnabledEffect(bool)), second, SLOT(setEnabledEffect(bool)));
     }
     else if(from == MusicEqualizerDialog::getClassName() && to == MusicSoundEffectsWidget::getClassName())
     {
-        QObject::connect(first, SIGNAL(setEnaleEffect(bool)), second, SLOT(equalizerButtonChanged(bool)));
+        QObject::connect(first, SIGNAL(setEnabledEffect(bool)), second, SLOT(equalizerButtonChanged(bool)));
     }
     else if(from == MusicSoundEffectsWidget::getClassName() && to == MusicPlayer::getClassName())
     {
-        QObject::connect(first, SIGNAL(volumeChanged(int)), second, SLOT(setSoundEffectVolume(int)));
         QObject::connect(first, SIGNAL(setEqInformation()), second, SLOT(setEqInformation()));
     }
     else if(from == MusicSongSearchTableWidget::getClassName() && to == MusicDownloadStatusObject::getClassName())
@@ -89,8 +87,7 @@ void MusicConnectionPool::poolConnect(const QString &from, const QString &to)
         QObject::connect(first, SIGNAL(getMusicMediaInfo(MusicObject::MusicSongAttributes&)), second, SLOT(getMusicMediaInfo(MusicObject::MusicSongAttributes&)));
     }
     else if((from == MusicConnectTransferWidget::getClassName() && to == MusicSongsSummariziedWidget::getClassName()) ||
-            (from == MusicSongCheckToolsWidget::getClassName() && to == MusicSongsSummariziedWidget::getClassName()) ||
-            (from == MusicLrcDownloadBatchWidget::getClassName() && to == MusicSongsSummariziedWidget::getClassName()) ||
+            (from == MusicSongItemSelectedAreaWidget::getClassName() && to == MusicSongsSummariziedWidget::getClassName()) ||
             (from == MusicSongDlnaTransferWidget::getClassName() && to == MusicSongsSummariziedWidget::getClassName()))
     {
         QObject::connect(first, SIGNAL(getMusicLists(MusicSongItems&)), second, SLOT(getMusicLists(MusicSongItems&)));

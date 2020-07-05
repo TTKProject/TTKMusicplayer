@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,11 +45,11 @@ public:
     /*!
      * Set or not draw window bound shadow.
      */
-    inline void drawWindowShadow(bool show) { m_showShadow = show;}
+    inline void drawWindowShadow(bool show) { m_showShadow = show; }
     /*!
      * Set or not block widget moving.
      */
-    inline void blockMoveOption(bool block) { m_moveOption = block;}
+    inline void blockMoveOption(bool block) { m_moveOption = block; }
 
 public Q_SLOTS:
     /*!

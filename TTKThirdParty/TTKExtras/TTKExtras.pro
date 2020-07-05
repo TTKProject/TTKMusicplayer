@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -19,42 +19,34 @@
 QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-include(../../TTKVersion.pri)
-unix:VERSION += $$TTKMusicPlayer
+include($$PWD/../../TTKVersion.pri)
+CONFIG += plugin lib
 
-win32{
-    TARGET = ../../../bin/$$TTKMusicPlayer/TTKExtras
-    msvc{
-        LIBS += -luser32
-    }
-}
-unix:TARGET = ../../lib/$$TTKMusicPlayer/TTKExtras
+DESTDIR = $$OUT_PWD/../../bin/$$TTKMusicPlayer
+TARGET = TTKExtras
+
 TEMPLATE = lib
 
 win32:msvc{
+    LIBS += -luser32
     CONFIG +=c++11
 }else{
     QMAKE_CXXFLAGS += -std=c++11
 }
 
-win32{
-    LIBS += -L../../bin/$$TTKMusicPlayer -lTTKUi
-}
-unix:!mac{
-    LIBS += -L../../lib/$$TTKMusicPlayer -lTTKUi
-}
+LIBS += -L$$DESTDIR -lTTKUi
+INCLUDEPATH += $$PWD
 
-include(../TTKExtrasDefine.pri)
+include($$PWD/../TTKExtrasDefine.pri)
 
-include(qalg/QAlg.pri)
-include(qdlna/QDlna.pri)
-include(qhttpserver/QHttpServer.pri)
-include(qimage/QImage.pri)
-include(qoss/QOss.pri)
-include(qjson/QJson.pri)
-include(qkugou/QKuGou.pri)
-include(qrencode/QRencode.pri)
-include(qshortcut/QShortCut.pri)
+include($$PWD/qalg/QAlg.pri)
+include($$PWD/qdlna/QDlna.pri)
+include($$PWD/qhttpserver/QHttpServer.pri)
+include($$PWD/qsync/QSync.pri)
+include($$PWD/qjson/QJson.pri)
+include($$PWD/qkugou/QKuGou.pri)
+include($$PWD/qrencode/QRencode.pri)
+include($$PWD/qshortcut/QShortCut.pri)
 
 win32{
     RC_FILE = TTKExtras.rc

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,11 +51,11 @@ public:
     /*!
      * Check the mail type valid.
      */
-    inline bool getMailStatus() const { return m_mailContains;}
+    inline bool getMailStatus() const { return m_mailContains; }
     /*!
      * Check the string type valid.
      */
-    inline bool getStrStatus() const { return m_strContains;}
+    inline bool getStrStatus() const { return m_strContains; }
 
 Q_SIGNALS:
     /*!

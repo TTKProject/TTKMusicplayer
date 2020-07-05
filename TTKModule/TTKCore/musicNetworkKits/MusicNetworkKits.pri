@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -30,12 +30,11 @@ INCLUDEPATH += $$PWD \
                $$PWD/yyt \
                $$PWD/ztl
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
-    $$PWD/radio/fm/musicradiochannelthread.h \
-    $$PWD/radio/fm/musicradioplaylistthread.h \
-    $$PWD/radio/fm/musicradiosongsthread.h \
-    $$PWD/radio/fm/musicradiothreadabstract.h \
+    $$PWD/radio/fm/musicfmradiochannelthread.h \
+    $$PWD/radio/fm/musicfmradiotextdownloadthread.h \
+    $$PWD/radio/fm/musicfmradiosongsthread.h \
+    $$PWD/radio/fm/musicfmradiothreadabstract.h \
     $$PWD/radio/dj/musicdjradiocategorythread.h \
     $$PWD/radio/dj/musicdjradioprogramthread.h \
     $$PWD/radio/dj/musicdjradioprogramcategorythread.h \
@@ -167,14 +166,12 @@ HEADERS  += \
     $$PWD/musicdownloadqueryartistlistthread.h \
     $$PWD/musicdownloadmanager.h
 
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
-    $$PWD/radio/fm/musicradiochannelthread.cpp \
-    $$PWD/radio/fm/musicradioplaylistthread.cpp \
-    $$PWD/radio/fm/musicradiosongsthread.cpp \
-    $$PWD/radio/fm/musicradiothreadabstract.cpp \
+    $$PWD/radio/fm/musicfmradiochannelthread.cpp \
+    $$PWD/radio/fm/musicfmradiotextdownloadthread.cpp \
+    $$PWD/radio/fm/musicfmradiosongsthread.cpp \
+    $$PWD/radio/fm/musicfmradiothreadabstract.cpp \
     $$PWD/radio/dj/musicdjradiocategorythread.cpp \
     $$PWD/radio/dj/musicdjradioprogramthread.cpp \
     $$PWD/radio/dj/musicdjradioprogramcategorythread.cpp \
@@ -304,5 +301,3 @@ SOURCES += \
     $$PWD/musicdownloadsimilarthread.cpp \
     $$PWD/musicdownloadqueryartistlistthread.cpp \
     $$PWD/musicdownloadmanager.cpp
-
-}

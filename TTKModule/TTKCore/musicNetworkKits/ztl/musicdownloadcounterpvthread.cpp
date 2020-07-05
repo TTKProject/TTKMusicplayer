@@ -1,6 +1,4 @@
 #include "musicdownloadcounterpvthread.h"
-#///QJson import
-#include "qjson/parser.h"
 
 MusicDownloadCounterPVThread::MusicDownloadCounterPVThread(QObject *parent)
     : MusicNetworkAbstract(parent)
@@ -27,7 +25,7 @@ void MusicDownloadCounterPVThread::startToDownload()
     MusicObject::setSslConfiguration(&request);
 #endif
 
-    m_reply = m_manager->get( request );
+    m_reply = m_manager->get(request);
     connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
 }
 
@@ -46,17 +44,17 @@ void MusicDownloadCounterPVThread::downLoadFinished()
         if(ok)
         {
             const QVariantMap &value = data.toMap();
-            emit downLoadDataChanged(value["site_pv"].toString());
+            Q_EMIT downLoadDataChanged(value["site_pv"].toString());
         }
         else
         {
-            emit downLoadDataChanged(QString());
+            Q_EMIT downLoadDataChanged(QString());
         }
     }
     else
     {
-        M_LOGGER_ERROR("Counter PV data error");
-        emit downLoadDataChanged(QString());
+        TTK_LOGGER_ERROR("Counter PV data error");
+        Q_EMIT downLoadDataChanged(QString());
     }
     deleteAll();
 }

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public:
     /*!
      * Set music sort.
      */
-    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort;}
+    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort; }
 
 Q_SIGNALS:
     /*!
@@ -120,14 +120,6 @@ public Q_SLOTS:
      */
     void musicListSongSortBy(QAction *action);
     /*!
-     * Show share list dialog.
-     */
-    void showShareListDialog();
-    /*!
-     * Show enhance lossless dialog.
-     */
-    void showEnhanceLosslessDialog();
-    /*!
      * Add music to played list and play later.
      */
     void addToPlayLater();
@@ -140,7 +132,7 @@ protected:
     /*!
      * Check the item is enable or not.
      */
-    virtual bool isItemEnable() const override;
+    virtual bool isItemEnabled() const override;
     /*!
      * Override the widget event.
      */

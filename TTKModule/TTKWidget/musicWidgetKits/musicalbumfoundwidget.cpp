@@ -4,7 +4,6 @@
 #include "musicsettingmanager.h"
 #include "musicuiobject.h"
 #include "musicstringutils.h"
-#include "musictime.h"
 
 #include "qrencode/qrcodewidget.h"
 
@@ -144,7 +143,7 @@ void MusicAlbumFoundWidget::createAlbumInfoItem(const MusicResultsItem &item)
         }
 
         MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-        connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+        connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
         if(!item.m_coverUrl.isEmpty() && item.m_coverUrl != COVER_URL_NULL)
         {
             download->startToDownload(item.m_coverUrl);
@@ -193,7 +192,7 @@ void MusicAlbumFoundWidget::createLabels()
 
     layout()->removeWidget(m_mainWindow);
     QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setStyleSheet(MusicUIObject::MScrollBarStyle01);
+    scrollArea->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
     scrollArea->setWidgetResizable(true);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setAlignment(Qt::AlignLeft);
@@ -201,7 +200,7 @@ void MusicAlbumFoundWidget::createLabels()
     layout()->addWidget(scrollArea);
 
     QWidget *function = new QWidget(m_mainWindow);
-    function->setStyleSheet(MusicUIObject::MCheckBoxStyle01 + MusicUIObject::MPushButtonStyle03);
+    function->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01 + MusicUIObject::MQSSPushButtonStyle03);
     QVBoxLayout *grid = new QVBoxLayout(function);
 
     QLabel *firstLabel = new QLabel(function);
@@ -222,19 +221,19 @@ void MusicAlbumFoundWidget::createLabels()
     QFont albumFont = albumLabel->font();
     albumFont.setPixelSize(20);
     albumLabel->setFont(albumFont);
-    albumLabel->setStyleSheet(MusicUIObject::MFontStyle01);
+    albumLabel->setStyleSheet(MusicUIObject::MQSSFontStyle01);
     albumLabel->setText("-");
     QLabel *singerLabel = new QLabel(topLineWidget);
-    singerLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    singerLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     singerLabel->setText("-");
     QLabel *languageLabel = new QLabel(topLineWidget);
-    languageLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    languageLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     languageLabel->setText("-");
     QLabel *companyLabel = new QLabel(topLineWidget);
-    companyLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    companyLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     companyLabel->setText("-");
     QLabel *yearLabel = new QLabel(topLineWidget);
-    yearLabel->setStyleSheet(MusicUIObject::MColorStyle04 + MusicUIObject::MFontStyle03);
+    yearLabel->setStyleSheet(MusicUIObject::MQSSColorStyle04 + MusicUIObject::MQSSFontStyle03);
     yearLabel->setText("-");
 
     topLineLayout->addWidget(albumLabel);
@@ -270,14 +269,14 @@ void MusicAlbumFoundWidget::createLabels()
 
     QLabel *numberLabel = new QLabel(topRightWidget);
     numberLabel->setAlignment(Qt::AlignCenter);
-    numberLabel->setStyleSheet(MusicUIObject::MFontStyle06 + MusicUIObject::MColorStyle05);
+    numberLabel->setStyleSheet(MusicUIObject::MQSSFontStyle06 + MusicUIObject::MQSSColorStyle05);
     int number = 9;
     numberLabel->setText(QString("%1.%2").arg(number).arg(1));
     topRightLayout->addWidget(numberLabel, 0, 0);
     for(int i=1; i<=5; ++i)
     {
         QLabel *label = new QLabel(topRightWidget);
-        label->setPixmap(QPixmap( (ceil(number/2.0) - i) >= 0 ? ":/tiny/lb_star" : ":/tiny/lb_unstar"));
+        label->setPixmap(QPixmap((ceil(number/2.0) - i) >= 0 ? ":/tiny/lb_star" : ":/tiny/lb_unstar"));
         topRightLayout->addWidget(label, 0, i);
     }
 
@@ -309,7 +308,7 @@ void MusicAlbumFoundWidget::createLabels()
     //
 
     QWidget *functionWidget = new QWidget(this);
-    functionWidget->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+    functionWidget->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
     QHBoxLayout *hlayout = new QHBoxLayout(functionWidget);
     m_songButton = new QPushButton(functionWidget);
     m_songButton->setText(tr("songItems"));

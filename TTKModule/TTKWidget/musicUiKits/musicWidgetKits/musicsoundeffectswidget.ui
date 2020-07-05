@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>368</width>
-    <height>573</height>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>4</x>
      <y>4</y>
      <width>360</width>
-     <height>565</height>
+     <height>440</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -64,7 +64,7 @@
      <x>4</x>
      <y>29</y>
      <width>360</width>
-     <height>540</height>
+     <height>415</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -84,7 +84,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>475</y>
+      <y>375</y>
       <width>55</width>
       <height>20</height>
      </rect>
@@ -93,24 +93,11 @@
      <string>均衡器: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="volumeLabel">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>510</y>
-      <width>60</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>声音平衡: </string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="eqButton">
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>472</y>
+      <y>372</y>
       <width>35</width>
       <height>25</height>
      </rect>
@@ -123,7 +110,7 @@
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>472</y>
+      <y>372</y>
       <width>35</width>
       <height>25</height>
      </rect>
@@ -132,51 +119,12 @@
      <string>调整</string>
     </property>
    </widget>
-   <widget class="QLabel" name="volumeLeftlabel">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>510</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>左</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="volumeRightLabel">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>510</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>右</string>
-    </property>
-   </widget>
-   <widget class="MusicClickedSlider" name="volumeSlider">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>510</y>
-      <width>230</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
    <widget class="MusicSoundEffectsItemWidget" name="BS2BWidget" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>60</y>
-      <width>340</width>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -184,9 +132,9 @@
    <widget class="MusicSoundEffectsItemWidget" name="CrossfadeWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>130</y>
-      <width>340</width>
+      <x>190</x>
+      <y>60</y>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -195,8 +143,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>200</y>
-      <width>340</width>
+      <y>130</y>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -204,9 +152,9 @@
    <widget class="MusicSoundEffectsItemWidget" name="LADSPAWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>340</width>
+      <x>190</x>
+      <y>270</y>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -215,8 +163,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>340</y>
-      <width>340</width>
+      <y>200</y>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -224,9 +172,29 @@
    <widget class="MusicSoundEffectsItemWidget" name="SRCWidget" native="true">
     <property name="geometry">
      <rect>
+      <x>190</x>
+      <y>130</y>
+      <width>160</width>
+      <height>50</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="MusicSoundEffectsItemWidget" name="MonoStereoWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>200</y>
+      <width>160</width>
+      <height>50</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="MusicSoundEffectsItemWidget" name="MonoWidget" native="true">
+    <property name="geometry">
+     <rect>
       <x>10</x>
       <y>270</y>
-      <width>340</width>
+      <width>160</width>
       <height>50</height>
      </rect>
     </property>
@@ -238,11 +206,6 @@
   <zorder>topTitleCloseButton</zorder>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>MusicClickedSlider</class>
-   <extends>QSlider</extends>
-   <header>musicclickedslider.h</header>
-  </customwidget>
   <customwidget>
    <class>MusicSoundEffectsItemWidget</class>
    <extends>QWidget</extends>

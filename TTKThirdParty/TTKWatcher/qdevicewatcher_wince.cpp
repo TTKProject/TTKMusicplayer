@@ -8,7 +8,7 @@
 #include <QtCore/QCoreApplication>
 
 #ifdef UNICODE
-#  if QT_VERSION >= 0x040000
+#  if TTK_QT_VERSION_CHECK(4,0,0)
 #    define TCHAR2QString(x) QString::fromUtf16(x)
 #  else
 #    define TCHAR2QString(x) QString::fromUcs2(x)
@@ -29,7 +29,7 @@ QDeviceWatcherPrivate::~QDeviceWatcherPrivate()
 
 bool QDeviceWatcherPrivate::start()
 {
-	if (!init())
+    if (!initialize())
 		return false;
 	this->QThread::start();
 	return true;
@@ -52,7 +52,7 @@ bool QDeviceWatcherPrivate::stop()
 }
 
 
-bool QDeviceWatcherPrivate::init()
+bool QDeviceWatcherPrivate::initialize()
 {
 	MSGQUEUEOPTIONS msgopts;
 

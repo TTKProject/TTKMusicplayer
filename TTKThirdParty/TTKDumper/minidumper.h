@@ -11,8 +11,7 @@
 typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
                                     CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
                                     CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
-                                    CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
-                                    );
+                                    CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam);
 
 #define MAX_WARNING_MESSAGE_PATH 1024
 
@@ -23,6 +22,7 @@ class MUSIC_EXTRAS_EXPORT MiniDumper
 {
 public:
     MiniDumper(LPCWSTR szAppName, LPCWSTR szVersion, LPCWSTR szBuildNumber = nullptr);
+    ~MiniDumper();
 
     static void SetVersion(LPCWSTR szVersion);
     static void SetBuildNumber(LPCWSTR szBuildNumber);
@@ -45,6 +45,7 @@ class MUSIC_EXTRAS_EXPORT MiniDumper
 {
 public:
     MiniDumper();
+    ~MiniDumper();
 
 };
 

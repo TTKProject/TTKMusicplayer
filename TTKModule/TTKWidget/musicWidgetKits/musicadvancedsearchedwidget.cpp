@@ -5,12 +5,12 @@
 #include "musicrightareawidget.h"
 #include "musicsongsharingwidget.h"
 #include "musicalgorithmutils.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 
 MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     : QWidget(parent)
 {
-    setStyleSheet(MusicUIObject::MBackgroundStyle17);
+    setStyleSheet(MusicUIObject::MQSSBackgroundStyle17);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setSpacing(0);
@@ -26,16 +26,16 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
 
     m_tabWidget = new QTabWidget(mainWidget);
     m_tabWidget->setFixedHeight(300);
-    m_tabWidget->setStyleSheet(MusicUIObject::MTabWidgetStyle01 + "QTabBar::tab{ width:120px;}");
+    m_tabWidget->setStyleSheet(MusicUIObject::MQSSTabWidgetStyle01 + "QTabBar::tab{ width:120px; }");
     //
     QWidget *songWidget = new QWidget(m_tabWidget);
     QVBoxLayout *songWidgetLayout = new QVBoxLayout(songWidget);
     QLabel *songLabel = new QLabel(tr("Input Song ID Or Url Link"), songWidget);
-    songLabel->setStyleSheet(MusicUIObject::MFontStyle05);
+    songLabel->setStyleSheet(MusicUIObject::MQSSFontStyle05);
     songWidgetLayout->setSpacing(10);
     songWidgetLayout->addStretch(1);
     songWidgetLayout->addWidget(songLabel);
-    songWidgetLayout->addWidget( createSearchPairWidget(&m_songEdit) );
+    songWidgetLayout->addWidget(createSearchPairWidget(&m_songEdit));
     songWidgetLayout->addStretch(1);
     songWidget->setLayout(songWidgetLayout);
     m_tabWidget->addTab(songWidget, tr("Song"));
@@ -43,11 +43,11 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     QWidget *artistWidget = new QWidget(m_tabWidget);
     QVBoxLayout *artistWidgetLayout = new QVBoxLayout(artistWidget);
     QLabel *artistLabel = new QLabel(tr("Input Artist ID Or Url Link"), artistWidget);
-    artistLabel->setStyleSheet(MusicUIObject::MFontStyle05);
+    artistLabel->setStyleSheet(MusicUIObject::MQSSFontStyle05);
     artistWidgetLayout->setSpacing(10);
     artistWidgetLayout->addStretch(1);
     artistWidgetLayout->addWidget(artistLabel);
-    artistWidgetLayout->addWidget( createSearchPairWidget(&m_artistEdit) );
+    artistWidgetLayout->addWidget(createSearchPairWidget(&m_artistEdit));
     artistWidgetLayout->addStretch(1);
     artistWidget->setLayout(artistWidgetLayout);
     m_tabWidget->addTab(artistWidget, tr("Artist"));
@@ -55,11 +55,11 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     QWidget *albumWidget = new QWidget(m_tabWidget);
     QVBoxLayout *albumWidgetLayout = new QVBoxLayout(albumWidget);
     QLabel *albumLabel = new QLabel(tr("Input Album ID Or Url Link"), albumWidget);
-    albumLabel->setStyleSheet(MusicUIObject::MFontStyle05);
+    albumLabel->setStyleSheet(MusicUIObject::MQSSFontStyle05);
     albumWidgetLayout->setSpacing(10);
     albumWidgetLayout->addStretch(1);
     albumWidgetLayout->addWidget(albumLabel);
-    albumWidgetLayout->addWidget( createSearchPairWidget(&m_albumEdit) );
+    albumWidgetLayout->addWidget(createSearchPairWidget(&m_albumEdit));
     albumWidgetLayout->addStretch(1);
     albumWidget->setLayout(albumWidgetLayout);
     m_tabWidget->addTab(albumWidget, tr("Album"));
@@ -67,11 +67,11 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     QWidget *playlistWidget = new QWidget(m_tabWidget);
     QVBoxLayout *playlistWidgetLayout = new QVBoxLayout(playlistWidget);
     QLabel *playlistLabel = new QLabel(tr("Input Playlist ID Or Url Link"), playlistWidget);
-    playlistLabel->setStyleSheet(MusicUIObject::MFontStyle05);
+    playlistLabel->setStyleSheet(MusicUIObject::MQSSFontStyle05);
     playlistWidgetLayout->setSpacing(10);
     playlistWidgetLayout->addStretch(1);
     playlistWidgetLayout->addWidget(playlistLabel);
-    playlistWidgetLayout->addWidget( createSearchPairWidget(&m_playlistEdit) );
+    playlistWidgetLayout->addWidget(createSearchPairWidget(&m_playlistEdit));
     playlistWidgetLayout->addStretch(1);
     playlistWidget->setLayout(playlistWidgetLayout);
     m_tabWidget->addTab(playlistWidget, tr("Playlist"));
@@ -79,11 +79,11 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     QWidget *movieWidget = new QWidget(m_tabWidget);
     QVBoxLayout *movieWidgetLayout = new QVBoxLayout(movieWidget);
     QLabel *movieLabel = new QLabel(tr("Input Movie ID Or Url Link"), movieWidget);
-    movieLabel->setStyleSheet(MusicUIObject::MFontStyle05);
+    movieLabel->setStyleSheet(MusicUIObject::MQSSFontStyle05);
     movieWidgetLayout->setSpacing(10);
     movieWidgetLayout->addStretch(1);
     movieWidgetLayout->addWidget(movieLabel);
-    movieWidgetLayout->addWidget( createSearchPairWidget(&m_movieEdit) );
+    movieWidgetLayout->addWidget(createSearchPairWidget(&m_movieEdit));
     movieWidgetLayout->addStretch(1);
     movieWidget->setLayout(movieWidgetLayout);
     m_tabWidget->addTab(movieWidget, tr("Movie"));
@@ -92,7 +92,7 @@ MusicAdvancedSearchedWidget::MusicAdvancedSearchedWidget(QWidget *parent)
     mainLayout->addWidget(m_tabWidget);
     QPushButton *button = new QPushButton(tr("Search"), mainWidget);
     button->setFixedSize(90, 30);
-    button->setStyleSheet(MusicUIObject::MPushButtonStyle03);
+    button->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
     button->setCursor(QCursor(Qt::PointingHandCursor));
     connect(button, SIGNAL(clicked()), SLOT(searchButtonClicked()));
 #ifdef Q_OS_UNIX
@@ -114,9 +114,7 @@ void MusicAdvancedSearchedWidget::searchButtonClicked()
     const int server = M_SETTING_PTR->value(MusicSettingManager::DownloadServer).toInt();
     if(server > 5 || server < 0)
     {
-        MusicMessageBox message;
-        message.setText(tr("Current server not support search!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Current server not support search!"));
         return;
     }
 
@@ -165,12 +163,12 @@ QWidget *MusicAdvancedSearchedWidget::createSearchPairWidget(MusicLocalSongSearc
 {
     QWidget *searchPair = new QWidget(this);
     searchPair->setFixedHeight(33);
-    searchPair->setStyleSheet(MusicUIObject::MBorderStyle02);
+    searchPair->setStyleSheet(MusicUIObject::MQSSBorderStyle02);
     QHBoxLayout *searchPairLayout = new QHBoxLayout(searchPair);
     searchPairLayout->setContentsMargins(5, 2, 5, 0);
     QLabel *showIcon = new QLabel(searchPair);
     showIcon->setFixedSize(16, 16);
-    showIcon->setStyleSheet(MusicUIObject::MBackgroundStyle01 + "border-image: url(:/tiny/btn_search_main_hover);");
+    showIcon->setStyleSheet(MusicUIObject::MQSSBackgroundStyle01 + "border-image: url(:/tiny/btn_search_main_hover);");
     *input = new MusicLocalSongSearchEdit(searchPair);
     searchPairLayout->addWidget(showIcon);
     searchPairLayout->addWidget(*input);
@@ -299,9 +297,4 @@ QString MusicAdvancedSearchedWidget::getSearchedKeyWork(int type, const QString 
     }
 
     return key;
-}
-
-void MusicAdvancedSearchedWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
 }

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,55 +21,55 @@
 
 #include <QObject>
 
-/*! @brief The namespace of the Interior float button style.
+/*! @brief The namespace of the application ui object.
  * @author Greedysky <greedysky@163.com>
  */
 namespace MusicUIObject
 {
-    const QString MKGInteriorFloatMore = " \
+    const QString MQSSInteriorFloatMore = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_more_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_more_hover);}";
+            background-image: url(:/lrc/lb_more_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_more_hover); }";
 
-    const QString MKGInteriorFloatUpdate = " \
+    const QString MQSSInteriorFloatUpdate = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_update_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_update_hover);}";
+            background-image: url(:/lrc/lb_update_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_update_hover); }";
 
-    const QString MKGInteriorFloatWallpaper = " \
+    const QString MQSSInteriorFloatWallpaper = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_wallpaper_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_wallpaper_hover);}";
+            background-image: url(:/lrc/lb_wallpaper_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_wallpaper_hover); }";
 
-    const QString MKGInteriorFloatWallpaperOn = " \
+    const QString MQSSInteriorFloatWallpaperOn = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_wallpaper_on_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_wallpaper_on_hover);}";
+            background-image: url(:/lrc/lb_wallpaper_on_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_wallpaper_on_hover); }";
 
-    const QString MKGInteriorFloatSearch = " \
+    const QString MQSSInteriorFloatSearch = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_search_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_search_hover);}";
+            background-image: url(:/lrc/lb_search_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_search_hover); }";
 
-    const QString MKGInteriorFloatPhoto = " \
+    const QString MQSSInteriorFloatPhoto = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_photo_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_photo_hover);}";
+            background-image: url(:/lrc/lb_photo_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_photo_hover); }";
 
-    const QString MKGInteriorFloatSetting = " \
+    const QString MQSSInteriorFloatSetting = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/lb_border_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/lb_border_hover);}";
+            background-image: url(:/lrc/lb_border_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/lb_border_hover); }";
 
-    const QString MKGInteriorLrcBigger = " \
+    const QString MQSSInteriorLrcBigger = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/btn_bigger_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_bigger_hover);}";
+            background-image: url(:/lrc/btn_bigger_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_bigger_hover); }";
 
-    const QString MKGInteriorLrcSmaller = " \
+    const QString MQSSInteriorLrcSmaller = " \
             QPushButton{ border:none;\
-            background-image: url(:/lrc/btn_smaller_normal);} \
-            QPushButton:hover{ background-image: url(:/lrc/btn_smaller_hover);}";
+            background-image: url(:/lrc/btn_smaller_normal); } \
+            QPushButton:hover{ background-image: url(:/lrc/btn_smaller_hover); }";
 
 }
 

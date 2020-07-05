@@ -1,47 +1,48 @@
 #include "musiclrccontainerforcortana.h"
-#include "musicdesktopwallpaperthread.h"
-#include "musiclrcmanagerforinterior.h"
-#include "musiclayoutanimationwidget.h"
-#include "musictransitionanimationlabel.h"
-#include "musicbackgroundmanager.h"
-#include "musiclrcanalysis.h"
-#include "musicstringutils.h"
+#include "musiclrcmanagerfordesktop.h"
+#include "musicuiobject.h"
+#include "musicfunctionuiobject.h"
+#include "musicdesktoplrcuiobject.h"
+#include "musicsettingmanager.h"
+#include "musiclrcdefines.h"
+
+#include "musicapplication.h"
+#include "musicbottomareawidget.h"
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 
 MusicLrcContainerForCortana::MusicLrcContainerForCortana(QWidget *parent)
     : MusicLrcContainer(parent)
 {
-    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
-    vBoxLayout->setContentsMargins(0, 0, 0, 0);
-    vBoxLayout->setSpacing(0);
-    setLayout(vBoxLayout);
+    m_containerType = LRC_CORTANA_TPYE;
+    m_geometry.setX(340);
+    m_geometry.setY(20);
 
-    m_background = new MusicTransitionAnimationLabel(this);
-    m_background->setScaledContents(true);
-    vBoxLayout->addWidget(m_background);
-    QVBoxLayout *bBoxLayout = new QVBoxLayout(m_background);
-    bBoxLayout->setContentsMargins(0, 0, 0, 0);
-    bBoxLayout->setSpacing(0);
-    m_background->setLayout(bBoxLayout);
-
-    m_containerType = LRC_WALLPAPER_TPYE;
-    m_layoutWidget = new MusicVLayoutAnimationWidget(this);
-    m_layoutWidget->connectTo(this);
-    bBoxLayout->addWidget(m_layoutWidget);
-
-    m_animationFreshTime = 0;
+    m_musicLrcContainer << new MusicLrcManagerHorizontalDesktop(this)
+                        << new MusicLrcManagerHorizontalDesktop(this);
+    foreach(MusicLrcManager *manager, m_musicLrcContainer)
+    {
+        manager->setSelfGeometry(m_geometry.x(), m_geometry.y());
+    }
 #ifdef Q_OS_WIN
     PDWORD_PTR result = nullptr;
     HWND hTaskBar = FindWindowW(L"Shell_TrayWnd", nullptr);
-    HWND hCortanaBar = FindWindowExW(hTaskBar, nullptr, L"TrayDummySearchControl", nullptr);
-
-    SendMessageTimeoutW(hCortanaBar, 0x52C, 0, 0, SMTO_NORMAL, 1000, result);
-    ShowWindow(hCortanaBar, 0);
-    SetParent((HWND)winId(), hCortanaBar);
-
-    RECT rect;
-    if(GetClientRect(hCortanaBar, &rect))
+    if(hTaskBar)
     {
-        setFixedSize(rect.right, rect.bottom);
+        HWND hCortanaBar = FindWindowExW(hTaskBar, nullptr, L"TrayDummySearchControl", nullptr);
+        if(hCortanaBar)
+        {
+            SendMessageTimeoutW(hCortanaBar, 0x52C, 0, 0, SMTO_NORMAL, 1000, result);
+            ShowWindow(hCortanaBar, 0);
+            SetParent((HWND)winId(), hCortanaBar);
+
+            RECT rect;
+            if(GetClientRect(hCortanaBar, &rect))
+            {
+                setGeometry(0, 0, rect.right, rect.bottom);
+            }
+        }
     }
 #endif
 }
@@ -53,113 +54,62 @@ MusicLrcContainerForCortana::~MusicLrcContainerForCortana()
 
 void MusicLrcContainerForCortana::startTimerClock()
 {
-    m_musicLrcContainer[MUSIC_LRC_INTERIOR_MAX_LINE/2]->startTimerClock();
+    m_musicLrcContainer[!m_reverse]->startTimerClock();
 }
 
 void MusicLrcContainerForCortana::stopLrcMask()
 {
-    m_musicLrcContainer[MUSIC_LRC_INTERIOR_MAX_LINE/2]->stopLrcMask();
-    m_layoutWidget->stop();
-}
-
-void MusicLrcContainerForCortana::setSettingParameter()
-{
-    const int width = M_SETTING_PTR->value(MusicSettingManager::ScreenSize).toSize().width() - LRC_PER_WIDTH;
-    for(int i=0; i<MUSIC_LRC_INTERIOR_MAX_LINE; ++i)
+    foreach(MusicLrcManager *manager, m_musicLrcContainer)
     {
-        MusicLrcManagerForInterior *w = MStatic_cast(MusicLrcManagerForInterior*, m_musicLrcContainer[i]);
-        w->setLrcPerWidth(width);
-        w->setLrcFontSize(36);
-        w->setY(35 + 36);
-        w->setFixedHeight(35 + 36);
-    }
-
-    for(int i=0; i<MUSIC_LRC_INTERIOR_MAX_LINE; ++i)
-    {
-        if(i == 0 || i == 10) setItemStyleSheet(i, 25, 90);
-        else if(i == 1 || i == 9) setItemStyleSheet(i, 20, 80);
-        else if(i == 2 || i == 8) setItemStyleSheet(i, 15, 60);
-        else if(i == 3 || i == 7) setItemStyleSheet(i, 10, 40);
-        else if(i == 4 || i == 6) setItemStyleSheet(i, 5, 20);
-        else setItemStyleSheet(i, 0, 0);
+        manager->stopLrcMask();
     }
 }
 
-void MusicLrcContainerForCortana::setLrcAnalysisModel(MusicLrcAnalysis *analysis)
+void MusicLrcContainerForCortana::applySettingParameter()
 {
-    MusicLrcContainer::setLrcAnalysisModel(analysis);
-    m_layoutWidget->addStretch(1);
-    for(int i=0; i<MUSIC_LRC_INTERIOR_MAX_LINE; ++i)
+    MusicLrcContainer::applySettingParameter();
+    foreach(MusicLrcManager *manager, m_musicLrcContainer)
     {
-       MusicLrcManager *w = new MusicLrcManagerForInterior(this);
-       m_layoutWidget->addWidget(w);
-       m_musicLrcContainer.append(w);
+        manager->setLrcFontSize(10);
     }
-    m_layoutWidget->addStretch(1);
 
-    initCurrentLrc(tr("Init Wallpaper Module"));
-}
-
-void MusicLrcContainerForCortana::updateCurrentLrc(qint64 time)
-{
-    if(m_lrcAnalysis->isValid())
+    const QPoint &point = M_SETTING_PTR->value(MusicSettingManager::DLrcGeometry).toPoint();
+    if(!point.isNull())
     {
-        m_animationFreshTime = time;
-        m_layoutWidget->start();
+        move(point);
     }
 }
 
-void MusicLrcContainerForCortana::updateCurrentLrc(const QString &text)
+void MusicLrcContainerForCortana::initCurrentLrc() const
 {
-    for(int i=0; i<MUSIC_LRC_INTERIOR_MAX_LINE; ++i)
+    if(m_currentTime == 0)
     {
-        m_musicLrcContainer[i]->setText(QString());
+        m_musicLrcContainer[0]->setText(tr("welcome use TTKMusicPlayer"));
     }
-    m_musicLrcContainer[MUSIC_LRC_INTERIOR_MAX_LINE/2]->setText(text);
+
+    if(m_currentTime == 0)
+    {
+        const int width = m_musicLrcContainer[0]->x();
+        m_musicLrcContainer[0]->setGeometry(0, 2, width, m_geometry.y());
+        m_musicLrcContainer[1]->setGeometry(0, m_geometry.y() + 2, 0, 0);
+    }
 }
 
-void MusicLrcContainerForCortana::changeCurrentLrcColor()
+void MusicLrcContainerForCortana::updateCurrentLrc(const QString &first, const QString &second, qint64 time)
 {
-    setSettingParameter();
-}
+    m_reverse = !m_reverse;
+    m_musicLrcContainer[m_reverse]->reset();
+    m_musicLrcContainer[m_reverse]->setText(second);
+    m_musicLrcContainer[!m_reverse]->setText(first);
+    m_musicLrcContainer[!m_reverse]->startLrcMask(time);
 
-void MusicLrcContainerForCortana::updateAnimationLrc()
-{
-    const int length = (MUSIC_LRC_INTERIOR_MAX_LINE - m_lrcAnalysis->getLineMax())/2 + 1;
-    for(int i=0; i<MUSIC_LRC_INTERIOR_MAX_LINE; ++i)
+    int width = m_musicLrcContainer[0]->x();
+    m_musicLrcContainer[0]->setGeometry(0, 2, width, m_geometry.y());
+    width = m_musicLrcContainer[1]->x();
+    int pos = m_geometry.x() - width;
+    if(pos < 0)
     {
-        m_musicLrcContainer[i]->setText(m_lrcAnalysis->getText(i - length));
+        pos = 0;
     }
-    m_musicLrcContainer[MUSIC_LRC_INTERIOR_MAX_LINE/2]->startLrcMask(m_animationFreshTime);
-}
-
-void MusicLrcContainerForCortana::initCurrentLrc(const QString &str)
-{
-    for(int i=0; i<m_lrcAnalysis->getLineMax(); ++i)
-    {
-        m_musicLrcContainer[i]->setText( QString() );
-    }
-    m_musicLrcContainer[MUSIC_LRC_INTERIOR_MAX_LINE/2]->setText(str);
-}
-
-void MusicLrcContainerForCortana::setItemStyleSheet(int index, int size, int transparent)
-{
-    MusicLrcManagerForInterior *w = MStatic_cast(MusicLrcManagerForInterior*, m_musicLrcContainer[index]);
-    w->setFontSize(size);
-
-    const int value = 100 - transparent;
-    w->setFontTransparent(value);
-    w->setTransparent(value);
-
-    if(M_SETTING_PTR->value("LrcColor").toInt() != -1)
-    {
-        const MusicLrcColor::LrcColorType index = MStatic_cast(MusicLrcColor::LrcColorType, M_SETTING_PTR->value("LrcColor").toInt());
-        setLinearGradientColor(index);
-    }
-    else
-    {
-        const MusicLrcColor cl(MusicUtils::String::readColorConfig(M_SETTING_PTR->value("LrcFrontgroundColor").toString()),
-                               MusicUtils::String::readColorConfig(M_SETTING_PTR->value("LrcBackgroundColor").toString()));
-        setLinearGradientColor(cl);
-    }
+    m_musicLrcContainer[1]->setGeometry(pos, m_geometry.y() + 2, width, m_geometry.y());
 }

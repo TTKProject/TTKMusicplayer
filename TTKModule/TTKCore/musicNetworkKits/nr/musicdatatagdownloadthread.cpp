@@ -32,8 +32,8 @@ void MusicDataTagDownloadThread::startToDownload()
         }
         else
         {
-            M_LOGGER_ERROR("The data file create failed");
-            emit downLoadDataChanged("The data file create failed");
+            TTK_LOGGER_ERROR("The data file create failed");
+            Q_EMIT downLoadDataChanged("The data file create failed");
             deleteAll();
         }
     }
@@ -53,20 +53,20 @@ void MusicDataTagDownloadThread::downLoadFinished()
     {
         MusicSemaphoreLoop loop;
         MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
-        connect(download, SIGNAL(downLoadByteDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
+        connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
         download->startToDownload(m_musicTag.getComment());
         connect(this, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
     }
 
-    emit downLoadDataChanged( transferData() );
-    M_LOGGER_INFO("data download has finished!");
+    Q_EMIT downLoadDataChanged(mapCurrentQueryData());
+    TTK_LOGGER_INFO("data download has finished!");
 }
 
 void MusicDataTagDownloadThread::downLoadFinished(const QByteArray &data)
 {
     MusicSongTag tag;
-    if(tag.read(m_savePathName))
+    if(tag.read(m_savePath))
     {
         if(M_SETTING_PTR->value(MusicSettingManager::OtherWriteInfo).toBool())
         {
@@ -81,8 +81,8 @@ void MusicDataTagDownloadThread::downLoadFinished(const QByteArray &data)
             tag.setCover(data);
         }
         tag.save();
-        M_LOGGER_INFO("write tag has finished!");
+        TTK_LOGGER_INFO("write tag has finished!");
     }
 
-    emit finished();
+    Q_EMIT finished();
 }

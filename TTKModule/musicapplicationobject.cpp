@@ -4,35 +4,36 @@
 #include "musicspectrumwidget.h"
 #include "musictimerautoobject.h"
 #include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicequalizerdialog.h"
 #include "musicsettingmanager.h"
-#include "musicregeditmanager.h"
+#include "musicplatformmanager.h"
 #include "musicsourceupdatewidget.h"
 #include "musicsoundeffectswidget.h"
 #include "musicmessageaboutdialog.h"
-#include "musicnumberdefine.h"
 #include "musicapplication.h"
 #include "musictopareawidget.h"
 #include "musicwidgetutils.h"
+#include "musicimageutils.h"
 #include "musicgiflabelwidget.h"
-#include "musicotherdefine.h"
 #include "musicurlutils.h"
 #include "musicfileutils.h"
 #include "musicalgorithmutils.h"
+#include "musicsourceupdatethread.h"
 #include "musicdownloadcounterpvthread.h"
 #include "musicsinglemanager.h"
+#include "musicscreensaverwidget.h"
 
 #include "qdevicewatcher.h"
+#include "qsync/qsyncconf.h"
 
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QPropertyAnimation>
-
-#include "qoss/ossconf.h"
+#ifdef Q_CC_GNU
+#   pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 
 #define MARGIN_SIDE     5
 #define MARGIN_SIDE_BY  1
-#define OSS_HOST_URL    "VDVnYUdYMW9xNnVWSnd6L0J6NHI2MFZ5d0R3R2NiRVF4VW5WckpNcUhnUT0="
+#define SYNC_HOST_URL    "VDVnYUdYMW9xNnVWSnd6L0J6NHI2MFZ5d0R3R2NiRVF4VW5WckpNcUhnUT0="
 
 MusicApplicationObject *MusicApplicationObject::m_instance = nullptr;
 
@@ -47,9 +48,10 @@ MusicApplicationObject::MusicApplicationObject(QObject *parent)
     m_quitAnimation = new QPropertyAnimation(this);
     m_sideAnimation = new QPropertyAnimation(parent, "geometry", this);
     m_quitAnimation->setTargetObject(parent);
-    m_sideAnimation->setDuration(250*MT_MS);
+    m_sideAnimation->setDuration(250 * MT_MS);
 
-    m_musicTimerAutoObj = new MusicTimerAutoObject(this);
+    m_musicTimerAutoObject = new MusicTimerAutoObject(this);
+    m_screenSaverWidget = nullptr;
     m_setWindowToTop = false;
     m_mobileDeviceWidget = nullptr;
     m_quitContainer = nullptr;
@@ -60,6 +62,7 @@ MusicApplicationObject::MusicApplicationObject(QObject *parent)
     m_deviceWatcher->appendEventReceiver(this);
     m_deviceWatcher->start();
 
+    m_sourceUpdatehread = new MusicSourceUpdateThread(this);
     m_counterPVThread = new MusicDownloadCounterPVThread(this);
 
     musicToolSetsParameter();
@@ -70,12 +73,14 @@ MusicApplicationObject::~MusicApplicationObject()
     cleanUp();
     Q_CLEANUP_RESOURCE(MusicPlayer);
 
-    delete m_musicTimerAutoObj;
+    delete m_musicTimerAutoObject;
+    delete m_screenSaverWidget;
     delete m_quitAnimation;
     delete m_sideAnimation;
     delete m_deviceWatcher;
     delete m_mobileDeviceWidget;
     delete m_quitContainer;
+    delete m_sourceUpdatehread;
     delete m_counterPVThread;
 }
 
@@ -84,26 +89,38 @@ MusicApplicationObject *MusicApplicationObject::instance()
     return m_instance;
 }
 
+bool MusicApplicationObject::isLastedVersion() const
+{
+    return m_sourceUpdatehread->isLastedVersion();
+}
+
 void MusicApplicationObject::loadNetWorkSetting()
 {
 #ifndef QT_NO_SSL
     // ssl support check
-    M_LOGGER_INFO(QString("App Support ssl: %1").arg(QSslSocket::supportsSsl()));
+    TTK_LOGGER_INFO(QString("Application network support ssl: %1").arg(QSslSocket::supportsSsl() ? "true" : "false"));
 #endif
-    //oss host init
-    OSSConf::OSS_HOST = MusicUtils::Algorithm::mdII(OSS_HOST_URL, false);
+    // sync host init
+    QSyncConf::HOST = MusicUtils::Algorithm::mdII(SYNC_HOST_URL, false);
+    //
+    m_sourceUpdatehread->startToDownload();
     m_counterPVThread->startToDownload();
 }
 
-void MusicApplicationObject::getParameterSetting()
+void MusicApplicationObject::applySettingParameter()
 {
 #ifdef Q_OS_WIN
     if(M_SETTING_PTR->value(MusicSettingManager::FileAssociation).toInt())
     {
-        MusicRegeditManager regeditManager;
-        regeditManager.setMusicRegeditAssociateFileIcon();
+        MusicPlatformManager platform;
+        platform.setMusicRegeditAssociateFileIcon();
     }
 #endif
+    if(!m_screenSaverWidget)
+    {
+        m_screenSaverWidget = new MusicScreenSaverBackgroundWidget;
+    }
+    m_screenSaverWidget->applySettingParameter();
 }
 
 void MusicApplicationObject::windowCloseAnimation()
@@ -116,7 +133,7 @@ void MusicApplicationObject::windowCloseAnimation()
 
         m_quitAnimation->stop();
         m_quitAnimation->setPropertyName("geometry");
-        m_quitAnimation->setDuration(250*MT_MS);
+        m_quitAnimation->setDuration(250 * MT_MS);
         m_quitAnimation->setStartValue(w->geometry());
         m_quitAnimation->setEndValue(QRect(w->x(), w->geometry().center().y(), w->width(), 0));
         m_quitAnimation->start();
@@ -125,7 +142,7 @@ void MusicApplicationObject::windowCloseAnimation()
     else
     {
         float v = M_SETTING_PTR->value(MusicSettingManager::BackgroundTransparent).toInt();
-              v = MusicUtils::Widget::reRenderValue<float>(1, 0.35, v);
+              v = MusicUtils::Image::reRenderValue<float>(1, 0.35, v);
         m_quitAnimation->stop();
         m_quitAnimation->setPropertyName("windowOpacity");
         m_quitAnimation->setDuration(MT_S2MS);
@@ -139,8 +156,8 @@ void MusicApplicationObject::windowCloseAnimation()
 void MusicApplicationObject::soureUpdateCheck()
 {
     MusicSourceUpdateNotifyWidget *w = new MusicSourceUpdateNotifyWidget;
-    w->show();
     w->start();
+    w->show();
 }
 
 void MusicApplicationObject::sideAnimationByOn()
@@ -167,14 +184,14 @@ void MusicApplicationObject::sideAnimationByOn()
         M_SETTING_PTR->setValue(MusicSettingManager::OtherSideByIn, true);
     }
 
-    QWidget *widget = QApplication::desktop();
-    pt = w->mapToGlobal(w->rect().topRight());
-    if(-MARGIN_SIDE + widget->width() <= pt.x() && pt.x() <= MARGIN_SIDE + widget->width())
+    const QRect &rect = MusicUtils::Widget::windowScreenGeometry();
+    pt = w->mapToGlobal(rect.topRight());
+    if(-MARGIN_SIDE + rect.width() <= pt.x() && pt.x() <= MARGIN_SIDE + rect.width())
     {
         m_rightSideByOn = true;
         m_sideAnimation->stop();
         m_sideAnimation->setStartValue(w->geometry());
-        m_sideAnimation->setEndValue(QRect(widget->width() - MARGIN_SIDE_BY, w->y(), w->width(), w->height()));
+        m_sideAnimation->setEndValue(QRect(rect.width() - MARGIN_SIDE_BY, w->y(), w->width(), w->height()));
         m_sideAnimation->start();
         M_SETTING_PTR->setValue(MusicSettingManager::OtherSideByIn, true);
     }
@@ -199,11 +216,11 @@ void MusicApplicationObject::sideAnimationByOff()
     }
     else if(m_rightSideByOn)
     {
-        QWidget *widget = QApplication::desktop();
+        const QRect &rect = MusicUtils::Widget::windowScreenGeometry();
         m_rightSideByOn = false;
         m_sideAnimation->stop();
         m_sideAnimation->setStartValue(w->geometry());
-        m_sideAnimation->setEndValue(QRect(widget->width() - w->width() - MARGIN_SIDE_BY, w->y(), w->width(), w->height()));
+        m_sideAnimation->setEndValue(QRect(rect.width() - w->width() - MARGIN_SIDE_BY, w->y(), w->width(), w->height()));
         m_sideAnimation->start();
         M_SETTING_PTR->setValue(MusicSettingManager::OtherSideByIn, false);
     }
@@ -224,7 +241,8 @@ void MusicApplicationObject::sideAnimationReset()
     else if(m_rightSideByOn)
     {
         MusicApplication *w = MusicApplication::instance();
-        w->move(QApplication::desktop()->width() - w->width() - MARGIN_SIDE_BY, w->y());
+        const QRect &rect = MusicUtils::Widget::windowScreenGeometry();
+        w->move(rect.width() - w->width() - MARGIN_SIDE_BY, w->y());
     }
 }
 
@@ -246,7 +264,7 @@ void MusicApplicationObject::windowCloseAnimationFinished()
         m_quitContainer->resize(gifWidget->size());
 
         const QPoint &center = w->geometry().center();
-        m_quitContainer->move(QPoint(center.x() - m_quitContainer->width()/2, center.y() - m_quitContainer->height()/2));
+        m_quitContainer->move(QPoint(center.x() - m_quitContainer->width() / 2, center.y() - m_quitContainer->height() / 2));
 
         m_quitContainer->raise();
         m_quitContainer->show();
@@ -273,6 +291,7 @@ void MusicApplicationObject::musicVersionUpdate()
 void MusicApplicationObject::musicTimerWidget()
 {
     MusicTimerWidget timer;
+
     QStringList list;
     MusicApplication::instance()->getCurrentPlaylist(list);
     timer.setSongStringList(list);
@@ -297,8 +316,8 @@ void MusicApplicationObject::musicResetWindow()
     m_leftSideByOn = false;
     m_rightSideByOn = false;
 
-    QWidget *widget = QApplication::desktop();
-    M_SETTING_PTR->setValue(MusicSettingManager::ScreenSize, widget->size());
+    const QRect &rect = MusicUtils::Widget::windowScreenGeometry();
+    M_SETTING_PTR->setValue(MusicSettingManager::ScreenSize, rect.size());
     M_SETTING_PTR->setValue(MusicSettingManager::WidgetSize, QSize(WINDOW_WIDTH_MIN, WINDOW_HEIGHT_MIN));
 
     QWidget *w = MusicApplication::instance();
@@ -306,20 +325,18 @@ void MusicApplicationObject::musicResetWindow()
     {
         w->showNormal();
     }
-    w->setGeometry((widget->width() - WINDOW_WIDTH_MIN)/2, (widget->height() - WINDOW_HEIGHT_MIN)/2, WINDOW_WIDTH_MIN, WINDOW_HEIGHT_MIN);
+    w->setGeometry((rect.width() - WINDOW_WIDTH_MIN) / 2, (rect.height() - WINDOW_HEIGHT_MIN) / 2, WINDOW_WIDTH_MIN, WINDOW_HEIGHT_MIN);
 }
 
 void MusicApplicationObject::musicToolSetsParameter()
 {
-    m_musicTimerAutoObj->runTimerAutoConfig();
+    m_musicTimerAutoObject->runTimerAutoConfig();
 #ifdef Q_OS_WIN
-    MusicRegeditManager regeditManager;
-    const int version = regeditManager.getLocalIEVersion();
+    MusicPlatformManager platform;
+    const int version = platform.getLocalIEVersion();
     if(version == -1 || version < 8)
     {
-        MusicMessageBox message;
-        message.setText(version == -1 ? QObject::tr("No IE Core Detected!") : QObject::tr("IE Version Less Than 8!"));
-        message.exec();
+        MusicToastLabel::popup(version == -1 ? QObject::tr("No IE Core Detected!") : QObject::tr("IE Version Less Than 8!"));
     }
 #endif
 }
@@ -364,7 +381,7 @@ void MusicApplicationObject::musicSetSoundEffect()
     }
 
     MusicSoundEffectsWidget sound;
-    sound.setParentConnect(this);
+    sound.setInputObject(this);
     sound.exec();
 }
 
@@ -387,7 +404,22 @@ void MusicApplicationObject::musicEffectChanged()
 
     if(M_SETTING_PTR->value(MusicSettingManager::EnhancedSOX).toInt() == 1)
     {
-        MusicSoundEffectsItemWidget::soundEffectChanged(MusicSoundEffectsItemWidget::SoX, true);
+        MusicSoundEffectsItemWidget::soundEffectChanged(MusicSoundEffectsItemWidget::Soxr, true);
+    }
+
+    if(M_SETTING_PTR->value(MusicSettingManager::EnhancedSRC).toInt() == 1)
+    {
+        MusicSoundEffectsItemWidget::soundEffectChanged(MusicSoundEffectsItemWidget::SrcConverter, true);
+    }
+
+    if(M_SETTING_PTR->value(MusicSettingManager::EnhancedMonoStereo).toInt() == 1)
+    {
+        MusicSoundEffectsItemWidget::soundEffectChanged(MusicSoundEffectsItemWidget::MonoStereo, true);
+    }
+
+    if(M_SETTING_PTR->value(MusicSettingManager::EnhancedMono).toInt() == 1)
+    {
+        MusicSoundEffectsItemWidget::soundEffectChanged(MusicSoundEffectsItemWidget::Mono, true);
     }
 
 #ifdef Q_OS_UNIX
@@ -410,21 +442,14 @@ bool MusicApplicationObject::closeCurrentEqualizer()
             return false;
         }
 
-        emit enhancedMusicChanged(0);
+        Q_EMIT enhancedMusicChanged(0);
     }
     return true;
 }
 
 void MusicApplicationObject::cleanUp()
 {
-    QFile::remove(TEMPPATH);
-    QFile::remove(MUSIC_COLOR_FILE);
-    QFile::remove(MUSIC_IMAGE_FILE);
-    QFile::remove(MUSIC_RECORD_FILE);
-    QFile::remove(MUSIC_RECORD_IN_FILE);
-    QFile::remove(MUSIC_RECORD_OUT_FILE);
-    QFile::remove(MUSIC_NETWORK_TEST_FILE);
-
     ///remove daily pic theme
-    MusicUtils::File::removeRecursively(STRCAT(CACHE_DIR_FULL, MUSIC_DAILY_DIR));
+    MusicUtils::File::removeRecursively(TTK_STRCAT(CACHE_DIR_FULL, MUSIC_DAILY_DIR));
+    ///other remove in ttkdumper
 }

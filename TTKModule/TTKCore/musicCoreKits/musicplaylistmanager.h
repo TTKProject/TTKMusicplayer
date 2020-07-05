@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,71 +41,94 @@ protected:
     /*!
      * Read ttk music playlist data from file.
      */
-    void readLisList(const QString &path, MusicSongItems &items);
+    bool readTKPLList(const QString &path, MusicSongItems &items);
     /*!
      * Write ttk music playlist data to file.
      */
-    void writeLisList(const QString &path, const MusicSongItem &item);
+    bool writeTKPLList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read m3u music playlist data from file.
      */
-    void readM3UList(const QString &path, MusicSongItems &items);
+    bool readM3UList(const QString &path, MusicSongItems &items);
     /*!
      * Write m3u music playlist data to file.
      */
-    void writeM3UList(const QString &path, const MusicSongItem &item);
+    bool writeM3UList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read pls music playlist data from file.
      */
-    void readPLSList(const QString &path, MusicSongItems &items);
+    bool readPLSList(const QString &path, MusicSongItems &items);
     /*!
      * Write pls music playlist data to file.
      */
-    void writePLSList(const QString &path, const MusicSongItem &item);
+    bool writePLSList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read wpl music playlist data from file.
      */
-    void readWPLList(const QString &path, MusicSongItems &items);
+    bool readWPLList(const QString &path, MusicSongItems &items);
     /*!
      * Write wpl music playlist data to file.
      */
-    void writeWPLList(const QString &path, const MusicSongItem &item);
+    bool writeWPLList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read xspf music playlist data from file.
      */
-    void readXSPFList(const QString &path, MusicSongItems &items);
+    bool readXSPFList(const QString &path, MusicSongItems &items);
     /*!
      * Write xspf music playlist data to file.
      */
-    void writeXSPFList(const QString &path, const MusicSongItem &item);
+    bool writeXSPFList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read asx music playlist data from file.
      */
-    void readASXList(const QString &path, MusicSongItems &items);
+    bool readASXList(const QString &path, MusicSongItems &items);
     /*!
      * Write asx music playlist data to file.
      */
-    void writeASXList(const QString &path, const MusicSongItem &item);
+    bool writeASXList(const QString &path, const MusicSongItem &item);
 
     /*!
      * Read kuwo music playlist data from file.
      */
-    void readKWLList(const QString &path, MusicSongItems &items);
+    bool readKWLList(const QString &path, MusicSongItems &items);
 
     /*!
      * Read kugou music playlist data from file.
      */
-    void readKGLList(const QString &path, MusicSongItems &items);
+    bool readKGLList(const QString &path, MusicSongItems &items);
 
     /*!
      * Read foobar2k music playlist data from file.
      */
-    void readFPLList(const QString &path, MusicSongItems &items);
+    bool readFPLList(const QString &path, MusicSongItems &items);
+
+    /*!
+     * Read csv music playlist data from file.
+     */
+    bool readCSVList(const QString &path, MusicSongItems &items);
+    /*!
+     * Write csv music playlist data to file.
+     */
+    bool writeCSVList(const QString &path, const MusicSongItem &item);
+
+    /*!
+     * Read txt music playlist data from file.
+     */
+    bool readTXTList(const QString &path, MusicSongItems &items);
+    /*!
+     * Write txt music playlist data to file.
+     */
+    bool writeTXTList(const QString &path, const MusicSongItem &item);
+
+    /*!
+     * Write nfn music playlist data to file.
+     */
+    bool writeNFNList(const QString &path, const MusicSongItem &item);
 
 };
 

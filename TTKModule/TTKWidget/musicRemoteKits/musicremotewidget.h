@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,14 +41,11 @@ public:
     enum RemoteType
     {
         Null = 0,       /*!< Romote Null type*/
-        Circle,         /*!< Romote Circle type*/
         Square,         /*!< Romote Square type*/
         Rectangle,      /*!< Romote Rectangle type*/
         SimpleStyle,    /*!< Romote SimpleStyle type*/
         ComplexStyle,   /*!< Romote ComplexStyle type*/
-        Diamond,        /*!< Romote Diamond type*/
-        Ripples,        /*!< Romote Ripples type*/
-        RaysWave        /*!< Romote RaysWave type*/
+        Ripple          /*!< Romote Ripple type*/
     };
 
     /*!
@@ -61,45 +58,46 @@ public:
     /*!
      * Set current play state button.
      */
-    void showPlayStatus(bool status) const;
+    void setCurrentPlayStatus(bool status) const;
     /*!
      * Set current volume value by index.
      */
     void setVolumeValue(int index);
     /*!
-     * Set current song text.
-     */
-    virtual void setLabelText(const QString &text);
-    /*!
      * Map remote type to index.
      */
     int mapRemoteTypeIndex();
+
+    /*!
+     * Set current song text.
+     */
+    virtual void setLabelText(const QString &text);
 
 Q_SIGNALS:
     /*!
      * Set show application normal.
      */
-    void musicWindowSignal();
+    void musicWindowChanged();
     /*!
      * Set current play state.
      */
-    void musicKeySignal();
+    void musicKeyChanged();
     /*!
      * Set current play to previous.
      */
-    void musicPlayPreviousSignal();
+    void musicPlayPreviousChanged();
     /*!
      * Set current play to next.
      */
-    void musicPlayNextSignal();
+    void musicPlayNextChanged();
     /*!
      * Set current play volume by value.
      */
-    void musicVolumeSignal(int value);
+    void musicVolumeChanged(int value);
     /*!
      * Show current setting widget.
      */
-    void musicSettingSignal();
+    void musicSettingChanged();
     /*!
      * Change diff remote style by type.
      */
@@ -109,7 +107,7 @@ public Q_SLOTS:
     /*!
      * Set current play volume change by value.
      */
-    void musicVolumeChanged(int value);
+    void musicVolumeSliderChanged(int value);
     /*!
      * Override show function.
      */
@@ -129,9 +127,9 @@ protected:
      */
     void adjustPostion(QWidget *w);
 
-    QPushButton *m_showMainWindow, *m_PreSongButton;
-    QPushButton *m_NextSongButton, *m_PlayButton;
-    QPushButton *m_SettingButton;
+    QPushButton *m_showMainWindowButton, *m_preSongButton;
+    QPushButton *m_nextSongButton, *m_playButton;
+    QPushButton *m_settingButton;
     QWidget *m_mainWidget, *m_volumeWidget;
     QToolButton *m_volumeButton;
     MusicClickedSlider *m_volumeSlider;

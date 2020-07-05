@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -16,5 +16,10 @@
 # * with this program; If not, see <http://www.gnu.org/licenses/>.
 # =================================================
 
-# update time 2019.06.29
-TTKMusicPlayer = 2.9.0.0
+UI_DIR = ./.build/ui
+MOC_DIR = ./.build/moc
+OBJECTS_DIR = ./.build/obj
+RCC_DIR = ./.build/rcc
+
+# update time 2020.06.06
+TTKMusicPlayer = 2.13.0.0

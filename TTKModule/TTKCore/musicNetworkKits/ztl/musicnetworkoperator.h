@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,9 +46,9 @@ Q_SIGNALS:
      */
     void getNetworkOperatorFinished(const QString &name);
 
-public Q_SLOTS:
+private Q_SLOTS:
     /*!
-     * Download data from ip net finished.
+     * Download data from net finished.
      */
     void downLoadFinished(const QByteArray &data);
 

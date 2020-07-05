@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2019 Greedysky Studio
+ * Copyright (C) 2015 - 2020 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-#include <QTime>
+#include <QElapsedTimer>
 #include "musicwidgetheaders.h"
 #include "musicabstractmovedialog.h"
 #include "musicdatabaseobject.h"
@@ -95,7 +95,7 @@ protected:
     Ui::MusicUserManagerDialog *m_ui;
     MusicUserModel *m_userModel;
     MusicUserUIDItem m_userUID;
-    QTime m_time;
+    QElapsedTimer m_time;
     QMenu m_popMenu;
 
 };

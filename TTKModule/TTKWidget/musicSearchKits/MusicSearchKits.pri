@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2019 Greedysky Studio
+# * Copyright (C) 2015 - 2020 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,15 @@
 
 INCLUDEPATH += $$PWD
 
-!contains(CONFIG, TTK_NO_MSVC_LINK_NEED){
 HEADERS  += \
     $$PWD/musiclocalsongsearchedit.h \
-    $$PWD/musiclocalsongsearchinlineedit.h \
+    $$PWD/musiclocalsongsearchinterioredit.h \
     $$PWD/musiclocalsongsearchpopwidget.h \
     $$PWD/musiclocalsongsearchdialog.h
 
-}
 
-contains(CONFIG, TTK_BUILD_LIB){
 SOURCES += \
     $$PWD/musiclocalsongsearchedit.cpp \
-    $$PWD/musiclocalsongsearchinlineedit.cpp \
+    $$PWD/musiclocalsongsearchinterioredit.cpp \
     $$PWD/musiclocalsongsearchpopwidget.cpp \
     $$PWD/musiclocalsongsearchdialog.cpp
-}

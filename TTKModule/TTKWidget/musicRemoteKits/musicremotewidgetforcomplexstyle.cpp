@@ -26,12 +26,12 @@ MusicRemoteWidgetForComplexStyle::MusicRemoteWidgetForComplexStyle(QWidget *pare
     QHBoxLayout *toolbox = new QHBoxLayout(toolWidget);
     toolbox->setContentsMargins(0, 0, 0, 0);
     toolbox->setSpacing(1);
-    toolbox->addWidget(m_PreSongButton);
-    toolbox->addWidget(m_PlayButton);
-    toolbox->addWidget(m_NextSongButton);
+    toolbox->addWidget(m_preSongButton);
+    toolbox->addWidget(m_playButton);
+    toolbox->addWidget(m_nextSongButton);
     toolbox->addWidget(m_volumeWidget);
-    toolbox->addWidget(m_SettingButton);
-    toolbox->addWidget(m_showMainWindow);
+    toolbox->addWidget(m_settingButton);
+    toolbox->addWidget(m_showMainWindowButton);
     toolWidget->setLayout(toolbox);
 
     QVBoxLayout *mvbox = new QVBoxLayout(mvWidget);
@@ -43,9 +43,8 @@ MusicRemoteWidgetForComplexStyle::MusicRemoteWidgetForComplexStyle(QWidget *pare
     mvWidget->setLayout(mvbox);
 
     m_iconLabel->setFixedSize(80, 80);
-    m_songName->setStyleSheet(MusicUIObject::MWidgetStyle01);
-    m_songArtist->setStyleSheet(MusicUIObject::MWidgetStyle01);
-
+    m_songName->setStyleSheet(MusicUIObject::MQSSWidgetStyle01);
+    m_songArtist->setStyleSheet(MusicUIObject::MQSSWidgetStyle01);
 }
 
 MusicRemoteWidgetForComplexStyle::~MusicRemoteWidgetForComplexStyle()
@@ -57,7 +56,7 @@ MusicRemoteWidgetForComplexStyle::~MusicRemoteWidgetForComplexStyle()
 
 void MusicRemoteWidgetForComplexStyle::setLabelText(const QString &value)
 {
-    const bool flag = (MusicUtils::String::splitString(value).count() == 1);
+    const bool flag = (MusicUtils::String::stringSplit(value).count() == 1);
 
     m_songName->setText(MusicUtils::String::songName(value));
     m_songArtist->setText(flag ? "--" : MusicUtils::String::artistName(value));

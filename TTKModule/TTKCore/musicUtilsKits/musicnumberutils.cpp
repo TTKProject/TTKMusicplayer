@@ -1,5 +1,4 @@
 #include "musicnumberutils.h"
-#include "musicnumberdefine.h"
 
 #include <QColor>
 #include <QStringList>
@@ -78,17 +77,17 @@ QString MusicUtils::Number::speed2LabelInt(qint64 size)
     return speed2LabelFromLabel(size, size2NumberInt(size));
 }
 
-qreal MusicUtils::Number::sizeByte2KByte(qint64 size)
+float MusicUtils::Number::sizeByte2KByte(qint64 size)
 {
     return size*1.0 / MH_KB;
 }
 
-qreal MusicUtils::Number::sizeByte2MByte(qint64 size)
+float MusicUtils::Number::sizeByte2MByte(qint64 size)
 {
     return sizeByte2KByte(size) / MH_MB;
 }
 
-qreal MusicUtils::Number::sizeByte2TByte(qint64 size)
+float MusicUtils::Number::sizeByte2TByte(qint64 size)
 {
     return sizeByte2MByte(size) / MH_GB;
 }
@@ -117,44 +116,44 @@ QString MusicUtils::Number::speed2LabelFromLabel(qint64 size, const QString &lab
     }
 }
 
-void MusicUtils::Number::transfromBitrateToQuality(int level, QString &bitString, QColor &color)
+void MusicUtils::Number::transfromBitrateToQuality(int level, QString &bitrate, QColor &color)
 {
-    bitString = QObject::tr("UnKnow");
+    bitrate = QObject::tr("UnKnow");
     color = QColor(131, 131, 131);
     switch(level)
     {
         case 0:
-            bitString = QObject::tr("Low");
+            bitrate = QObject::tr("Low");
             color = QColor(211, 0, 70);
             break;
         case 1:
-            bitString = QObject::tr("Normal");
+            bitrate = QObject::tr("Normal");
             color = QColor(0, 134, 211);
             break;
         case 2:
-            bitString = QObject::tr("High");
+            bitrate = QObject::tr("High");
             color = QColor(236, 138, 48);
             break;
         case 3:
-            bitString = QObject::tr("LLess");
+            bitrate = QObject::tr("LLess");
             color = QColor(117, 0, 206);
             break;
         default: break;
     }
 }
 
-void MusicUtils::Number::transfromBitrateToQuality(int level, QString &bitString)
+void MusicUtils::Number::transfromBitrateToQuality(int level, QString &bitrate)
 {
     QColor color;
-    transfromBitrateToQuality(level, bitString, color);
+    transfromBitrateToQuality(level, bitrate, color);
 }
 
 QString MusicUtils::Number::transfromBitrateToQuality(int level)
 {
     QColor color;
-    QString bitString;
-    transfromBitrateToQuality(level, bitString, color);
-    return bitString;
+    QString bitrate;
+    transfromBitrateToQuality(level, bitrate, color);
+    return bitrate;
 }
 
 int MusicUtils::Number::transfromBitrateToLevel(const QString &bitrate)

@@ -4,7 +4,7 @@
 #include "musicsettingmanager.h"
 #include "musicdownloadrecordconfigmanager.h"
 #include "musicdatatagdownloadthread.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicdownloadqueryfactory.h"
 #include "musicstringutils.h"
 #include "musicwidgetheaders.h"
@@ -112,18 +112,19 @@ MusicDownloadWidget::MusicDownloadWidget(QWidget *parent)
       m_ui(new Ui::MusicDownloadWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
 
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
 
     setAttribute(Qt::WA_DeleteOnClose);
 
-    m_ui->downloadPathEdit->setStyleSheet(MusicUIObject::MLineEditStyle01);
-    m_ui->pathChangedButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
-    m_ui->settingButton->setStyleSheet(MusicUIObject::MPushButtonStyle03);
-    m_ui->downloadButton->setStyleSheet(MusicUIObject::MPushButtonStyle06);
+    m_ui->downloadPathEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    m_ui->pathChangedButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
+    m_ui->settingButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle03);
+    m_ui->downloadButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle06);
 #ifdef Q_OS_UNIX
     m_ui->pathChangedButton->setFocusPolicy(Qt::NoFocus);
     m_ui->settingButton->setFocusPolicy(Qt::NoFocus);
@@ -139,9 +140,9 @@ MusicDownloadWidget::MusicDownloadWidget(QWidget *parent)
     m_ui->loadingLabel->setType(MusicGifLabelWidget::Gif_Cicle_Blue);
 
     connect(m_ui->pathChangedButton, SIGNAL(clicked()), SLOT(downloadDirSelected()));
-    connect(m_downloadThread, SIGNAL(downLoadDataChanged(QString)), SLOT(queryAllFinished()));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
     connect(m_ui->downloadButton, SIGNAL(clicked()), SLOT(startToDownload()));
+    connect(m_downloadThread, SIGNAL(downLoadDataChanged(QString)), SLOT(queryAllFinished()));
 }
 
 MusicDownloadWidget::~MusicDownloadWidget()
@@ -154,7 +155,7 @@ void MusicDownloadWidget::initWidget()
 {
     m_ui->loadingLabel->run(true);
 
-    controlEnable(true);
+    controlEnabled(true);
 
     if(m_queryType == MusicDownLoadQueryThreadAbstract::MovieQuery)
     {
@@ -166,7 +167,7 @@ void MusicDownloadWidget::initWidget()
     }
 }
 
-void MusicDownloadWidget::controlEnable(bool enable)
+void MusicDownloadWidget::controlEnabled(bool enable)
 {
     m_ui->topTitleCloseButton->setEnabled(enable);
     m_ui->downloadButton->setEnabled(enable);
@@ -245,7 +246,7 @@ MusicObject::MusicSongInformation MusicDownloadWidget::getMatchMusicSongInformat
                 break;
             }
         }
-        qSort(musicSongInfo.m_songAttrs);
+        std::sort(musicSongInfo.m_songAttrs.begin(), musicSongInfo.m_songAttrs.end());
         return musicSongInfo;
     }
     return MusicObject::MusicSongInformation();
@@ -261,15 +262,14 @@ void MusicDownloadWidget::queryAllFinishedMusic()
     else
     {
         close();
-        MusicMessageBox message(tr("No Resource found!"));
-        message.exec();
+        MusicToastLabel::popup(tr("No Resource found!"));
     }
 }
 
 void MusicDownloadWidget::queryAllFinishedMusic(const MusicObject::MusicSongAttributes &attrs)
 {
     MusicObject::MusicSongAttributes attributes = attrs;
-    qSort(attributes);
+    std::sort(attributes.begin(), attributes.end());
     //to find out the min bitrate
 
     foreach(const MusicObject::MusicSongAttribute &attr, attributes)
@@ -313,15 +313,14 @@ void MusicDownloadWidget::queryAllFinishedMovie()
     else
     {
         close();
-        MusicMessageBox message(tr("No Resource found!"));
-        message.exec();
+        MusicToastLabel::popup(tr("No Resource found!"));
     }
 }
 
 void MusicDownloadWidget::queryAllFinishedMovie(const MusicObject::MusicSongAttributes &attrs)
 {
     MusicObject::MusicSongAttributes attributes = attrs;
-    qSort(attributes);
+    std::sort(attributes.begin(), attributes.end());
     //to find out the min bitrate
 
     foreach(const MusicObject::MusicSongAttribute &attr, attributes)
@@ -410,8 +409,7 @@ void MusicDownloadWidget::startToDownload()
     hide(); ///hide download widget
     if(m_ui->viewArea->getCurrentItemRole().isEmpty())
     {
-        MusicMessageBox message(tr("Please Select One Item First!"));
-        message.exec();
+        MusicToastLabel::popup(tr("Please Select One Item First!"));
         return;
     }
 
@@ -423,14 +421,14 @@ void MusicDownloadWidget::startToDownload()
     {
         m_querySingleInfo ? startToDownloadMovie(m_singleSongInfo) : startToDownloadMovie();
     }
-    controlEnable(false);
+    controlEnabled(false);
 }
 
 void MusicDownloadWidget::dataDownloadFinished()
 {
     if(++m_downloadOffset >= m_downloadTotal)
     {
-        emit dataDownloadChanged();
+        Q_EMIT dataDownloadChanged();
         close();
     }
 }
@@ -468,14 +466,14 @@ void MusicDownloadWidget::startToDownloadMusic(const MusicObject::MusicSongInfor
                 return;
             }
 
-            down.readDownloadData( records );
+            down.readDownloadData(records);
             MusicSong record;
             record.setMusicName(musicSong);
             record.setMusicPath(QFileInfo(downloadName).absoluteFilePath());
             record.setMusicSizeStr(musicAttr.m_size);
             record.setMusicAddTimeStr("-1");
             records << record;
-            down.writeDownloadData( records );
+            down.writeDownloadData(records);
             //
             if(QFile::exists(downloadName))
             {

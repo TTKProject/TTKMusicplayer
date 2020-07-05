@@ -4,7 +4,7 @@
 #include "musicurlutils.h"
 #include "musicnumberutils.h"
 #include "musicsongtag.h"
-#include "musicmessagebox.h"
+#include "musictoastlabel.h"
 #include "musicfileutils.h"
 
 #define ADVANCE_OFFSET  150
@@ -14,15 +14,16 @@ MusicFileInformationWidget::MusicFileInformationWidget(QWidget *parent)
       m_ui(new Ui::MusicFileInformationWidget)
 {
     m_ui->setupUi(this);
+    setFixedSize(size());
     
     m_ui->topTitleCloseButton->setIcon(QIcon(":/functions/btn_close_hover"));
-    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MToolButtonStyle04);
+    m_ui->topTitleCloseButton->setStyleSheet(MusicUIObject::MQSSToolButtonStyle04);
     m_ui->topTitleCloseButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_ui->topTitleCloseButton->setToolTip(tr("Close"));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
 
-    setStyleSheet(MusicUIObject::MLineEditStyle01);
-    setEditLineEnable(false);
+    setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
+    setEditLineEnabled(false);
     m_advanceOn = false;
     musicAdvanceClicked();
 
@@ -30,10 +31,10 @@ MusicFileInformationWidget::MusicFileInformationWidget(QWidget *parent)
     pix.load(":/image/lb_defaultArt");
     m_ui->pixmapLabel->setPixmap(pix.scaled(m_ui->pixmapLabel->size()));
 
-    m_ui->editButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->saveButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->viewButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
-    m_ui->openPixButton->setStyleSheet(MusicUIObject::MPushButtonStyle04);
+    m_ui->editButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->saveButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->viewButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
+    m_ui->openPixButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle04);
 
 #ifdef Q_OS_UNIX
     m_ui->editButton->setFocusPolicy(Qt::NoFocus);
@@ -58,9 +59,7 @@ void MusicFileInformationWidget::musicOpenFileDir()
 {
     if(!MusicUtils::Url::openUrl(QFileInfo(m_path).absoluteFilePath()))
     {
-        MusicMessageBox message;
-        message.setText(tr("The origin one does not exist!"));
-        message.exec();
+        MusicToastLabel::popup(tr("The origin one does not exist!"));
     }
 }
 
@@ -127,7 +126,7 @@ void MusicFileInformationWidget::musicAdvanceClicked()
 
 void MusicFileInformationWidget::musicEditTag()
 {
-    setEditLineEnable(!m_ui->fileAlbumEdit->isEnabled());
+    setEditLineEnabled(!m_ui->fileAlbumEdit->isEnabled());
 }
 
 void MusicFileInformationWidget::musicSaveTag()
@@ -175,9 +174,7 @@ void MusicFileInformationWidget::musicSaveTag()
 
     tag.save();
 
-    MusicMessageBox message;
-    message.setText(tr("Save Successfully!"));
-    message.exec();
+    MusicToastLabel::popup(tr("Save Successfully!"));
 }
 
 void MusicFileInformationWidget::setFileInformation(const QString &name)
@@ -192,26 +189,26 @@ void MusicFileInformationWidget::setFileInformation(const QString &name)
     const bool state = tag.read(m_path = name);
     const QFileInfo fin(name);
     QString check;
-    m_ui->filePathEdit->setText( (check = name).isEmpty() ? "-" : check );
-    m_ui->fileFormatEdit->setText( (check = fin.suffix() ).isEmpty() ? "-" : check );
-    m_ui->fileSizeEdit->setText( (check = MusicUtils::Number::size2Label(fin.size()) ).isEmpty() ? "-" : check );
+    m_ui->filePathEdit->setText((check = name).isEmpty() ? "-" : check);
+    m_ui->fileFormatEdit->setText((check = fin.suffix()).isEmpty() ? "-" : check);
+    m_ui->fileSizeEdit->setText((check = MusicUtils::Number::size2Label(fin.size())).isEmpty() ? "-" : check);
 
-    m_ui->fileAlbumEdit->setText( state ? ((check = tag.getAlbum()).isEmpty() ? "-" : check) : "-" );
-    m_ui->fileArtistEdit->setText( state ? ((check = tag.getArtist()).isEmpty() ? "-" : check) : "-" );
-    m_ui->fileGenreEdit->setText( state ? ((check = tag.getGenre()).isEmpty() ? "-" : check) : "-" );
-    m_ui->fileTitleEdit->setText( state ? ((check = tag.getTitle()).isEmpty() ? "-" : check) : "-" );
-    m_ui->fileYearEdit->setText( state ? ((check = tag.getYear()).isEmpty() ? "-" : check) : "-" );
-    m_ui->fileTimeEdit->setText( state ? ((check = tag.getLengthString()).isEmpty() ? "-" : check) : "-" );
+    m_ui->fileAlbumEdit->setText(state ? ((check = tag.getAlbum()).isEmpty() ? "-" : check) : "-");
+    m_ui->fileArtistEdit->setText(state ? ((check = tag.getArtist()).isEmpty() ? "-" : check) : "-");
+    m_ui->fileGenreEdit->setText(state ? ((check = tag.getGenre()).isEmpty() ? "-" : check) : "-");
+    m_ui->fileTitleEdit->setText(state ? ((check = tag.getTitle()).isEmpty() ? "-" : check) : "-");
+    m_ui->fileYearEdit->setText(state ? ((check = tag.getYear()).isEmpty() ? "-" : check) : "-");
+    m_ui->fileTimeEdit->setText(state ? ((check = tag.getLengthString()).isEmpty() ? "-" : check) : "-");
 
-    m_ui->BitrateEdit->setText( state ? ((check = (tag.getBitrate())).isEmpty() ? "-" : check) : "-" );
-    m_ui->ChannelEdit->setText( state ? ((check = tag.getChannel()).isEmpty() ? "-" : check) : "-" );
-    m_ui->SamplingRateEdit->setText( state ? ((check = tag.getSampleRate()).isEmpty() ? "-" : check) : "-" );
-    m_ui->TrackNumEdit->setText( state ? ((check = tag.getTrackNum()).isEmpty() ? "-" : check) : "-" );
-    m_ui->decoderLabel->setText( state ? ((check = tag.getDecoder()).isEmpty() ? "-" : check.toUpper()) : "-" );
-    m_ui->qualityEdit->setText( MusicUtils::Number::transfromBitrateToQuality(MusicUtils::Number::transfromBitrateToLevel(m_ui->BitrateEdit->text())) );
+    m_ui->BitrateEdit->setText(state ? ((check = (tag.getBitrate())).isEmpty() ? "-" : check) : "-");
+    m_ui->ChannelEdit->setText(state ? ((check = tag.getChannel()).isEmpty() ? "-" : check) : "-");
+    m_ui->SamplingRateEdit->setText(state ? ((check = tag.getSampleRate()).isEmpty() ? "-" : check) : "-");
+    m_ui->TrackNumEdit->setText(state ? ((check = tag.getTrackNum()).isEmpty() ? "-" : check) : "-");
+    m_ui->decoderLabel->setText(state ? ((check = tag.getDecoder()).isEmpty() ? "-" : check.toUpper()) : "-");
+    m_ui->qualityEdit->setText(MusicUtils::Number::transfromBitrateToQuality(MusicUtils::Number::transfromBitrateToLevel(m_ui->BitrateEdit->text())));
 }
 
-void MusicFileInformationWidget::setEditLineEnable(bool enable)
+void MusicFileInformationWidget::setEditLineEnabled(bool enable)
 {
     m_ui->fileAlbumEdit->setEnabled(enable);
     m_ui->fileArtistEdit->setEnabled(enable);

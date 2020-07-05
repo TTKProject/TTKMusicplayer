@@ -1,8 +1,6 @@
 #include "musicwyauthenticationthread.h"
 #include "musicalgorithmutils.h"
 #include "musicsettingmanager.h"
-#///QJson import
-#include "qjson/parser.h"
 
 #include <QNetworkCookie>
 
@@ -18,11 +16,11 @@ void MusicWYAuthenticationThread::startToDownload(const QString &usr, const QStr
     m_interrupt = true;
 
     QNetworkRequest request;
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     const QByteArray &parameter = makeTokenQueryUrl(&request,
                       MusicUtils::Algorithm::mdII(WY_AUT_N_URL, false),
                       MusicUtils::Algorithm::mdII(WY_AUT_NDT_URL, false).arg(usr).arg(pwd));
-    if(!m_manager || m_stateCode != MusicObject::NetworkInit) return;
+    if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return;
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->post(request, parameter);
@@ -38,7 +36,7 @@ void MusicWYAuthenticationThread::downLoadFinished()
         return;
     }
 
-    M_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+    TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
     m_interrupt = false;
     m_info.clear();
 
@@ -65,6 +63,6 @@ void MusicWYAuthenticationThread::downLoadFinished()
         }
     }
 
-    emit downLoadDataChanged(QString());
+    Q_EMIT downLoadDataChanged(QString());
     deleteAll();
 }
