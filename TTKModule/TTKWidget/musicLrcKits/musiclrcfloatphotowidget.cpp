@@ -130,7 +130,7 @@ void MusicLrcFloatPhotoItem::enterEvent(QEvent *event)
 
 
 MusicLrcFloatPhotoWidget::MusicLrcFloatPhotoWidget(QWidget *parent)
-    : MusicFloatAbstractWidget(parent)
+    : MusicAbstractFloatWidget(parent)
 {
     setObjectName("MusicLrcFloatPhotoWidget");
     setStyleSheet(QString("#MusicLrcFloatPhotoWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle08));
@@ -152,6 +152,7 @@ MusicLrcFloatPhotoWidget::MusicLrcFloatPhotoWidget(QWidget *parent)
     m_checkBox = new QCheckBox(tr("All"), this);
     m_checkBox->setGeometry(29, 130, 100, 20);
     m_checkBox->setChecked(true);
+    m_checkBox->setCursor(QCursor(Qt::PointingHandCursor));
     m_checkBox->setStyleSheet(MusicUIObject::MQSSCheckBoxStyle01);
 
     m_confirmButton = new QPushButton(tr("Confirm"), this);
@@ -205,9 +206,9 @@ void MusicLrcFloatPhotoWidget::resizeWindow(int width, int height)
     m_rectIn = QRect(0, 555 + height, 133 + width, 105);
     m_rectOut = QRect(0, 355 + height, 680 + width, 180);
 
-    m_filmBackgroundWidget->move(width/2, 0);
-    m_checkBox->move(width/2 + 20, 130);
-    m_confirmButton->move(width/2 + 580, 130);
+    m_filmBackgroundWidget->move(width / 2, 0);
+    m_checkBox->move(width / 2 + 20, 130);
+    m_confirmButton->move(width / 2 + 580, 130);
 
     setGeometry(m_rectOut);
 }
@@ -345,11 +346,11 @@ void MusicLrcFloatPhotoWidget::selectAllStateChanged(bool state)
 
 void MusicLrcFloatPhotoWidget::paintEvent(QPaintEvent *event)
 {
-    MusicFloatAbstractWidget::paintEvent(event);
+    MusicAbstractFloatWidget::paintEvent(event);
 
     QPainter painter(this);
-    for(int i=0; i<= ceil(width()/PHOTO_BACKGROUNDG_WIDTH); ++i)
+    for(int i=0; i<= ceil(width() / PHOTO_BACKGROUNDG_WIDTH); ++i)
     {
-        painter.drawPixmap(PHOTO_BACKGROUNDG_WIDTH*i, 0, QPixmap(":/lrc/lb_film_bg"));
+        painter.drawPixmap(PHOTO_BACKGROUNDG_WIDTH * i, 0, QPixmap(":/lrc/lb_film_bg"));
     }
 }

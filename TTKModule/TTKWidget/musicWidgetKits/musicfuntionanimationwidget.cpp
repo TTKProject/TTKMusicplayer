@@ -17,9 +17,9 @@ MusicBackgroundWidget::MusicBackgroundWidget(QWidget *parent)
 
 }
 
-void MusicBackgroundWidget::setTransparent(int alpha)
+void MusicBackgroundWidget::backgroundTransparent(int value)
 {
-    m_backgroundAlpha = MusicUtils::Image::reRenderValue<int>(0xFF, 0x1F, alpha);
+    m_backgroundAlpha = MusicUtils::Image::reRenderValue<int>(0xFF, 0x10, 100 - value);
     update();
 }
 

@@ -75,7 +75,7 @@ MusicBackgroundSkinDialog::MusicBackgroundSkinDialog(QWidget *parent)
 
     connect(m_ui->skinTransparentLabelBox, SIGNAL(clicked(bool)), SLOT(windowTransparentChanged(bool)));
     connect(m_ui->skinTransparentButton, SIGNAL(valueChanged(int)), MusicTopAreaWidget::instance(), SLOT(musicBackgroundTransparentChanged(int)));
-    connect(m_ui->skinTransparentButton, SIGNAL(sliderStateChanged(bool)), MusicTopAreaWidget::instance(), SLOT(musicBackgroundSliderStateChanged(bool)));
+    connect(m_ui->skinTransparentButton, SIGNAL(sliderStateChanged(bool)), MusicTopAreaWidget::instance(), SLOT(musicBackgroundAnimationChanged(bool)));
     connect(m_ui->listTransparentButton, SIGNAL(valueChanged(int)), MusicTopAreaWidget::instance(), SLOT(musicPlaylistTransparent(int)));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
     connect(m_ui->paletteButton, SIGNAL(clicked()), SLOT(showPaletteDialog()));
@@ -93,7 +93,6 @@ MusicBackgroundSkinDialog::~MusicBackgroundSkinDialog()
     delete m_thunderBackgroundList;
     delete m_dailyBackgroundList;
 }
-
 
 QPixmap MusicBackgroundSkinDialog::setBackgroundUrl(QString &name)
 {
@@ -138,18 +137,18 @@ void MusicBackgroundSkinDialog::updateArtistFileTheme(const QString &theme)
     m_myBackgroundList->updateLastedItem();
 }
 
-void MusicBackgroundSkinDialog::setCurrentBackgroundTheme(const QString &theme, int alpha, int listAlpha)
+void MusicBackgroundSkinDialog::setCurrentBackgroundTheme(const QString &theme, int skin, int list)
 {
     m_backgroundList->setCurrentItemName(theme);
     m_myBackgroundList->setCurrentItemName(theme);
     //Set the the slider bar value as what the alpha is
-    m_ui->listTransparentButton->setValue(listAlpha);
-    setListTransToolText(listAlpha);
+    m_ui->listTransparentButton->setValue(list);
+    setListTransToolText(list);
 
     const bool state = M_SETTING_PTR->value(MusicSettingManager::BackgroundTransparentEnable).toBool();
-    m_ui->skinTransparentButton->setValue(state ? alpha : 100);
+    m_ui->skinTransparentButton->setValue(state ? skin : 0);
     m_ui->skinTransparentButton->setEnabled(state);
-    setSkinTransToolText(state ? alpha : 100);
+    setSkinTransToolText(state ? skin : 0);
     m_ui->skinTransparentLabelBox->setChecked(state);
 }
 
@@ -289,8 +288,8 @@ void MusicBackgroundSkinDialog::windowTransparentChanged(bool state)
     M_SETTING_PTR->setValue(MusicSettingManager::BackgroundTransparentEnable, state);
     if(!state)
     {
-        m_ui->skinTransparentButton->setValue(100);
-        MusicTopAreaWidget::instance()->musicBackgroundTransparentChanged(100);
+        m_ui->skinTransparentButton->setValue(0);
+        MusicTopAreaWidget::instance()->musicBackgroundTransparentChanged(0);
     }
 }
 

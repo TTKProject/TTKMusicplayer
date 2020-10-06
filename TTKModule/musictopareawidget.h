@@ -58,7 +58,7 @@ public:
     /*!
      * Set background skin and alpha and list alpha parameter.
      */
-    void setBackgroundParams(const QString &skin, int alpha, int list);
+    void setBackgroundParams(const QString &path, int skin, int list);
     /*!
      * Get background skin name.
      */
@@ -86,9 +86,9 @@ public:
     bool getUserLoginState() const;
 
     /*!
-     * Stop background skin change tiemr.
+     * Stop background skin change timer.
      */
-    void setTimerStop();
+    void setBackgroundAnimation(bool state);
     /*!
      * Set current play state button.
      */
@@ -103,10 +103,6 @@ public:
     void setVolumeValue(int value) const;
 
 Q_SIGNALS:
-    /*!
-     * Set list background skin transparent emit.
-     */
-    void setTransparent(int index);
     /*!
      * Search current music song from net.
      */
@@ -134,9 +130,9 @@ public Q_SLOTS:
      */
     void musicBackgroundTransparentChanged();
     /*!
-     * Current background transparent changed by index.
+     * Current background transparent changed by value.
      */
-    void musicBackgroundTransparentChanged(int index);
+    void musicBackgroundTransparentChanged(int value);
     /*!
      * Current background transparent changed by string.
      */
@@ -156,7 +152,7 @@ public Q_SLOTS:
     /*!
      * Current slider state changed.
      */
-    void musicBackgroundSliderStateChanged(bool state);
+    void musicBackgroundAnimationChanged(bool state);
     /*!
      * Current background skin download is finished.
      */
@@ -212,6 +208,14 @@ public Q_SLOTS:
 
 protected:
     /*!
+     * Set list background skin transparent changed.
+     */
+    void backgroundTransparentChanged(int value);
+    /*!
+     * Check background draw enable.
+     */
+    bool isEnableBackground();
+    /*!
      * Create remote widget.
      */
     void createRemoteWidget();
@@ -240,10 +244,11 @@ protected:
     QImage m_backgroundImage;
     int m_lastRemoteBeforeWallpaper;
     QString m_backgroundImagePath;
-    int m_backgroundAlpha, m_backgroundAListlpha;
+    int m_backgroundAlpha, m_backgroundListAlpha;
     QTimer m_pictureCarouselTimer;
 
     static MusicTopAreaWidget *m_instance;
+
 };
 
 #endif // MUSICTOPAREAWIDGET_H

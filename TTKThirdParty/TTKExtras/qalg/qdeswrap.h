@@ -23,7 +23,7 @@
 
 class QDesWrapPrivate;
 
-/*! @brief The namespace of the des wrapper.
+/*! @brief The class of the des wrapper.
  * @author Greedysky <greedysky@163.com>
  */
 class MUSIC_EXTRAS_EXPORT QDesWrap

@@ -33,7 +33,7 @@
 
 
 MusicSongsListTableWidget::MusicSongsListTableWidget(int index, QWidget *parent)
-    : MusicSongsListAbstractTableWidget(parent), m_openFileWidget(nullptr),
+    : MusicAbstractSongsListTableWidget(parent), m_openFileWidget(nullptr),
       m_musicSongsInfoWidget(nullptr), m_musicSongsPlayWidget(nullptr)
 {
     m_deleteItemWithFile = false;
@@ -98,9 +98,9 @@ void MusicSongsListTableWidget::updateSongsFileName(const MusicSongs &songs)
                           item = new QTableWidgetItem;
         item->setText(MusicUtils::Widget::elidedText(font(), songs[i].getMusicName(), Qt::ElideRight, headerview->sectionSize(1) - 10));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         setItem(i, 1, item);
@@ -116,9 +116,9 @@ void MusicSongsListTableWidget::updateSongsFileName(const MusicSongs &songs)
 
                           item = new QTableWidgetItem(songs[i].getMusicPlayTime());
 #if TTK_QT_VERSION_CHECK(5,13,0)
-        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         setItem(i, 5, item);
@@ -138,7 +138,7 @@ void MusicSongsListTableWidget::clearAllItems()
 
     m_playRowIndex = 0;
     //Remove all the original item
-    MusicSongsListAbstractTableWidget::clear();
+    MusicAbstractSongsListTableWidget::clear();
     setColumnCount(6);
 }
 
@@ -184,7 +184,7 @@ void MusicSongsListTableWidget::selectRow(int index)
     {
         return;
     }
-    MusicSongsListAbstractTableWidget::selectRow(index);
+    MusicAbstractSongsListTableWidget::selectRow(index);
 
     replacePlayWidgetRow();
     for(int i=0; i<columnCount(); ++i)
@@ -254,9 +254,9 @@ void MusicSongsListTableWidget::replacePlayWidgetRow()
 
     item = new QTableWidgetItem(MusicUtils::Widget::elidedText(font(), name, Qt::ElideRight, headerview->sectionSize(1) - 10));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -267,9 +267,9 @@ void MusicSongsListTableWidget::replacePlayWidgetRow()
 
     item = new QTableWidgetItem((*m_musicSongs)[m_playRowIndex].getMusicPlayTime());
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(m_playRowIndex, 5, item);
@@ -285,7 +285,7 @@ bool MusicSongsListTableWidget::createUploadFileWidget()
 {
     if(m_musicSongs->isEmpty() && m_parentToolIndex != MUSIC_LOVEST_LIST && m_parentToolIndex != MUSIC_NETWORK_LIST && m_parentToolIndex != MUSIC_RECENT_LIST)
     {
-        setFixedSize(320, 100);
+        setFixedSize(LEFT_SIDE_WIDTH_MIN, 100);
         if(m_openFileWidget == nullptr)
         {
             m_openFileWidget = new MusicOpenFileWidget(this);
@@ -372,7 +372,7 @@ void MusicSongsListTableWidget::itemCellEntered(int row, int column)
         unsetCursor();
     }
 
-    MusicSongsListAbstractTableWidget::itemCellEntered(row, column);
+    MusicAbstractSongsListTableWidget::itemCellEntered(row, column);
 
     //To show music Songs Item information
     if(m_musicSongsInfoWidget == nullptr)
@@ -381,9 +381,9 @@ void MusicSongsListTableWidget::itemCellEntered(int row, int column)
         m_musicSongsInfoWidget->hide();
     }
     m_timerShow.stop();
-    m_timerShow.start(0.5*MT_S2MS);
+    m_timerShow.start(0.5 * MT_S2MS);
     m_timerStay.stop();
-    m_timerStay.start(3*MT_S2MS);
+    m_timerStay.start(3 * MT_S2MS);
 }
 
 void MusicSongsListTableWidget::itemCellClicked(int row, int column)
@@ -466,7 +466,7 @@ void MusicSongsListTableWidget::setDeleteItemAt()
     MusicProgressWidget progress;
     progress.show();
     progress.setTitle(tr("Delete File Mode"));
-    progress.setRange(0, deleteList.count()/3*2);
+    progress.setRange(0, deleteList.count() / 3 * 2);
 
     for(int i=0; i<deleteList.count(); ++i)
     {
@@ -485,7 +485,7 @@ void MusicSongsListTableWidget::setDeleteItemAt()
     {
         const int index = deleteList[i];
         removeRow(index);           //Delete the current row
-        progress.setValue(deleteList.count()*2 - i);
+        progress.setValue(deleteList.count() * 2 - i);
     }
 
     //just fix table widget size hint
@@ -647,7 +647,7 @@ void MusicSongsListTableWidget::musicListSongSortBy(QAction *action)
 
 void MusicSongsListTableWidget::mousePressEvent(QMouseEvent *event)
 {
-    MusicSongsListAbstractTableWidget::mousePressEvent(event);
+    MusicAbstractSongsListTableWidget::mousePressEvent(event);
     closeRenameItem();
 
     if(event->button() == Qt::LeftButton)
@@ -660,7 +660,7 @@ void MusicSongsListTableWidget::mousePressEvent(QMouseEvent *event)
 
 void MusicSongsListTableWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    MusicSongsListAbstractTableWidget::mouseMoveEvent(event);
+    MusicAbstractSongsListTableWidget::mouseMoveEvent(event);
     if(m_leftButtonPressed && abs(m_dragStartPoint.y() - event->pos().y()) > 15)
     {
         m_mouseMoved = true;
@@ -671,7 +671,7 @@ void MusicSongsListTableWidget::mouseMoveEvent(QMouseEvent *event)
 
 void MusicSongsListTableWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    MusicSongsListAbstractTableWidget::mouseReleaseEvent(event);
+    MusicAbstractSongsListTableWidget::mouseReleaseEvent(event);
     startToDrag();
 
     m_leftButtonPressed = false;
@@ -682,7 +682,7 @@ void MusicSongsListTableWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void MusicSongsListTableWidget::leaveEvent(QEvent *event)
 {
-    MusicSongsListAbstractTableWidget::leaveEvent(event);
+    MusicAbstractSongsListTableWidget::leaveEvent(event);
     itemCellEntered(-1, -1);
 
     delete m_musicSongsInfoWidget;
@@ -692,14 +692,14 @@ void MusicSongsListTableWidget::leaveEvent(QEvent *event)
 
 void MusicSongsListTableWidget::wheelEvent(QWheelEvent *event)
 {
-    MusicSongsListAbstractTableWidget::wheelEvent(event);
+    MusicAbstractSongsListTableWidget::wheelEvent(event);
     closeRenameItem();
     Q_EMIT showFloatWidget();
 }
 
 void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
 {
-    MusicSongsListAbstractTableWidget::contextMenuEvent(event);
+    Q_UNUSED(event);
     QMenu rightClickMenu(this);
     QMenu musicPlaybackMode(tr("playbackMode"), &rightClickMenu);
 
@@ -771,7 +771,7 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
 
     rightClickMenu.addAction(tr("musicInfo..."), this, SLOT(musicFileInformation()));
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_localFile"), tr("openFileDir"), this, SLOT(musicOpenFileDir()));
-    rightClickMenu.addAction(QIcon(":/contextMenu/btn_ablum"), tr("ablum"), this, SLOT(musicAlbumFoundWidget()));
+    rightClickMenu.addAction(QIcon(":/contextMenu/btn_ablum"), tr("ablum"), this, SLOT(musicAlbumQueryWidget()));
     rightClickMenu.addSeparator();
 
     bool empty;

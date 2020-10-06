@@ -7,7 +7,7 @@
 #include <QButtonGroup>
 
 MusicLrcFloatSettingWidget::MusicLrcFloatSettingWidget(QWidget *parent)
-    : MusicFloatAbstractWidget(parent)
+    : MusicAbstractFloatWidget(parent)
 {
     setObjectName("MusicLrcFloatSettingWidget");
     setStyleSheet(QString("#MusicLrcFloatSettingWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle08));
@@ -75,8 +75,8 @@ MusicLrcFloatSettingWidget::MusicLrcFloatSettingWidget(QWidget *parent)
 
 void MusicLrcFloatSettingWidget::resizeWindow(int width, int height)
 {
-    m_rectIn = QRect(513 + width, 120 + height/2, 165, 210);
-    m_rectOut = QRect(673 + width, 171 + height/2, 165, 105);
+    m_rectIn = QRect(513 + width, 120 + height / 2, 165, 210);
+    m_rectOut = QRect(673 + width, 171 + height / 2, 165, 105);
     setGeometry(m_rectOut);
 }
 
@@ -137,7 +137,7 @@ void MusicLrcFloatSettingWidget::lrcArtBackgroundChanged()
 
 void MusicLrcFloatSettingWidget::show()
 {
-    MusicFloatAbstractWidget::show();
+    MusicAbstractFloatWidget::show();
     animationIn();
 }
 

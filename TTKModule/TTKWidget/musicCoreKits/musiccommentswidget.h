@@ -20,7 +20,7 @@
  ================================================= */
 
 #include <QLabel>
-#include "musicdownloadcommentsthread.h"
+#include "musiccommentsrequest.h"
 
 class QTextEdit;
 class MusicPagingWidgetObject;
@@ -104,8 +104,8 @@ protected:
     /*!
      * Override the widget event.
      */
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
     /*!
      * Int current comment label text.
@@ -124,7 +124,7 @@ protected:
     QTextEdit *m_messageEdit;
     QLabel *m_topLabel, *m_commentsLabel;
     QWidget *m_messageComments;
-    MusicDownLoadCommentsThread *m_commentsThread;
+    MusicCommentsRequest *m_downloadRequest;
     QList<MusicCommentsItem*> m_commentsItems;
     MusicPagingWidgetObject *m_pagingWidgetObject;
 

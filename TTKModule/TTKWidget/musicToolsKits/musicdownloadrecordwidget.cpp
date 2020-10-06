@@ -4,7 +4,7 @@
 #include "musicconnectionpool.h"
 
 MusicDownloadRecordTableWidget::MusicDownloadRecordTableWidget(QWidget *parent)
-    : MusicDownloadAbstractTableWidget(parent)
+    : MusicAbstractDownloadTableWidget(parent)
 {
     M_CONNECTION_PTR->setValue(getClassName(), this);
 
@@ -38,9 +38,9 @@ void MusicDownloadRecordTableWidget::createItem(int index, const MusicSong &reco
     item->setToolTip(record.getMusicName());
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(index, 1, item);
@@ -51,9 +51,9 @@ void MusicDownloadRecordTableWidget::createItem(int index, const MusicSong &reco
 
                       item = new QTableWidgetItem(record.getMusicSizeStr());
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
@@ -93,7 +93,7 @@ void MusicDownloadToolBoxWidget::updateItemTitle(int index)
     }
 }
 
-void MusicDownloadToolBoxWidget::createWidgetItem(MusicDownloadAbstractTableWidget *w, const QString &text, int index)
+void MusicDownloadToolBoxWidget::createWidgetItem(MusicAbstractDownloadTableWidget *w, const QString &text, int index)
 {
     MusicSongItem *item = &m_songItems.last();
     item->m_itemName = text;

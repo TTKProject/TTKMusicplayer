@@ -192,13 +192,13 @@ void MusicLrcContainerForInterior::resizeWindow()
 
     if(m_lrcDisplayAll)
     {
-        width += 320;
+        width += LEFT_SIDE_WIDTH_MIN;
     }
 
     if(MusicBottomAreaWidget::instance()->isLrcWidgetShowFullScreen())
     {
-        width += (m_lrcDisplayAll ? 0 : 320);
-        height += 320 / 2;
+        width += (m_lrcDisplayAll ? 0 : LEFT_SIDE_WIDTH_MIN);
+        height += LEFT_SIDE_WIDTH_MIN / 2;
     }
 
     resizeWidth(width - WINDOW_WIDTH_MIN, height - WINDOW_HEIGHT_MIN);
@@ -246,14 +246,14 @@ void MusicLrcContainerForInterior::lrcTimeSpeedChanged(QAction *action)
     int timeValue = 0;
     switch(action->data().toInt())
     {
-        case 0: timeValue = -0.5*MT_S2MS; break;
+        case 0: timeValue = -0.5 * MT_S2MS; break;
         case 1: timeValue = -MT_S2MS; break;
-        case 2: timeValue = -2*MT_S2MS; break;
-        case 3: timeValue = -5*MT_S2MS; break;
-        case 4: timeValue = 0.5*MT_S2MS; break;
+        case 2: timeValue = -2 * MT_S2MS; break;
+        case 3: timeValue = -5 * MT_S2MS; break;
+        case 4: timeValue = 0.5 * MT_S2MS; break;
         case 5: timeValue = MT_S2MS; break;
-        case 6: timeValue = 2*MT_S2MS; break;
-        case 7: timeValue = 5*MT_S2MS; break;
+        case 6: timeValue = 2 * MT_S2MS; break;
+        case 7: timeValue = 5 * MT_S2MS; break;
         default: break;
     }
 
@@ -316,7 +316,7 @@ void MusicLrcContainerForInterior::showSongCommentsWidget()
     delete m_commentsWidget;
     m_commentsWidget = new MusicLrcCommentsWidget(this);
     m_commentsWidget->initWidget(true);
-    m_commentsWidget->setGeometry(0, height()/5, width(), height()*4/5);
+    m_commentsWidget->setGeometry(0, height() / 5, width(), height() * 4 / 5);
     m_commentsWidget->show();
     m_commentsWidget->setCurrentSongName(m_currentSongName);
 }
@@ -349,7 +349,7 @@ void MusicLrcContainerForInterior::getTranslatedLrcFinished(const QString &data)
     delete m_translatedWidget;
     m_translatedWidget = new MusicLrcTranslatedWidget(this);
     m_translatedWidget->setPlainText(m_currentSongName, text);
-    m_translatedWidget->setGeometry(0, height()/5, width(), height()*4/5);
+    m_translatedWidget->setGeometry(0, height() / 5, width(), height() * 4 / 5);
     m_translatedWidget->show();
 }
 
@@ -512,6 +512,26 @@ void MusicLrcContainerForInterior::resizeEvent(QResizeEvent *event)
     resizeWindow();
 }
 
+void MusicLrcContainerForInterior::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        if(m_functionLabel && m_functionLabel->geometry().contains(event->pos()))
+        {
+            return; //block mouse event in function label area
+        }
+
+        m_mouseMoved = false;
+        m_mouseLeftPressed = true;
+        setCursor(Qt::CrossCursor);
+
+        m_mousePressedAt = event->globalPos();
+        m_lrcChangeState = false;
+        m_lrcChangeOffset = 0;
+        update();
+    }
+}
+
 void MusicLrcContainerForInterior::mouseMoveEvent(QMouseEvent *event)
 {
     if(m_mouseLeftPressed && m_lrcAnalysis->isValid())
@@ -564,20 +584,6 @@ void MusicLrcContainerForInterior::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void MusicLrcContainerForInterior::mousePressEvent(QMouseEvent *event)
-{
-    if(event->button() == Qt::LeftButton)
-    {
-        m_mouseMoved = false;
-        m_mouseLeftPressed = true;
-        setCursor(Qt::CrossCursor);
-        m_mousePressedAt = event->globalPos();
-        m_lrcChangeState = false;
-        m_lrcChangeOffset = 0;
-        update();
-    }
-}
-
 void MusicLrcContainerForInterior::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
@@ -600,7 +606,10 @@ void MusicLrcContainerForInterior::mouseReleaseEvent(QMouseEvent *event)
 
 void MusicLrcContainerForInterior::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    if(m_functionLabel && m_functionLabel->geometry().contains(event->pos()))
+    {
+        return; //block mouse event in function label area
+    }
     MusicBottomAreaWidget::instance()->lrcWidgetShowFullScreen();
 }
 
@@ -671,7 +680,7 @@ void MusicLrcContainerForInterior::showNoLrcCurrentInfo()
 {
     const int w = MusicUtils::Widget::fontTextWidth(m_noLrcCurrentInfo->font(), m_noLrcCurrentInfo->text());
     const int h = MusicUtils::Widget::fontTextHeight(m_noLrcCurrentInfo->font());
-    const int offset = height()/m_lrcAnalysis->getLineMax()*(m_lrcAnalysis->getMiddle() + 1) - 40;
+    const int offset = height() / m_lrcAnalysis->getLineMax() * (m_lrcAnalysis->getMiddle() + 1) - 20;
 
     m_noLrcCurrentInfo->setGeometry((width() - w) / 2, offset, w, h);
     m_noLrcCurrentInfo->show();
@@ -893,10 +902,10 @@ void MusicLrcContainerForInterior::resizeWidth(int w, int h)
 
     if(m_commentsWidget)
     {
-        m_commentsWidget->setGeometry(0, height()/5, width(), height()*4/5);
+        m_commentsWidget->setGeometry(0, height() / 5, width(), height() * 4 / 5);
     }
     if(m_translatedWidget)
     {
-        m_translatedWidget->setGeometry(0, height()/5, width(), height()*4/5);
+        m_translatedWidget->setGeometry(0, height() / 5, width(), height() * 4 / 5);
     }
 }

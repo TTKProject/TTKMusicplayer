@@ -1,9 +1,8 @@
 #include "musictime.h"
 
+#include "qalg/random.h"
+
 #include <QDateTime>
-#if TTK_QT_VERSION_CHECK(5,10,0)
-#include <QRandomGenerator>
-#endif
 
 MusicTime::MusicTime()
 {
@@ -85,7 +84,7 @@ QString MusicTime::toString(const QString &format) const
 qint64 MusicTime::getTimestamp(Type type) const
 {
     qint64 delta = (type == All_Sec) ? MT_S : MT_S2MS;
-           delta = (m_day * MT_D2S + m_hour * MT_H2S + m_min * MT_M2S + m_sec)*delta;
+           delta = (m_day * MT_D2S + m_hour * MT_H2S + m_min * MT_M2S + m_sec) * delta;
     return (type == All_Sec) ? delta : (delta + m_msec);
 }
 
@@ -97,18 +96,12 @@ qint64 MusicTime::timestamp(bool ms)
 
 void MusicTime::initRandom()
 {
-#if !TTK_QT_VERSION_CHECK(5,10,0)
-    qsrand(timestamp());
-#endif
+    Random::initRandom();
 }
 
 int MusicTime::random(int value)
 {
-#if TTK_QT_VERSION_CHECK(5,10,0)
-    return QRandomGenerator::global()->bounded(value);
-#else
-    return qrand() % value;
-#endif
+    return Random::random(value);
 }
 
 qint64 MusicTime::labelJustified2MsecTime(const QString &time)
@@ -126,8 +119,7 @@ QString MusicTime::msecTime2LabelJustified()
     else
     {
         const int min = m_day * MT_H2S + m_hour * MT_H + m_min;
-        return QString::number(min).rightJustified(2, '0') + ":" +
-               QString::number(m_sec).rightJustified(2, '0');
+        return QString::number(min).rightJustified(2, '0') + ":" + QString::number(m_sec).rightJustified(2, '0');
     }
 }
 
@@ -141,8 +133,7 @@ QString MusicTime::msecTime2LabelJustified(qint64 time, bool greedy)
     else
     {
         const int min = t.getDay() * MT_H2S + t.getHour() * MT_H + t.getMinute();
-        return QString::number(min).rightJustified(2, '0') + ":" +
-               QString::number(t.getSecond()).rightJustified(2, '0');
+        return QString::number(min).rightJustified(2, '0') + ":" + QString::number(t.getSecond()).rightJustified(2, '0');
     }
 }
 

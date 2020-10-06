@@ -26,8 +26,7 @@
 
 #define QMMP_VERSION_MAJOR 1
 #define QMMP_VERSION_MINOR 4
-#define QMMP_VERSION_PATCH 0
-#define QMMP_VERSION_STABLE 1
+#define QMMP_VERSION_PATCH 2
 
 #define QMMP_VERSION_INT (QMMP_VERSION_MAJOR<<16 | QMMP_VERSION_MINOR<<8 | QMMP_VERSION_PATCH)
 
@@ -174,37 +173,9 @@ public:
      * @param prefix Plugin type or directory name (examples: Inpunt, Transport, Output).
      */
     static QStringList findPlugins(const QString &prefix);
-    /*!
-     * Returns system language if uiLanguageID() is 'auto'. Otherwise returns uiLanguageID().
-     */
-    static QString systemLanguageID();
-    /*!
-     * Returns state of the user interface language option. Code "auto" means autodetection.
-     */
-    static QString uiLanguageID();
-    /*!
-     * Sets user interface language.
-     * @param code Language code; code "auto" means autodetection.
-     */
-    static void setUiLanguageID(const QString &code);
-    /*!
-     * Returns a directory location where persistent application data can be stored.
-     */
-    static QString dataPath();
-
-#ifdef Q_OS_WIN
-    /*!
-     * Returns \b true if portable mode is enabled. Otherwise returns \b false.
-     */
-    static bool isPortable();
-#endif
 
 private:
     static QString m_configDir;
-    static QString m_langID;
-#ifdef Q_OS_WIN
-    static QString m_appDir;
-#endif
 
 };
 

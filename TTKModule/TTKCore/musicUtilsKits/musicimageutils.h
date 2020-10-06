@@ -31,19 +31,19 @@ namespace MusicUtils
         /*!
          * Set pixmap to round by ratio.
          */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, int ratioX, int ratioY);
+        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &input, int ratioX, int ratioY);
         /*!
          * Set pixmap to round by ratio.
          */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QSize &size, int ratioX, int ratioY);
+        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &input, const QSize &size, int ratioX, int ratioY);
         /*!
          * Set pixmap to round by ratio.
          */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QRect &rect, int ratioX, int ratioY);
+        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &input, const QRect &rect, int ratioX, int ratioY);
         /*!
          * Set pixmap to round by ratio.
          */
-        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &src, const QPixmap &mask, const QSize &size);
+        MUSIC_UTILS_EXPORT QPixmap pixmapToRound(const QPixmap &input, const QPixmap &mask, const QSize &size);
         /*!
          * Get bitmap mask from rect.
          */
@@ -52,24 +52,34 @@ namespace MusicUtils
         /*!
          * Get pximap data.
          */
-        MUSIC_UTILS_EXPORT QByteArray getPixmapData(const QPixmap &pix);
+        MUSIC_UTILS_EXPORT QByteArray getPixmapData(const QPixmap &input);
+
         /*!
-         * Set fusion two image.
+         * Set fusion two pixmap.
          */
         MUSIC_UTILS_EXPORT void fusionPixmap(QPixmap &back, const QPixmap &front, const QPoint &pt);
         /*!
          * Set fusion two image.
          */
-        MUSIC_UTILS_EXPORT QPixmap grayScalePixmap(const QPixmap &src, int radius = 0);
+        MUSIC_UTILS_EXPORT void fusionPixmap(QImage &back, const QImage &front, const QPoint &pt);
+
+        /*!
+         * Image gray scale.
+         */
+        MUSIC_UTILS_EXPORT QPixmap grayScalePixmap(const QPixmap &input, int radius = 0);
+        /*!
+         * Image gray average.
+         */
+        MUSIC_UTILS_EXPORT int grayScaleAverage(const QImage &input, int width, int height);
 
         /*!
          * Image gauss filter.
          */
-        MUSIC_UTILS_EXPORT QImage gaussPixmap(const QImage &image, int radius);
+        MUSIC_UTILS_EXPORT QImage gaussPixmap(const QImage &input, int radius);
         /*!
          * Image gauss filter.
          */
-        MUSIC_UTILS_EXPORT void gaussPixmap(QImage &image, int radius);
+        MUSIC_UTILS_EXPORT void gaussPixmap(QImage &input, int radius);
 
         /*!
          * Rerender the custum value.
@@ -80,7 +90,7 @@ namespace MusicUtils
             if(alpha < 0) return 0;
             else if(alpha > key) return key;
 
-            return (key - alpha)*1.0/100*value + alpha;
+            return (key - alpha) * 1.0 / 100 * value + alpha;
         }
 
         /*!

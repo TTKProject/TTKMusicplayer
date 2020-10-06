@@ -23,6 +23,9 @@
 #include "musicglobaldefine.h"
 
 class QPropertyAnimation;
+namespace QImageWrap {
+class QSharpeImage;
+}
 
 /*! @brief The class of the label transition animation.
  * @author Greedysky <greedysky@163.com>
@@ -37,6 +40,7 @@ public:
         FadeEffect,
         BlindsEffect,
         CubeEffect,
+        WaterEffect,
         LeftToRightEffect,
         TopToBottomEffect
     };
@@ -51,7 +55,7 @@ public:
     /*!
      * Set no animation to start.
      */
-    inline void setNoAnimation(bool on) { m_noAnimationSet = on; }
+    inline void setAnimation(bool on) { m_noAnimationSet = on; }
     /*!
      * Get no animation state.
      */
@@ -96,6 +100,9 @@ protected:
     QPixmap m_rendererPixmap;
     QPixmap m_currentPixmap, m_previousPixmap;
     QPropertyAnimation *m_animation;
+
+    QImageWrap::QSharpeImage *m_cubeWave;
+    QImageWrap::QSharpeImage *m_waterWave;
 
 };
 

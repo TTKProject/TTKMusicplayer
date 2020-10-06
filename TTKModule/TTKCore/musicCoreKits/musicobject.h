@@ -68,6 +68,8 @@
 #define APE_FILE_PREFIX         "ape"
 #define FLC_FILE_PREFIX         "flac"
 
+//zip ext
+#define ZIP_FILE_PREFIX         "zip"
 
 #define TTS_FILE                TTK_STRCAT(DOT, TTS_FILE_PREFIX)
 #define CFG_FILE                TTK_STRCAT(DOT, CFG_FILE_PREFIX)
@@ -157,9 +159,9 @@
 #  define APPCACHE_DIR_FULL     MusicObject::getAppDir() + APPCACHE_DIR
 #else
 #  define MAIN_DIR_FULL         MusicObject::getAppDir() + "../"
-#  define APPDATA_DIR_FULL      MusicObject::getHomeDir() + APPDATA_DIR
+#  define APPDATA_DIR_FULL      MusicObject::getConfigDir() + APPDATA_DIR
 #  define DOWNLOADS_DIR_FULL    MAIN_DIR_FULL + DOWNLOADS_DIR
-#  define APPCACHE_DIR_FULL     MusicObject::getHomeDir() + APPCACHE_DIR
+#  define APPCACHE_DIR_FULL     MusicObject::getConfigDir() + APPCACHE_DIR
 #endif
 
 
@@ -202,7 +204,8 @@
 
 //
 #define WINDOW_WIDTH_MIN        1000
-#define WINDOW_HEIGHT_MIN       690
+#define WINDOW_HEIGHT_MIN       665
+#define LEFT_SIDE_WIDTH_MIN     320
 #define CONCISE_WIDTH_MIN       322
 //
 #define COVER_URL_NULL          "null"
@@ -325,11 +328,15 @@ namespace MusicObject
     }
 
     /*!
-     * Get application dir.
+     * Get config dir.
      */
-    static QString getHomeDir()
+    static QString getConfigDir()
     {
-        return  QDir::homePath() +"/.ttkmp/";
+#ifdef Q_OS_WIN
+        return QString::fromLocal8Bit(getenv("APPDATA")) + "/ttkmp/";
+#else
+        return QDir::homePath() + "/.config/ttkmp/";
+#endif
     }
 }
 

@@ -79,10 +79,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     /*!
-     * Set list background skin transparent.
-     */
-    void setTransparent(int index);
-    /*!
      * To download music data from net to load.
      */
     void musicDownloadSongToLocal();
@@ -125,6 +121,7 @@ protected:
     MusicCloudSharedSongWidget *m_cloudSharedSongWidget;
 
     static MusicLeftAreaWidget *m_instance;
+
 };
 
 #endif // MUSICLEFTAREAWIDGET_H

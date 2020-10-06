@@ -10,7 +10,7 @@
 #include <QScrollBar>
 
 MusicSongsListPlayedTableWidget::MusicSongsListPlayedTableWidget(QWidget *parent)
-    : MusicSongsListAbstractTableWidget(parent)
+    : MusicAbstractSongsListTableWidget(parent)
 {
     setSelectionMode(QAbstractItemView::SingleSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -78,9 +78,9 @@ void MusicSongsListPlayedTableWidget::updateSongsFileName(const MusicSongs &song
         item->setToolTip(songs[i].getMusicName());
         item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 15));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -92,9 +92,9 @@ void MusicSongsListPlayedTableWidget::updateSongsFileName(const MusicSongs &song
 
                           item = new QTableWidgetItem(songs[i].getMusicPlayTime());
 #if TTK_QT_VERSION_CHECK(5,13,0)
-        item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-        item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+        item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
         item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         setItem(i, 4, item);
@@ -118,7 +118,7 @@ void MusicSongsListPlayedTableWidget::clearAllItems()
 
     m_playRowIndex = -1;
     //Remove all the original item
-    MusicSongsListAbstractTableWidget::clear();
+    MusicAbstractSongsListTableWidget::clear();
     setColumnCount(5);
 }
 
@@ -128,7 +128,7 @@ void MusicSongsListPlayedTableWidget::selectRow(int index)
     {
         return;
     }
-    MusicSongsListAbstractTableWidget::selectRow(index);
+    MusicAbstractSongsListTableWidget::selectRow(index);
 
     replacePlayWidgetRow();
     for(int i=0; i<columnCount(); ++i)
@@ -179,9 +179,9 @@ void MusicSongsListPlayedTableWidget::replacePlayWidgetRow()
     item->setToolTip(name);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 15));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -191,9 +191,9 @@ void MusicSongsListPlayedTableWidget::replacePlayWidgetRow()
 
     item = new QTableWidgetItem((*m_musicSongs)[m_playRowIndex].getMusicPlayTime());
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(m_playRowIndex, 4, item);
@@ -250,7 +250,7 @@ void MusicSongsListPlayedTableWidget::itemCellEntered(int row, int column)
         unsetCursor();
     }
 
-    MusicSongsListAbstractTableWidget::itemCellEntered(row, column);
+    MusicAbstractSongsListTableWidget::itemCellEntered(row, column);
 }
 
 void MusicSongsListPlayedTableWidget::itemCellClicked(int row, int column)
@@ -318,7 +318,7 @@ void MusicSongsListPlayedTableWidget::contextMenuEvent(QContextMenuEvent *event)
     const bool empty = true;
     rightClickMenu.addAction(tr("musicInfo..."), this, SLOT(musicFileInformation()))->setEnabled(empty);
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_localFile"), tr("openFileDir"), this, SLOT(musicOpenFileDir()))->setEnabled(empty);
-    rightClickMenu.addAction(QIcon(":/contextMenu/btn_ablum"), tr("ablum"), this, SLOT(musicAlbumFoundWidget()));
+    rightClickMenu.addAction(QIcon(":/contextMenu/btn_ablum"), tr("ablum"), this, SLOT(musicAlbumQueryWidget()));
     rightClickMenu.addSeparator();
 
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_delete"), tr("delete"), this, SLOT(setDeleteItemAt()))->setEnabled(empty);

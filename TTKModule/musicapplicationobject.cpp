@@ -19,8 +19,8 @@
 #include "musicurlutils.h"
 #include "musicfileutils.h"
 #include "musicalgorithmutils.h"
-#include "musicsourceupdatethread.h"
-#include "musicdownloadcounterpvthread.h"
+#include "musicsourceupdaterequest.h"
+#include "musicdownloadcounterpvrequest.h"
 #include "musicsinglemanager.h"
 #include "musicscreensaverwidget.h"
 
@@ -33,7 +33,7 @@
 
 #define MARGIN_SIDE     5
 #define MARGIN_SIDE_BY  1
-#define SYNC_HOST_URL    "VDVnYUdYMW9xNnVWSnd6L0J6NHI2MFZ5d0R3R2NiRVF4VW5WckpNcUhnUT0="
+#define SYNC_HOST_URL   "VDVnYUdYMW9xNnVWSnd6L0J6NHI2MFZ5d0R3R2NiRVF4VW5WckpNcUhnUT0="
 
 MusicApplicationObject *MusicApplicationObject::m_instance = nullptr;
 
@@ -62,8 +62,8 @@ MusicApplicationObject::MusicApplicationObject(QObject *parent)
     m_deviceWatcher->appendEventReceiver(this);
     m_deviceWatcher->start();
 
-    m_sourceUpdatehread = new MusicSourceUpdateThread(this);
-    m_counterPVThread = new MusicDownloadCounterPVThread(this);
+    m_sourceUpdatehread = new MusicSourceUpdateRequest(this);
+    m_counterPVThread = new MusicDownloadCounterPVRequest(this);
 
     musicToolSetsParameter();
 }
@@ -127,7 +127,7 @@ void MusicApplicationObject::windowCloseAnimation()
 {
     if(M_SETTING_PTR->value(MusicSettingManager::WindowQuitMode).toBool())
     {
-        MusicTopAreaWidget::instance()->setTimerStop();
+        MusicTopAreaWidget::instance()->setBackgroundAnimation(false);
         MusicApplication *w = MusicApplication::instance();
         w->setMinimumSize(0, 0); ///remove fixed size
 
@@ -142,7 +142,7 @@ void MusicApplicationObject::windowCloseAnimation()
     else
     {
         float v = M_SETTING_PTR->value(MusicSettingManager::BackgroundTransparent).toInt();
-              v = MusicUtils::Image::reRenderValue<float>(1, 0.35, v);
+              v = MusicUtils::Image::reRenderValue<float>(1, 0.35, 100 - v);
         m_quitAnimation->stop();
         m_quitAnimation->setPropertyName("windowOpacity");
         m_quitAnimation->setDuration(MT_S2MS);
@@ -259,7 +259,7 @@ void MusicApplicationObject::windowCloseAnimationFinished()
 
         MusicGifLabelWidget *gifWidget = new MusicGifLabelWidget(m_quitContainer);
         gifWidget->setType(MusicGifLabelWidget::Gif_Close_White);
-        gifWidget->setInterval(25*MT_MS);
+        gifWidget->setInterval(25 * MT_MS);
         gifWidget->setInfinited(false);
         m_quitContainer->resize(gifWidget->size());
 

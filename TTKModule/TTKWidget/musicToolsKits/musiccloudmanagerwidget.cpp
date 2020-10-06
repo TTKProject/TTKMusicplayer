@@ -1,13 +1,13 @@
 #include "musiccloudmanagerwidget.h"
 #include "musicuiobject.h"
 #include "musicsemaphoreloop.h"
-#include "musicdownloadsourcethread.h"
+#include "musicdownloadsourcerequest.h"
 #include "musicitemdelegate.h"
 #include "musicnumberutils.h"
 #include "musicopenfilewidget.h"
 #include "musicsettingmanager.h"
 #include "musiccloudfileinformationwidget.h"
-#include "musicdatadownloadthread.h"
+#include "musicdownloaddatarequest.h"
 #include "musiccoreutils.h"
 #include "musicfileutils.h"
 #include "musicstringutils.h"
@@ -80,7 +80,7 @@ bool MusicCloudManagerTableWidget::getKey()
     MusicSemaphoreLoop loop;
     connect(this, SIGNAL(getKeyFinished()), &loop, SLOT(quit()));
 
-    MusicDownloadSourceThread *download = new MusicDownloadSourceThread(this);
+    MusicDownloadSourceRequest *download = new MusicDownloadSourceRequest(this);
     connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
     download->startToDownload(QSyncUtils::generateDataBucketUrl() + OS_CLOUD_URL);
 
@@ -264,7 +264,7 @@ void MusicCloudManagerTableWidget::downloadFileToServer()
     const MusicCloudDataItem &data = it->data(MUSIC_DATAS_ROLE).value<MusicCloudDataItem>();
     const QString &url = m_syncDownloadData->getDownloadUrl(MUSIC_BUCKET, data.m_dataItem.m_name);
 
-    MusicDataDownloadThread *download = new MusicDataDownloadThread(url, MusicUtils::String::musicPrefix() + data.m_dataItem.m_name, MusicObject::DownloadMusic, this);
+    MusicDownloadDataRequest *download = new MusicDownloadDataRequest(url, MusicUtils::String::musicPrefix() + data.m_dataItem.m_name, MusicObject::DownloadMusic, this);
     download->setRecordType(MusicObject::RecordCloudDownload);
     download->startToDownload();
 }
@@ -320,7 +320,7 @@ void MusicCloudManagerTableWidget::uploadProgress(const QString &time, qint64 by
 {
     if(bytesTotal != 0)
     {
-        const int value = TTKStatic_cast(int, (bytesSent*1.0/bytesTotal)*100);
+        const int value = TTKStatic_cast(int, (bytesSent*1.0/bytesTotal) * 100);
         const int row = FindUploadItemRow(time);
         if(row != -1)
         {
@@ -476,9 +476,9 @@ void MusicCloudManagerTableWidget::createItem(const MusicCloudDataItem &data)
     item->setToolTip(data.m_dataItem.m_name);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(1) - 20));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row, 1, item);
@@ -491,9 +491,9 @@ void MusicCloudManagerTableWidget::createItem(const MusicCloudDataItem &data)
     item->setToolTip(MusicUtils::Number::size2Label(data.m_dataItem.m_size));
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(3) - 5));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     setItem(row, 3, item);
@@ -502,9 +502,9 @@ void MusicCloudManagerTableWidget::createItem(const MusicCloudDataItem &data)
     item->setToolTip(data.m_dataItem.m_putTime);
     item->setText(MusicUtils::Widget::elidedText(font(), item->toolTip(), Qt::ElideRight, headerview->sectionSize(4) - 5));
 #if TTK_QT_VERSION_CHECK(5,13,0)
-    item->setForeground(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setForeground(QColor(MusicUIObject::MQSSColor01));
 #else
-    item->setTextColor(QColor(MusicUIObject::MQSSColorStyle12_S));
+    item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
     setItem(row, 4, item);

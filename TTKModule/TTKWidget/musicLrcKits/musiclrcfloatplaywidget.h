@@ -19,14 +19,14 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-#include "musicfloatabstractwidget.h"
+#include "musicabstractfloatwidget.h"
 
 class QToolButton;
 
 /*! @brief The class of the lrc play float widget.
  * @author Greedysky <greedysky@163.com>
  */
-class MUSIC_LRC_EXPORT MusicLrcFloatPlayWidget : public MusicFloatAbstractWidget
+class MUSIC_LRC_EXPORT MusicLrcFloatPlayWidget : public MusicAbstractFloatWidget
 {
     Q_OBJECT
     TTK_DECLARE_MODULE(MusicLrcFloatPlayWidget)
@@ -54,8 +54,8 @@ protected:
      * Override the widget event.
      */
     virtual void enterEvent(QEvent *event) override;
-    virtual void mouseMoveEvent(QMouseEvent *) override {}
     virtual void mousePressEvent(QMouseEvent *) override {}
+    virtual void mouseMoveEvent(QMouseEvent *) override {}
     virtual void mouseReleaseEvent(QMouseEvent *) override {}
     /*!
      * Set current play state icon.

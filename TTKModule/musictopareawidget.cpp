@@ -30,11 +30,11 @@ MusicTopAreaWidget::MusicTopAreaWidget(QWidget *parent)
     m_musicBackgroundWidget = nullptr;
     m_musicRemoteWidget = nullptr;
 
-    m_pictureCarouselTimer.setInterval(10*MT_S2MS);
+    m_pictureCarouselTimer.setInterval(10 * MT_S2MS);
     connect(&m_pictureCarouselTimer, SIGNAL(timeout()), SLOT(musicBackgroundChanged()));
     connect(M_BACKGROUND_PTR, SIGNAL(userSelectIndexChanged()), SLOT(musicBackgroundChanged()));
 
-    m_backgroundAListlpha = 40;
+    m_backgroundListAlpha = 60;
     m_lastRemoteBeforeWallpaper = -1;
 
     Visual::initialize(MusicApplication::instance());
@@ -56,7 +56,7 @@ void MusicTopAreaWidget::setupUi(Ui::MusicApplication* ui)
 {
     m_ui = ui;
 
-    musicBackgroundSliderStateChanged(true);
+    musicBackgroundAnimationChanged(true);
     m_musicUserWindow = new MusicUserWindow(this);
     ui->userWindow->addWidget(m_musicUserWindow);
 
@@ -106,22 +106,20 @@ void MusicTopAreaWidget::setupUi(Ui::MusicApplication* ui)
     connect(ui->windowClose, SIGNAL(clicked()), MusicApplication::instance(), SLOT(close()));
 }
 
-void MusicTopAreaWidget::setBackgroundParams(const QString &skin, int alpha, int list)
+void MusicTopAreaWidget::setBackgroundParams(const QString &path, int skin, int list)
 {
-    m_backgroundImagePath = skin;
-    m_backgroundAListlpha = list;
-    m_backgroundAlpha = alpha;
-
-    drawWindowBackgroundRect();
+    m_backgroundImagePath = path;
+    m_backgroundListAlpha = list;
+    m_backgroundAlpha = skin;
 }
 
 int MusicTopAreaWidget::getBackgroundListAlpha()
 {
     if(m_musicBackgroundWidget)
     {
-        m_backgroundAListlpha = m_musicBackgroundWidget->getBackgroundListAlpha();
+        m_backgroundListAlpha = m_musicBackgroundWidget->getBackgroundListAlpha();
     }
-    return m_backgroundAListlpha;
+    return m_backgroundListAlpha;
 }
 
 bool MusicTopAreaWidget::getBackgroundTransparentEnable() const
@@ -143,9 +141,9 @@ bool MusicTopAreaWidget::getUserLoginState() const
     return m_musicUserWindow->isUserLogin();
 }
 
-void MusicTopAreaWidget::setTimerStop()
+void MusicTopAreaWidget::setBackgroundAnimation(bool state)
 {
-    m_pictureCarouselTimer.stop();
+    state ? m_pictureCarouselTimer.start() : m_pictureCarouselTimer.stop();
 }
 
 void MusicTopAreaWidget::setCurrentPlayStatus(bool status)
@@ -178,7 +176,7 @@ void MusicTopAreaWidget::musicShowSkinChangedWindow()
     {
         m_musicBackgroundWidget = new MusicBackgroundSkinDialog(this);
     }
-    m_musicBackgroundWidget->setCurrentBackgroundTheme(m_backgroundImagePath, m_backgroundAlpha, m_backgroundAListlpha);
+    m_musicBackgroundWidget->setCurrentBackgroundTheme(m_backgroundImagePath, m_backgroundAlpha, m_backgroundListAlpha);
     m_musicBackgroundWidget->exec();
 }
 
@@ -187,24 +185,24 @@ void MusicTopAreaWidget::musicUserContextLogin()
     m_musicUserWindow->musicUserContextLogin();
 }
 
-void MusicTopAreaWidget::musicBackgroundTransparentChanged(int index)
+void MusicTopAreaWidget::musicBackgroundTransparentChanged(int value)
 {
-    if(m_ui->functionsContainer->currentIndex() == APP_WINDOW_INDEX_1)
+    if(!isEnableBackground())
     {
         return;
     }
 
     if(m_musicBackgroundWidget)
     {
-        m_musicBackgroundWidget->setSkinTransToolText(index);
+        m_musicBackgroundWidget->setSkinTransToolText(value);
     }
-    m_backgroundAlpha = index;
+    m_backgroundAlpha = value;
     drawWindowBackgroundRectString();
 }
 
 void MusicTopAreaWidget::musicBackgroundTransparentChanged(const QString &fileName)
 {
-    if(m_ui->functionsContainer->currentIndex() == APP_WINDOW_INDEX_1)
+    if(!isEnableBackground())
     {
         return;
     }
@@ -244,7 +242,7 @@ void MusicTopAreaWidget::musicBackgroundSkinChanged(const QString &fileName)
 
 void MusicTopAreaWidget::musicBackgroundSkinCustumChanged(const QString &fileName)
 {
-    if(m_ui->functionsContainer->currentIndex() == APP_WINDOW_INDEX_1)
+    if(!isEnableBackground())
     {
         return;
     }
@@ -266,17 +264,17 @@ void MusicTopAreaWidget::musicBackgroundChanged()
     }
 }
 
-void MusicTopAreaWidget::musicBackgroundSliderStateChanged(bool state)
+void MusicTopAreaWidget::musicBackgroundAnimationChanged(bool state)
 {
-    m_ui->background->setNoAnimation(state);
+    m_ui->background->setAnimation(state);
 }
 
 void MusicTopAreaWidget::musicBackgroundThemeDownloadFinished()
 {
-    if(m_ui->functionsContainer->currentIndex() == APP_WINDOW_INDEX_1 && m_ui->musiclrccontainerforinterior->artistBackgroundIsShow())
+    if(!isEnableBackground() && m_ui->musiclrccontainerforinterior->artistBackgroundIsShow())
     {
         musicBackgroundChanged();
-        m_pictureCarouselTimer.start();
+        setBackgroundAnimation(true);
     }
     else
     {
@@ -286,9 +284,17 @@ void MusicTopAreaWidget::musicBackgroundThemeDownloadFinished()
 
 void MusicTopAreaWidget::musicBackgroundThemeChangedByResize()
 {
-    musicBackgroundSliderStateChanged(true);
+    musicBackgroundAnimationChanged(true);
+    setBackgroundAnimation(false);
+    ///
     drawWindowBackgroundRectString();
-    musicBackgroundSliderStateChanged(false);
+    ///
+    musicBackgroundAnimationChanged(false);
+
+    if(!isEnableBackground())
+    {
+        setBackgroundAnimation(true);
+    }
 }
 
 void MusicTopAreaWidget::musicPlaylistTransparent(int index)
@@ -297,7 +303,9 @@ void MusicTopAreaWidget::musicPlaylistTransparent(int index)
     {
         m_musicBackgroundWidget->setListTransToolText(index);
     }
-    Q_EMIT setTransparent(m_backgroundAListlpha = index);
+
+    m_backgroundListAlpha = index;
+    backgroundTransparentChanged(m_backgroundListAlpha);
 }
 
 void MusicTopAreaWidget::musicSquareRemote()
@@ -418,6 +426,17 @@ void MusicTopAreaWidget::musicStackedToolsWidgetChanged()
     M_SINGLE_MANAGER_WIDGET_CLASS(MusicToolSetsWidget);
 }
 
+void MusicTopAreaWidget::backgroundTransparentChanged(int value)
+{
+    M_SETTING_PTR->setValue(MusicSettingManager::BackgroundListTransparent, value);
+    m_ui->centerLeftWidget->backgroundTransparent(value);
+}
+
+bool MusicTopAreaWidget::isEnableBackground()
+{
+    return m_ui->functionsContainer->currentIndex() != APP_WINDOW_INDEX_1;
+}
+
 void MusicTopAreaWidget::createRemoteWidget()
 {
     if(!m_musicRemoteWidget)
@@ -439,7 +458,7 @@ void MusicTopAreaWidget::createRemoteWidget()
 
 void MusicTopAreaWidget::drawWindowBackgroundRect()
 {
-    m_pictureCarouselTimer.stop();
+    setBackgroundAnimation(false);
     drawWindowBackgroundRect(MusicBackgroundSkinDialog::setBackgroundUrl(m_backgroundImagePath).toImage());
 }
 
@@ -463,20 +482,26 @@ void MusicTopAreaWidget::drawWindowBackgroundRect(const QImage &image)
 
 void MusicTopAreaWidget::drawWindowBackgroundRectString()
 {
-    const float v = MusicUtils::Image::reRenderValue<float>(1, 0.35, m_backgroundAlpha);
+    if(m_backgroundImage.isNull())
+    {
+        return;
+    }
+
+    const float v = MusicUtils::Image::reRenderValue<float>(1, 0.35, 100 - m_backgroundAlpha);
     MusicApplication::instance()->setWindowOpacity(v);
 
     const QSize size(M_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize());
-    QPixmap after(size);
-    after.fill(Qt::transparent);
-    QPainter paint(&after);
+
+    QPixmap pixmap(size);
+    pixmap.fill(Qt::transparent);
+    QPainter paint(&pixmap);
     paint.drawPixmap(0, 0, QPixmap::fromImage(m_backgroundImage.scaled(size, Qt::KeepAspectRatioByExpanding)));
     paint.end();
 
-    Q_EMIT setTransparent(m_backgroundAListlpha);
-    Q_EMIT backgroundPixmapChanged(after);
+    backgroundTransparentChanged(m_backgroundListAlpha);
+    Q_EMIT backgroundPixmapChanged(pixmap);
 
-    m_ui->background->setPixmap(after);
+    m_ui->background->setPixmap(pixmap);
 }
 
 void MusicTopAreaWidget::drawWindowBackgroundRectString(const QString &path)

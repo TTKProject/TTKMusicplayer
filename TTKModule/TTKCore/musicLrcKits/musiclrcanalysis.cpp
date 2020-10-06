@@ -6,7 +6,7 @@
 #include "musicstringutils.h"
 #include "musicapplication.h"
 #include "musicdownloadqueryfactory.h"
-#include "musictranslationthreadabstract.h"
+#include "musictranslationrequest.h"
 
 MusicLrcAnalysis::MusicLrcAnalysis(QObject *parent)
     : QObject(parent)
@@ -31,7 +31,7 @@ MusicLrcAnalysis::State MusicLrcAnalysis::setLrcData(const QByteArray &data)
     if(data.left(9) == MUSIC_TTKLRCF) //plain txt check
     {
         getAllText[0].clear();
-        const int perTime = MusicApplication::instance()->duration()/getAllText.count();
+        const int perTime = MusicApplication::instance()->duration() / getAllText.count();
         foreach(const QString &oneLine, getAllText)
         {
             m_lrcContainer.insert(perTime*m_lrcContainer.count(), oneLine);
@@ -434,7 +434,7 @@ void MusicLrcAnalysis::revertLrcTime(qint64 pos)
 void MusicLrcAnalysis::saveLrcTimeChanged()
 {
     TTKIntStringMapIterator it(m_lrcContainer);
-    QByteArray data;
+    QString data;
     data.append(QString("[by: %1]\n[offset:0]\n").arg(APP_NAME));
     while(it.hasNext())
     {
@@ -585,7 +585,7 @@ QString MusicLrcAnalysis::getAllLrcString() const
 void MusicLrcAnalysis::getTranslatedLrc()
 {
     delete m_translationThread;
-    m_translationThread = M_DOWNLOAD_QUERY_PTR->getTranslationThread(this);
+    m_translationThread = M_DOWNLOAD_QUERY_PTR->getTranslationRequest(this);
     if(parent()->metaObject()->indexOfSlot("getTranslatedLrcFinished(QString)") != -1)
     {
         connect(m_translationThread, SIGNAL(downLoadDataChanged(QString)), parent(), SLOT(getTranslatedLrcFinished(QString)));
