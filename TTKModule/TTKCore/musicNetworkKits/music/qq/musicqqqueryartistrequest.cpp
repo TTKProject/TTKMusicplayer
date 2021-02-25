@@ -78,14 +78,12 @@ void MusicQQQueryArtistRequest::startToSearch(const QString &artist)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(artist));
-    deleteAll();
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_ARTIST_URL, false).arg(artist).arg(0).arg(50);
+    deleteAll();
     m_searchText = artist;
-    m_interrupt = true;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_ARTIST_URL, false).arg(artist).arg(0).arg(50));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -96,34 +94,27 @@ void MusicQQQueryArtistRequest::startToSearch(const QString &artist)
 
 void MusicQQQueryArtistRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+
     Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
-    m_interrupt = false;
+    setNetworkAbort(false);
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value.contains("data"))
             {
-                bool artistFlag = false;
+                bool artistFound = false;
                 //
                 value = value["data"].toMap();
                 const QVariantList &datas = value["list"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
                     if(var.isNull())
                     {
@@ -131,14 +122,17 @@ void MusicQQQueryArtistRequest::downLoadFinished()
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
+
                     value = value["musicData"].toMap();
                     MusicObject::MusicSongInformation musicInfo;
-                    foreach(const QVariant &var, value["singer"].toList())
+                    for(const QVariant &var : value["singer"].toList())
                     {
                         if(var.isNull())
                         {
                             continue;
                         }
+
                         const QVariantMap &name = var.toMap();
                         musicInfo.m_singerName = MusicUtils::String::illegalCharactersReplaced(name["name"].toString());
                         musicInfo.m_artistId = name["mid"].toString();
@@ -150,31 +144,30 @@ void MusicQQQueryArtistRequest::downLoadFinished()
                     musicInfo.m_songId = value["songmid"].toString();
                     musicInfo.m_albumId = value["albummid"].toString();
                     musicInfo.m_lrcUrl = MusicUtils::Algorithm::mdII(QQ_SONG_LRC_URL, false).arg(musicInfo.m_songId);
-                    musicInfo.m_smallPicUrl = MusicUtils::Algorithm::mdII(QQ_SONG_PIC_URL, false)
-                                              .arg(musicInfo.m_albumId.right(2).left(1))
-                                              .arg(musicInfo.m_albumId.right(1)).arg(musicInfo.m_albumId);
+                    musicInfo.m_smallPicUrl = MusicUtils::Algorithm::mdII(QQ_SONG_PIC_URL, false).arg(musicInfo.m_albumId);
+
                     musicInfo.m_albumName = MusicUtils::String::illegalCharactersReplaced(value["albumname"].toString());
 
                     musicInfo.m_year = QString();
                     musicInfo.m_discNumber = value["cdIdx"].toString();
                     musicInfo.m_trackNumber = value["belongCD"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                    TTK_NETWORK_QUERY_CHECK();
                     readFromMusicSongAttribute(&musicInfo, value, m_searchQuality, m_queryAllRecords);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                    TTK_NETWORK_QUERY_CHECK();
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
                         continue;
                     }
                     //
-                    if(!artistFlag)
+                    if(!artistFound)
                     {
-                        artistFlag = true;
+                        artistFound = true;
                         MusicResultsItem info;
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                        TTK_NETWORK_QUERY_CHECK();
                         getDownLoadIntro(&info);
-                        if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                        TTK_NETWORK_QUERY_CHECK();
                         info.m_id = musicInfo.m_artistId;
                         info.m_name = musicInfo.m_singerName;
                         info.m_coverUrl = musicInfo.m_smallPicUrl;
@@ -206,9 +199,7 @@ void MusicQQQueryArtistRequest::getDownLoadIntro(MusicResultsItem *item)
     }
 
     QNetworkRequest request;
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_ARTIST_INFO_URL, false).arg(m_searchText);
-
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_ARTIST_INFO_URL, false).arg(m_searchText));
     request.setRawHeader("Referer", MusicUtils::Algorithm::mdII(REFER_URL, false).toUtf8());
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);

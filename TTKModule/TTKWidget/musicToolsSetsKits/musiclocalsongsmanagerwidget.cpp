@@ -5,7 +5,7 @@
 #include "musicsongssummariziedwidget.h"
 #include "musictoastlabel.h"
 #include "musicconnectionpool.h"
-#include "musicsongtag.h"
+#include "musicsongmeta.h"
 #include "musicsinglemanager.h"
 
 #ifdef TTK_GREATER_NEW
@@ -103,15 +103,15 @@ MusicLocalSongsManagerWidget::MusicLocalSongsManagerWidget(QWidget *parent)
     m_thread = new MusicLocalSongsManagerThread(this);
     connect(m_thread, SIGNAL(setSongNamePath(QFileInfoList)), SLOT(setSongNamePath(QFileInfoList)));
 
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(getClassName(), MusicSongsSummariziedWidget::getClassName());
+    G_CONNECTION_PTR->setValue(getClassName(), this);
+    G_CONNECTION_PTR->poolConnect(getClassName(), MusicSongsSummariziedWidget::getClassName());
 }
 
 MusicLocalSongsManagerWidget::~MusicLocalSongsManagerWidget()
 {
     m_runTypeChanged = false;
-    M_CONNECTION_PTR->removeValue(getClassName());
-    M_SINGLE_MANAGER_PTR->removeObject(getClassName());
+    G_CONNECTION_PTR->removeValue(getClassName());
+    G_SINGLE_MANAGER_PTR->removeObject(getClassName());
     clearAllItems();
     m_thread->stopAndQuitThread();
     delete m_thread;
@@ -253,7 +253,7 @@ void MusicLocalSongsManagerWidget::musicSearchIndexChanged(int, int index)
     clearAllItems();
 
     QFileInfoList names;
-    foreach(const int index, searchResult)
+    for(const int index : qAsConst(searchResult))
     {
         names.append(m_fileNames[index]);
     }
@@ -289,17 +289,17 @@ void MusicLocalSongsManagerWidget::setShowArtButton()
     QtConcurrent::run([&]
     {
         MusicInfoData arts;
-        MusicSongTag tag;
-        foreach(const QFileInfo &info, m_ui->songlistsTable->getFiles())
+        MusicSongMeta meta;
+        for(const QFileInfo &file : m_ui->songlistsTable->getFiles())
         {
             if(!m_runTypeChanged)
             {
                 break;
             }
 
-            if(tag.read(info.absoluteFilePath()))
+            if(meta.read(file.absoluteFilePath()))
             {
-                QString artString = tag.getArtist().trimmed();
+                QString artString = meta.getArtist().trimmed();
                 if(artString.isEmpty())
                 {
                     artString = "Various Artists";
@@ -307,11 +307,11 @@ void MusicLocalSongsManagerWidget::setShowArtButton()
 
                 if(!arts.contains(artString))
                 {
-                    arts.insert(artString, QFileInfoList() << info);
+                    arts.insert(artString, QFileInfoList() << file);
                 }
                 else
                 {
-                    arts.insert(artString, arts[artString] << info);
+                    arts.insert(artString, arts[artString] << file);
                 }
             }
         }
@@ -334,17 +334,17 @@ void MusicLocalSongsManagerWidget::setShowAlbumButton()
     QtConcurrent::run([&]
     {
         MusicInfoData albums;
-        MusicSongTag tag;
-        foreach(const QFileInfo &info, m_ui->songlistsTable->getFiles())
+        MusicSongMeta meta;
+        for(const QFileInfo &file : m_ui->songlistsTable->getFiles())
         {
             if(!m_runTypeChanged)
             {
                 break;
             }
 
-            if(tag.read(info.absoluteFilePath()))
+            if(meta.read(file.absoluteFilePath()))
             {
-                QString albumString = tag.getAlbum().trimmed();
+                QString albumString = meta.getAlbum().trimmed();
                 if(albumString.isEmpty())
                 {
                     albumString = "Various Album";
@@ -352,11 +352,11 @@ void MusicLocalSongsManagerWidget::setShowAlbumButton()
 
                 if(!albums.contains(albumString))
                 {
-                    albums.insert(albumString, QFileInfoList() << info);
+                    albums.insert(albumString, QFileInfoList() << file);
                 }
                 else
                 {
-                    albums.insert(albumString, albums[albumString] << info);
+                    albums.insert(albumString, albums[albumString] << file);
                 }
             }
         }
@@ -403,7 +403,7 @@ void MusicLocalSongsManagerWidget::addDrivesList()
     QStringList names;
     names << tr("Overall");
     const QFileInfoList &drives = QDir::drives();
-    foreach(const QFileInfo &driver, drives)
+    for(const QFileInfo &driver : qAsConst(drives))
     {
        names << driver.absoluteDir().absolutePath();
     }
@@ -413,7 +413,7 @@ void MusicLocalSongsManagerWidget::addDrivesList()
 void MusicLocalSongsManagerWidget::itemsSelected()
 {
     TTKIntSet auditionRow; //if selected multi rows
-    foreach(QTableWidgetItem *item, m_ui->songlistsTable->selectedItems())
+    for(QTableWidgetItem *item : m_ui->songlistsTable->selectedItems())
     {
         if(!m_searchfileListCache.isEmpty())
         {
@@ -432,7 +432,7 @@ void MusicLocalSongsManagerWidget::itemsSelected()
     std::sort(auditionList.begin(), auditionList.end());
 
     QStringList names;
-    foreach(const int index, auditionList)
+    for(const int index : qAsConst(auditionList))
     {
         names << m_fileNames[index].absoluteFilePath();
     }
@@ -452,7 +452,7 @@ bool MusicLocalSongsManagerWidget::filterIndexChanged()
     {
         QStringList names;
         const QFileInfoList &drives = QDir::drives();
-        foreach(const QFileInfo &driver, drives)
+        for(const QFileInfo &driver : qAsConst(drives))
         {
            names << driver.absoluteDir().absolutePath();
         }

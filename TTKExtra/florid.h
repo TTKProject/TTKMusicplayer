@@ -1,6 +1,6 @@
 /* =================================================
  * This file is part of the TTK qmmp plugin project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #define FLORID_H
 
 #include <QTimer>
+#include "qmmp.h"
 #include "visual.h"
 
 #define DISTANCE    100
@@ -118,7 +119,7 @@ protected:
     /*!
      * Process current patch visual data by state.
      */
-    virtual void processPatch(bool state);
+    virtual void processPatch(bool state) override;
 
     virtual void hideEvent(QHideEvent *event) override;
     virtual void showEvent(QShowEvent *event) override;

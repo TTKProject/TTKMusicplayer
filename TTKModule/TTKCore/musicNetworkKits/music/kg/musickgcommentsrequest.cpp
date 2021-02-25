@@ -11,6 +11,7 @@ MusicKGSongCommentsRequest::MusicKGSongCommentsRequest(QObject *parent)
 void MusicKGSongCommentsRequest::startToSearch(const QString &name)
 {
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
+
     MusicSemaphoreLoop loop;
     MusicKGQueryRequest *d = new MusicKGQueryRequest(this);
     d->setQueryAllRecords(false);
@@ -35,14 +36,12 @@ void MusicKGSongCommentsRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_COMMENT_SONG_URL, false).arg(m_rawData["songID"].toString()).arg(offset + 1).arg(m_pageSize);
-    m_pageTotal = 0;
-    m_interrupt = true;
+    deleteAll();
+    m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KG_COMMENT_SONG_URL, false).arg(m_rawData["songID"].toString()).arg(offset + 1).arg(m_pageSize));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -53,48 +52,39 @@ void MusicKGSongCommentsRequest::startToPage(int offset)
 
 void MusicKGSongCommentsRequest::downLoadFinished()
 {
-    if(!m_reply)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    m_interrupt = false;
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    setNetworkAbort(false);
+
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value["err_code"].toInt() == 0)
             {
-                m_pageTotal = value["count"].toLongLong();
+                m_totalSize = value["count"].toLongLong();
 
-                const QVariantList &comments = value["list"].toList();
-                foreach(const QVariant &comm, comments)
+                const QVariantList &datas = value["list"].toList();
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(comm.isNull())
+                    if(var.isNull())
                     {
                         continue;
                     }
 
-                    if(m_interrupt) return;
+                    value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem comment;
-                    value = comm.toMap();
-
                     comment.m_playCount = QString::number(value["like"].toMap()["count"].toLongLong());
                     comment.m_updateTime = QString::number(QDateTime::fromString(value["addtime"].toString(), MUSIC_YEAR_STIME_FORMAT).toMSecsSinceEpoch());
                     comment.m_description = value["content"].toString();
                     comment.m_nickName = value["user_name"].toString();
                     comment.m_coverUrl = value["user_pic"].toString();
-
                     Q_EMIT createSearchedItem(comment);
                 }
             }
@@ -129,14 +119,12 @@ void MusicKGPlaylistCommentsRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_COMMENT_PLAYLIST_URL, false).arg(m_rawData["songID"].toString()).arg(offset + 1).arg(m_pageSize);
-    m_pageTotal = 0;
-    m_interrupt = true;
+    deleteAll();
+    m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KG_COMMENT_PLAYLIST_URL, false).arg(m_rawData["songID"].toString()).arg(offset + 1).arg(m_pageSize));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -147,48 +135,39 @@ void MusicKGPlaylistCommentsRequest::startToPage(int offset)
 
 void MusicKGPlaylistCommentsRequest::downLoadFinished()
 {
-    if(!m_reply)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    m_interrupt = false;
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    setNetworkAbort(false);
+
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value["err_code"].toInt() == 0)
             {
-                m_pageTotal = value["count"].toLongLong();
+                m_totalSize = value["count"].toLongLong();
 
-                const QVariantList &comments = value["list"].toList();
-                foreach(const QVariant &comm, comments)
+                const QVariantList &datas = value["list"].toList();
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(comm.isNull())
+                    if(var.isNull())
                     {
                         continue;
                     }
 
-                    if(m_interrupt) return;
+                    value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem comment;
-                    value = comm.toMap();
-
                     comment.m_playCount = QString::number(value["like"].toMap()["count"].toLongLong());
                     comment.m_updateTime = QString::number(QDateTime::fromString(value["addtime"].toString(), MUSIC_YEAR_STIME_FORMAT).toMSecsSinceEpoch());
                     comment.m_description = value["content"].toString();
                     comment.m_nickName = value["user_name"].toString();
                     comment.m_coverUrl = value["user_pic"].toString();
-
                     Q_EMIT createSearchedItem(comment);
                 }
             }

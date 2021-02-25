@@ -37,31 +37,26 @@ void MusicKWDownLoadTextRequest::startToDownload()
 
 void MusicKWDownLoadTextRequest::downLoadFinished()
 {
-    if(!m_reply || !m_file)
-    {
-        deleteAll();
-        return;
-    }
     m_speedTimer.stop();
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_file && m_reply->error() == QNetworkReply::NoError)
     {
-        QByteArray bytes = m_reply->readAll();
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes.replace("lrclist", "'lrclist'").replace("'", "\""), &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QString lrcData;
             QVariantMap value = data.toMap();
-            if(value.contains("lrclist"))
+            if(value.contains("data"))
             {
+                value = value["data"].toMap();
                 const QVariantList &datas = value["lrclist"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
                     value = var.toMap();
-                    lrcData.append(MusicTime(value["timeId"].toInt(), MusicTime::All_Sec).toString("[mm:ss.zzz]"))
-                           .append(value["text"].toByteArray()).append("\n");
+                    lrcData.append(MusicTime(value["time"].toString().toDouble(), MusicTime::All_Sec).toString("[mm:ss.zzz]"))
+                           .append(value["lineLyric"].toByteArray()).append("\n");
                 }
             }
 

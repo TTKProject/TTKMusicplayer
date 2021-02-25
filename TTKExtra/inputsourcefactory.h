@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2009-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,9 +24,7 @@
 #include <QObject>
 #include <QList>
 #include "qmmp_export.h"
-#ifdef QMMP_GREATER_NEW
-#include <QRegularExpression>
-#endif
+#include "regularwrapper.h"
 
 class QStringList;
 class InputSource;
@@ -38,11 +36,7 @@ struct QMMP_EXPORT InputSourceProperties
 {
     QString name;                      /*!< Transport plugin full name */
     QString shortName;                 /*!< Transport plugin name for internal usage */
-#ifdef QMMP_GREATER_NEW
-    QList<QRegularExpression> regExps; /*!< A list of regular expressions for supported URLs (has highest priority). */
-#else
-    QList<QRegExp> regExps;            /*!< A list of regular expressions for supported URLs (has highest priority). */
-#endif
+    QList<RegularWrapper> regExps;     /*!< A list of regular expressions for supported URLs (has highest priority). */
     QStringList protocols;             /*!< A list of supported protocols. */
     bool hasSettings = false;          /*!< Should be \b true if plugin has settings dialog, otherwise \b false */
 };

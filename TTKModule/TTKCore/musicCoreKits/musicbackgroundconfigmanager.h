@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ typedef struct MUSIC_CORE_EXPORT MusicSkinConfigItem
 TTK_DECLARE_LISTS(MusicSkinConfigItem)
 
 
-/*! @brief The class of the skin backgroud image item.
+/*! @brief The class of the skin backgroud image.
  * @author Greedysky <greedysky@163.com>
  */
 typedef struct MUSIC_CORE_EXPORT MusicBackgroundImage

@@ -11,8 +11,9 @@ MusicWYTranslationRequest::MusicWYTranslationRequest(QObject *parent)
 
 void MusicWYTranslationRequest::startToDownload(const QString &data)
 {
-    Q_UNUSED(data);
     TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+
+    Q_UNUSED(data);
     deleteAll();
 
     MusicSemaphoreLoop loop;
@@ -23,14 +24,14 @@ void MusicWYTranslationRequest::startToDownload(const QString &data)
     connect(d, SIGNAL(downLoadDataChanged(QString)), &loop, SLOT(quit()));
     loop.exec();
 
-    QUrl musicUrl;
+    QUrl url;
     if(!d->isEmpty())
     {
-        musicUrl.setUrl(MusicUtils::Algorithm::mdII(WY_SONG_LRC_OLD_URL, false).arg(d->getMusicSongInfos().first().m_songId));
+        url.setUrl(MusicUtils::Algorithm::mdII(WY_SONG_LRC_OLD_URL, false).arg(d->getMusicSongInfos().first().m_songId));
     }
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(url);
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -40,19 +41,11 @@ void MusicWYTranslationRequest::startToDownload(const QString &data)
 
 void MusicWYTranslationRequest::downLoadFinished()
 {
-    if(!m_reply)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        deleteAll();
-        return;
-    }
-
-    if(m_reply->error() == QNetworkReply::NoError)
-    {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();

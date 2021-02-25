@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2020 Greedysky Studio
+# * Copyright (C) 2015 - 2021 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ INCLUDEPATH += \
     $$PWD/../../../TTKModule/TTKWidget/musicCoreKits \
 
 LIBS += -L$$OUT_PWD/../../../bin/$$TTKMusicPlayer -lTTKCore
-unix:LIBS += -L$$OUT_PWD/../../../bin/$$TTKMusicPlayer -lqmmp -lTTKUi -lTTKExtras -lTTKWatcher -lzlib -lTTKZip
+unix:LIBS += -L$$OUT_PWD/../../../bin/$$TTKMusicPlayer -lTTKqmmp -lTTKUi -lTTKExtras -lTTKWatcher -lzlib -lTTKZip
 
 SOURCES += \
     mainskin.cpp \

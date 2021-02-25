@@ -15,11 +15,11 @@
 MusicTimerAutoObject::MusicTimerAutoObject(QObject *parent)
     : QObject(parent)
 {
-    MusicTimeObject play, stop, shutdown;
+    MusicTimeData play, stop, shutdown;
     play.m_index = 0;
     stop.m_index = 1;
     shutdown.m_index = 2;
-    m_timeObjects << play << stop << shutdown;
+    m_timeDatas << play << stop << shutdown;
 
     connect(&m_timer, SIGNAL(timeout()), SLOT(timeout()));
 }
@@ -33,25 +33,25 @@ void MusicTimerAutoObject::runTimerAutoConfig()
 {
     m_timer.start(MT_S2MS);
 
-    if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlay).toInt() == 0)
+    if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoPlay).toInt() == 0)
     {
-        m_timeObjects[0].m_state = true;
-        m_timeObjects[0].m_hour = M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlayHour).toInt();
-        m_timeObjects[0].m_minute = M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlaySecond).toInt();
+        m_timeDatas[0].m_state = true;
+        m_timeDatas[0].m_hour = G_SETTING_PTR->value(MusicSettingManager::TimerAutoPlayHour).toInt();
+        m_timeDatas[0].m_minute = G_SETTING_PTR->value(MusicSettingManager::TimerAutoPlaySecond).toInt();
     }
 
-    if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoStop).toInt() == 0)
+    if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoStop).toInt() == 0)
     {
-        m_timeObjects[1].m_state = true;
-        m_timeObjects[1].m_hour = M_SETTING_PTR->value(MusicSettingManager::TimerAutoStopHour).toInt();
-        m_timeObjects[1].m_minute = M_SETTING_PTR->value(MusicSettingManager::TimerAutoStopSecond).toInt();
+        m_timeDatas[1].m_state = true;
+        m_timeDatas[1].m_hour = G_SETTING_PTR->value(MusicSettingManager::TimerAutoStopHour).toInt();
+        m_timeDatas[1].m_minute = G_SETTING_PTR->value(MusicSettingManager::TimerAutoStopSecond).toInt();
     }
 
-    if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdown).toInt() == 0)
+    if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdown).toInt() == 0)
     {
-        m_timeObjects[2].m_state = true;
-        m_timeObjects[2].m_hour = M_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownHour).toInt();
-        m_timeObjects[2].m_minute = M_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownSecond).toInt();
+        m_timeDatas[2].m_state = true;
+        m_timeDatas[2].m_hour = G_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownHour).toInt();
+        m_timeDatas[2].m_minute = G_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownSecond).toInt();
     }
 }
 
@@ -67,39 +67,39 @@ void MusicTimerAutoObject::timeout()
     hour = l[0].toInt();
     minute = l[1].toInt();
 
-    for(int i=0; i<m_timeObjects.count(); ++i)
+    for(int i=0; i<m_timeDatas.count(); ++i)
     {
-        MusicTimeObject *pair = &m_timeObjects[i];
+        MusicTimeData *pair = &m_timeDatas[i];
         if(pair->m_state && hour == pair->m_hour && minute == pair->m_minute)
         {
             switch(pair->m_index)
             {
                 case 0:
                     {
-                        if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlayRepeat).toInt() == 0)
+                        if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoPlayRepeat).toInt() == 0)
                         {
                             pair->m_state = false;
-                            M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoPlay, 1);
+                            G_SETTING_PTR->setValue(MusicSettingManager::TimerAutoPlay, 1);
                         }
-                        MusicApplication::instance()->setPlaySongChanged(M_SETTING_PTR->value(MusicSettingManager::TimerAutoPlaySongIndex).toInt());
+                        MusicApplication::instance()->setPlaySongChanged(G_SETTING_PTR->value(MusicSettingManager::TimerAutoPlaySongIndex).toInt());
                         break;
                     }
                 case 1:
                     {
-                        if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoStopRepeat).toInt() == 0)
+                        if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoStopRepeat).toInt() == 0)
                         {
                             pair->m_state = false;
-                            M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoStop, 1);
+                            G_SETTING_PTR->setValue(MusicSettingManager::TimerAutoStop, 1);
                         }
                         MusicApplication::instance()->setStopSongChanged();
                         break;
                     }
                 case 2:
                     {
-                        if(M_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownRepeat).toInt() == 0)
+                        if(G_SETTING_PTR->value(MusicSettingManager::TimerAutoShutdownRepeat).toInt() == 0)
                         {
                             pair->m_state = false;
-                            M_SETTING_PTR->setValue(MusicSettingManager::TimerAutoShutdown, 1);
+                            G_SETTING_PTR->setValue(MusicSettingManager::TimerAutoShutdown, 1);
                         }
                         setShutdown();
                         break;

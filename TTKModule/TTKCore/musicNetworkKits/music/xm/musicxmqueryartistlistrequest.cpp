@@ -6,7 +6,6 @@ MusicXMQueryArtistListRequest::MusicXMQueryArtistListRequest(QObject *parent)
     : MusicQueryArtistListRequest(parent)
 {
     m_pageSize = 100;
-    m_pageTotal = DEFAULT_LEVEL_HIGHER;
     m_queryServer = QUERY_XM_INTERFACE;
 }
 
@@ -18,8 +17,8 @@ void MusicXMQueryArtistListRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
+    deleteAll();
     QString catId = "class=1&type=1";
     const QStringList &dds = m_searchText.split(TTK_STR_SPLITER);
     if(dds.count() == 2)
@@ -30,11 +29,10 @@ void MusicXMQueryArtistListRequest::startToPage(int offset)
             catId = "class=1&type=1";
         }
     }
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(XM_ARTIST_LIST_URL, false).arg(catId).arg(offset).arg(m_pageSize);
-    m_interrupt = true;
+    m_totalSize = DEFAULT_LEVEL_HIGHER;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(XM_ARTIST_LIST_URL, false).arg(catId).arg(offset).arg(m_pageSize));
     request.setRawHeader("Referer", MusicUtils::Algorithm::mdII(REFER_URL, false).toUtf8());
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(XM_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
@@ -53,24 +51,17 @@ void MusicXMQueryArtistListRequest::startToSearch(const QString &artistlist)
 
 void MusicXMQueryArtistListRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+
     Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
-    m_interrupt = false;
+    setNetworkAbort(false);
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
@@ -78,16 +69,15 @@ void MusicXMQueryArtistListRequest::downLoadFinished()
             {
                 value = value["data"].toMap();
                 const QVariantList &datas = value["artists"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(m_interrupt) return;
-
                     if(var.isNull())
                     {
                         continue;
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem info;
                     info.m_id = value["artist_id"].toString();

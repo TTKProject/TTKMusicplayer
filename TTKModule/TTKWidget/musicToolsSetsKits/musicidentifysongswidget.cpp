@@ -257,7 +257,7 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
         m_analysis->setLineMax(11);
         connect(m_mediaPlayer, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
     }
-    const MusicSongIdentify songIdentify(m_detectedThread->getIdentifySongs().first());
+    const MusicSongIdentifyData songIdentify(m_detectedThread->getIdentifySongs().first());
 
     QWidget *widget = new QWidget(m_mainWindow);
     widget->setStyleSheet(MusicUIObject::MQSSColorStyle03 + MusicUIObject::MQSSFontStyle05);
@@ -277,14 +277,14 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
     textLabel->setAlignment(Qt::AlignCenter);
     //
     MusicSemaphoreLoop loop;
-    MusicAbstractQueryRequest *d = M_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
+    MusicAbstractQueryRequest *d = G_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), &loop, SLOT(quit()));
     d->startToSearch(MusicAbstractQueryRequest::MusicQuery, textLabel->text().trimmed());
     loop.exec();
 
     if(!d->isEmpty())
     {
-        foreach(const MusicObject::MusicSongInformation &info, d->getMusicSongInfos())
+        for(const MusicObject::MusicSongInformation &info : d->getMusicSongInfos())
         {
             if(info.m_singerName.toLower().trimmed().contains(songIdentify.m_singerName.toLower().trimmed(), Qt::CaseInsensitive) &&
                info.m_songName.toLower().trimmed().contains(songIdentify.m_songName.toLower().trimmed(), Qt::CaseInsensitive))
@@ -361,7 +361,7 @@ void MusicIdentifySongsWidget::createDetectedSuccessedWidget()
         const QString &name = MusicUtils::String::lrcPrefix() + m_currentSong.m_singerName + " - " + m_currentSong.m_songName + LRC_FILE;
         if(!QFile::exists(name))
         {
-            MusicAbstractDownLoadRequest *d = M_DOWNLOAD_QUERY_PTR->getDownloadLrcRequest(m_currentSong.m_lrcUrl, name, MusicObject::DownloadLrc, this);
+            MusicAbstractDownLoadRequest *d = G_DOWNLOAD_QUERY_PTR->getDownloadLrcRequest(m_currentSong.m_lrcUrl, name, MusicObject::DownloadLrc, this);
             connect(d, SIGNAL(downLoadDataChanged(QString)), &loop, SLOT(quit()));
             d->startToDownload();
             loop.exec();

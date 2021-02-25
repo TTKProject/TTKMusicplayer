@@ -43,7 +43,7 @@ MusicToolSetsWidget::MusicToolSetsWidget(QWidget *parent)
 
 MusicToolSetsWidget::~MusicToolSetsWidget()
 {
-    M_SINGLE_MANAGER_PTR->removeObject(getClassName());
+    G_SINGLE_MANAGER_PTR->removeObject(getClassName());
     clearAllItems();
     delete m_ui;
 }
@@ -76,7 +76,7 @@ void MusicToolSetsWidget::addListWidgetItem()
           << ToolItem(":/tools/lb_detect", tr("detect"))
           << ToolItem(":/tools/lb_screen_saver", tr("saver"));
 
-    foreach(const ToolItem &pair, pairs)
+    for(const ToolItem &pair : qAsConst(pairs))
     {
         QListWidgetItem *item = new QListWidgetItem(QIcon(pair.m_icon), pair.m_name, m_ui->listItemWidget);
 #if TTK_QT_VERSION_CHECK(5,13,0)
@@ -97,7 +97,7 @@ void MusicToolSetsWidget::itemHasClicked(QListWidgetItem *item)
     {
         case 0:
             {
-                M_SINGLE_MANAGER_WIDGET_CLASS(MusicLocalSongsManagerWidget);
+                SINGLE_MANAGER_WIDGET_CLASS(MusicLocalSongsManagerWidget);
                 break;
             }
         case 1:
@@ -121,22 +121,22 @@ void MusicToolSetsWidget::itemHasClicked(QListWidgetItem *item)
             }
         case 4:
             {
-                M_SINGLE_MANAGER_WIDGET_CLASS(MusicSpectrumWidget);
+                SINGLE_MANAGER_WIDGET_CLASS(MusicSpectrumWidget);
                 break;
             }
         case 5:
             {
-                M_SINGLE_MANAGER_WIDGET_CLASS(MusicNetworkConnectionTestWidget);
+                SINGLE_MANAGER_WIDGET_CLASS(MusicNetworkConnectionTestWidget);
                 break;
             }
         case 6:
             {
-                M_SINGLE_MANAGER_WIDGET_CLASS(MusicReplayGainWidget);
+                SINGLE_MANAGER_WIDGET_CLASS(MusicReplayGainWidget);
                 break;
             }
         case 7:
             {
-                M_SINGLE_MANAGER_WIDGET_CLASS(MusicSongDlnaTransferWidget);
+                SINGLE_MANAGER_WIDGET_CLASS(MusicSongDlnaTransferWidget);
                 break;
             }
         case 8:

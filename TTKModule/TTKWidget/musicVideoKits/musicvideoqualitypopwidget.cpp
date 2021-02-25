@@ -12,13 +12,13 @@ MusicVideoQualityPopWidget::MusicVideoQualityPopWidget(QWidget *parent)
     setFixedSize(44, 20);
     setStyleSheet(MusicUIObject::MQSSVideoBtnSDMode);
 
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(getClassName(), MusicVideoSearchTableWidget::getClassName());
+    G_CONNECTION_PTR->setValue(getClassName(), this);
+    G_CONNECTION_PTR->poolConnect(getClassName(), MusicVideoSearchTableWidget::getClassName());
 }
 
 MusicVideoQualityPopWidget::~MusicVideoQualityPopWidget()
 {
-    M_CONNECTION_PTR->removeValue(getClassName());
+    G_CONNECTION_PTR->removeValue(getClassName());
     delete m_actionGroup;
 }
 
@@ -84,11 +84,11 @@ QString MusicVideoQualityPopWidget::findMVUrlByBitrate(int bitrate)
     MusicObject::MusicSongAttributes data;
     Q_EMIT getMusicMediaInfo(data);
 
-    foreach(const MusicObject::MusicSongAttribute &attr, data)
+    for(const MusicObject::MusicSongAttribute &attr : qAsConst(data))
     {
         if(attr.m_bitrate == bitrate)
         {
-            return attr.m_multiPart ? attr.m_url.split(TTK_STR_SPLITER).first() : attr.m_url;
+            return attr.m_url;
         }
     }
     return QString();
@@ -99,9 +99,9 @@ int MusicVideoQualityPopWidget::findMVBitrateByUrl(const QString &url)
     MusicObject::MusicSongAttributes data;
     Q_EMIT getMusicMediaInfo(data);
 
-    foreach(const MusicObject::MusicSongAttribute &attr, data)
+    for(const MusicObject::MusicSongAttribute &attr : qAsConst(data))
     {
-        const QString &aurl = attr.m_multiPart ? attr.m_url.split(TTK_STR_SPLITER).first() : attr.m_url;
+        const QString &aurl = attr.m_url;
         if(aurl == url)
         {
             return attr.m_bitrate;
@@ -115,7 +115,7 @@ bool MusicVideoQualityPopWidget::findExistByBitrate(int bitrate)
     MusicObject::MusicSongAttributes data;
     Q_EMIT getMusicMediaInfo(data);
 
-    foreach(const MusicObject::MusicSongAttribute &attr, data)
+    for(const MusicObject::MusicSongAttribute &attr : qAsConst(data))
     {
         if(attr.m_bitrate == bitrate)
         {

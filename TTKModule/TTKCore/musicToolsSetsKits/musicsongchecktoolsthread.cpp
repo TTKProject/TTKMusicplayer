@@ -1,5 +1,5 @@
 #include "musicsongchecktoolsthread.h"
-#include "musicsongtag.h"
+#include "musicsongmeta.h"
 
 MusicSongCheckToolsRenameThread::MusicSongCheckToolsRenameThread(QObject *parent)
     : MusicAbstractThread(parent)
@@ -22,8 +22,8 @@ void MusicSongCheckToolsRenameThread::run()
         if(m_operateMode == MusicObject::Check)
         {
             m_datas.clear();
-            MusicSongTag tag;
-            foreach(const MusicSong &song, *m_songItems)
+            MusicSongMeta meta;
+            for(const MusicSong &song : qAsConst(*m_songItems))
             {
                 if(!m_running)
                 {
@@ -31,22 +31,22 @@ void MusicSongCheckToolsRenameThread::run()
                     return;
                 }
 
-                if(!tag.read(song.getMusicPath()))
+                if(!meta.read(song.getMusicPath()))
                 {
                     continue;
                 }
 
-                if((!tag.getArtist().isEmpty() && !tag.getTitle().isEmpty()) &&
-                    (tag.getArtist() != song.getMusicArtistFront() ||
-                     tag.getTitle() != song.getMusicArtistBack()))
+                if((!meta.getArtist().isEmpty() && !meta.getTitle().isEmpty()) &&
+                    (meta.getArtist() != song.getMusicArtistFront() ||
+                     meta.getTitle() != song.getMusicArtistBack()))
                 {
-                    m_datas << MusicSongCheckToolsRename(song.getMusicName(), tag.getArtist() + " - " + tag.getTitle(), song.getMusicPath());
+                    m_datas << MusicSongCheckToolsRename(song.getMusicName(), meta.getArtist() + " - " + meta.getTitle(), song.getMusicPath());
                 }
             }
         }
         else
         {
-            foreach(const int index, m_itemIDs)
+            for(const int index : qAsConst(m_itemIDs))
             {
                 if(!m_running)
                 {
@@ -85,8 +85,8 @@ void MusicSongCheckToolsDuplicateThread::run()
         if(m_operateMode == MusicObject::Check)
         {
             m_datas.clear();
-            MusicSongTag tag;
-            foreach(const MusicSong &song, *m_songItems)
+            MusicSongMeta meta;
+            for(const MusicSong &song : qAsConst(*m_songItems))
             {
                 if(!m_run)
                 {
@@ -94,17 +94,17 @@ void MusicSongCheckToolsDuplicateThread::run()
                     return;
                 }
 
-                if(!tag.read(song.getMusicPath()))
+                if(!meta.read(song.getMusicPath()))
                 {
                     continue;
                 }
 
-                m_datas << MusicSongCheckToolsDuplicate(song, tag.getBitrate());
+                m_datas << MusicSongCheckToolsDuplicate(song, meta.getBitrate());
             }
         }
         else
         {
-            foreach(const int index, m_itemIDs)
+            for(const int index : qAsConst(m_itemIDs))
             {
                 if(!m_run)
                 {
@@ -140,8 +140,8 @@ void MusicSongCheckToolsQualityThread::run()
     MusicSongCheckToolsQualitys items;
     if(m_songItems && !m_songItems->isEmpty())
     {
-        MusicSongTag tag;
-        foreach(const MusicSong &song, *m_songItems)
+        MusicSongMeta meta;
+        for(const MusicSong &song : qAsConst(*m_songItems))
         {
             if(!m_running)
             {
@@ -149,12 +149,12 @@ void MusicSongCheckToolsQualityThread::run()
                 return;
             }
 
-            if(!tag.read(song.getMusicPath()))
+            if(!meta.read(song.getMusicPath()))
             {
                 continue;
             }
 
-            items << MusicSongCheckToolsQuality(song, tag.getBitrate());
+            items << MusicSongCheckToolsQuality(song, meta.getBitrate());
         }
     }
     Q_EMIT finished(items);

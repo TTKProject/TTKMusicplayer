@@ -35,7 +35,7 @@ MusicToplistQueryWidget::MusicToplistQueryWidget(QWidget *parent)
 
     m_queryTableWidget = new MusicToplistQueryTableWidget(this);
     m_queryTableWidget->hide();
-    m_downloadRequest = M_DOWNLOAD_QUERY_PTR->getToplistRequest(this);
+    m_downloadRequest = G_DOWNLOAD_QUERY_PTR->getToplistRequest(this);
     m_queryTableWidget->setQueryInput(m_downloadRequest);
 
     connect(m_downloadRequest, SIGNAL(createToplistInfoItem(MusicResultsItem)), SLOT(createToplistInfoItem(MusicResultsItem)));
@@ -67,20 +67,20 @@ void MusicToplistQueryWidget::resizeWindow()
 
     if(!m_resizeWidgets.isEmpty())
     {
-        int width = M_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().width();
+        int width = G_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().width();
             width = width - WINDOW_WIDTH_MIN;
 
-        QLabel *label = m_resizeWidgets[0];
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410 + width));
+        TTKResizeWidget *data = &m_resizeWidgets[0];
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410 + width));
 
-        label = m_resizeWidgets[1];
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410 + width));
+        data = &m_resizeWidgets[1];
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410 + width));
 
-        label = m_resizeWidgets[2];
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410 + width));
+        data = &m_resizeWidgets[2];
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410 + width));
 
-        label = m_resizeWidgets[3];
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410 + width));
+        data = &m_resizeWidgets[3];
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410 + width));
     }
 }
 
@@ -184,28 +184,31 @@ void MusicToplistQueryWidget::createLabels()
     function->setLayout(grid);
     m_mainWindow->layout()->addWidget(function);
 
-    m_resizeWidgets << nameLabel << playCountLabel << updateTimeLabel << descriptionLabel;
+    m_resizeWidgets.push_back({nameLabel, nameLabel->font()});
+    m_resizeWidgets.push_back({playCountLabel, playCountLabel->font()});
+    m_resizeWidgets.push_back({updateTimeLabel, updateTimeLabel->font()});
+    m_resizeWidgets.push_back({descriptionLabel, descriptionLabel->font()});
 }
 
 void MusicToplistQueryWidget::createToplistInfoItem(const MusicResultsItem &item)
 {
     if(!m_resizeWidgets.isEmpty())
     {
-        QLabel *label = m_resizeWidgets[0];
-        label->setToolTip(item.m_name);
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410));
+        TTKResizeWidget *data = &m_resizeWidgets[0];
+        data->m_label->setToolTip(item.m_name);
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410));
 
-        label = m_resizeWidgets[1];
-        label->setToolTip(tr("PlayCount: %1").arg(item.m_playCount));
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410));
+        data = &m_resizeWidgets[1];
+        data->m_label->setToolTip(tr("PlayCount: %1").arg(item.m_playCount));
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410));
 
-        label = m_resizeWidgets[2];
-        label->setToolTip(tr("UpdateTime: %1").arg(item.m_updateTime));
-        label->setText(MusicUtils::Widget::elidedText(label->font(), label->toolTip(), Qt::ElideRight, 410));
+        data = &m_resizeWidgets[2];
+        data->m_label->setToolTip(tr("UpdateTime: %1").arg(item.m_updateTime));
+        data->m_label->setText(MusicUtils::Widget::elidedText(data->m_font, data->m_label->toolTip(), Qt::ElideRight, 410));
 
-        label = m_resizeWidgets[3];
-        label->setToolTip(tr("Description: %1").arg(item.m_description));
-        label->setText(label->toolTip());
+        data = &m_resizeWidgets[3];
+        data->m_label->setToolTip(tr("Description: %1").arg(item.m_description));
+        data->m_label->setText(data->m_label->toolTip());
     }
 
     MusicDownloadSourceRequest *download = new MusicDownloadSourceRequest(this);
@@ -220,11 +223,11 @@ void MusicToplistQueryWidget::categoryChanged(const MusicResultsCategoryItem &ca
 {
     if(m_categoryButton)
     {
-        m_categoryButton->setText(category.m_name);
+        m_categoryButton->setText(category.m_value);
         m_categoryButton->closeMenu();
 
         m_songButton->setText(tr("songItems"));
         m_downloadRequest->setQueryAllRecords(true);
-        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_id);
+        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_key);
     }
 }

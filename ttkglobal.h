@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,24 @@
 #  endif
 #else
 #  define TTK_NO_WINEXTRAS
+#endif
+
+#ifndef qPrintable
+#define qPrintable(s) QString(s).toLocal8Bit().constData()
+#endif
+
+#ifndef qUtf8Printable
+#define qUtf8Printable(s) QString(s).toUtf8().constData()
+#endif
+
+#if !TTK_QT_VERSION_CHECK(5,7,0)
+#define TTK_AS_CONST
+// this adds const to non-const objects (like std::as_const)
+template <typename T>
+Q_DECL_CONSTEXPR typename std::add_const<T>::type &qAsConst(T &t) noexcept { return t; }
+// prevent rvalue arguments:
+template <typename T>
+void qAsConst(const T &&) = delete;
 #endif
 
 //

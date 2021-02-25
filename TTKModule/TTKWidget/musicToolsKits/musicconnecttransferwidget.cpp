@@ -56,13 +56,13 @@ MusicConnectTransferWidget::MusicConnectTransferWidget(QWidget *parent)
 
     QTimer::singleShot(MT_MS, this, SLOT(initColumns()));
 
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(getClassName(), MusicSongsSummariziedWidget::getClassName());
+    G_CONNECTION_PTR->setValue(getClassName(), this);
+    G_CONNECTION_PTR->poolConnect(getClassName(), MusicSongsSummariziedWidget::getClassName());
 }
 
 MusicConnectTransferWidget::~MusicConnectTransferWidget()
 {
-    M_CONNECTION_PTR->removeValue(getClassName());
+    G_CONNECTION_PTR->removeValue(getClassName());
     delete m_buttonGroup;
     delete m_ui;
     delete m_transferThread;
@@ -100,7 +100,7 @@ void MusicConnectTransferWidget::initColumns()
     }
 
     int count = 0;
-    foreach(const MusicSongItem &item, songs)
+    for(const MusicSongItem &item : qAsConst(songs))
     {
         count += item.m_songs.count();
     }
@@ -133,7 +133,7 @@ QStringList MusicConnectTransferWidget::getSelectedFiles()
         return paths;
     }
 
-    foreach(int index, list)
+    for(int index : list)
     {
         if(!m_searchfileListCache.value(0).isEmpty())
         {
@@ -208,7 +208,7 @@ void MusicConnectTransferWidget::musicSearchIndexChanged(int, int index)
     m_searchfileListCache.insert(index, searchResult);
 
     MusicSongs songs;
-    foreach(const int index, searchResult)
+    for(const int index : qAsConst(searchResult))
     {
         songs.append(m_currentSongs[index]);
     }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2009-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -153,11 +153,7 @@ public:
     /*!
      * Returns a list of supported regular expressions for URL.
      */
-#ifdef QMMP_GREATER_NEW
-    static QList<QRegularExpression> regExps();
-#else
-    static QList<QRegExp> regExps();
-#endif
+    static QList<RegularWrapper> regExps();
     /*!
      * Returns InputSourceFactory pointer which supports URL \b url or \b nullptr if \b URL is not supported.
      */

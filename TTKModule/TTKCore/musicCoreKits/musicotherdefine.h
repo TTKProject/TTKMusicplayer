@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,10 @@
  ================================================= */
 
 #include <QObject>
+
+#define MUSIC_CUE_FILE              "cue"
+#define MUSIC_GME_FILE              "gme"
+#define MUSIC_ZIP_FILE              "zip"
 
 #define MUSIC_AUTHOR_NAME           "Greedysky"
 #define MUSIC_DAILY_DIR             "Bing"

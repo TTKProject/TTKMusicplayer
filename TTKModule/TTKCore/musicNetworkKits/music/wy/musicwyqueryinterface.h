@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,12 @@
 #include "musicglobaldefine.h"
 
 ///cookie url
-const QString WY_UA_URL                     = "N1hBb3hrWFVaNnNTejltZUpIeUhieG9xN0FuV0J3QmkzOElteHZYNkQzL1Z2VEIzVDdsMVlURmhUVFlZT3NSU3BSQzVmUDFWNzBIbEwvaHJ4UFg0ODVzUVBXQzZNcjVheWZEcmF2ZitwSm1WUFV1Y1ozZXdCUXBsdXFoZ1ZyTTNURGVHUTZYQmRMQXJDZ2ZrQ3lNTU0rb3UxMkJmQUpxYXdaYVlCdC9kdm84PQ==";
+const QString WY_UA_URL                     = "bVlDb2p4N2ppaEs3b0RUV1dmQ2puZG9oRWNoZ2w5NmhJRG9DTkFLck00RFc4TzhCQnlmcGFwSjZWb3VkeHFXcUdWM3B0RTJnRzlVRlJFL0gxeS9RUU1VUVpMUVpycEVzNy9QUkVhNlc0ZXFpd1BrZzBmRXk5bDV6UXN2dnlNSTFBRDRSTzFvVkJFRVJpMXpMMHhDK0lOY0xzVXUvMFRBUmhGaUg2aWszRmRvPQ==";
 const QString WY_COOKIE_URL                 = "bSs4UEJOUzFwRWpzRVY0WUVJekhzU0Nzc1JZT0pLc2tOdFNaM05DWnRhM3JHT0kzSWpQb1MyNXJkK3A5YmV3YklpM082dDk1amVjejV0NlV5aHYybkF4Zjd3L2NSblJkYmRXOS8xVlJOWnYvMWhweUxsSGhtSGVPYnFQZE10d01sNWswZFNzYnVEOGhBWkpHdHFTUGpJNVROdWM9";
 const QString WY_NUID_URL                   = "b3dKbGtVNzlPOVd2VXFNblZaN1dXYW5WZ2hKNEZkUENjaUpxUDF3c2hvLzFaVnRW";
 const QString WY_NNID_URL                   = "RjF6ZXpKb2cyN1Nyay9FZ2c4L3hXUGtqdXo3WkdOa05FK0ZjNTVNczY2Q3YyNGhrYXlWSUh2TDVlMkxQVXRGY3JYRDFHZz09";
 const QString WY_WYYY_URL                   = "MG6QwDltNsmCgQuuPzMXdhc%2BpK3ejnT6BsTGsFA2Bqvs81skRhS2DG%5C9%5CRuSFwqmRipr%5CDktV9RlfnkNUb6AyE75tC4FXGv4iNlDB7EJZSMVFxjkkswdhD6vFxM2X%2Bndj4Humuwwgm4h8WVM%2Bc%2FNWiIwIR2H73AxY5jz7t3a8mKAQUK5%3A1538748695685";
+const QString WY_NMTID_URL                  = "V0Zsb2tGREU1R0thR29GYjRYdk5jbm5NZjEvN1d6WWNiQlZqb2k4eE1nTm9lTHlBRktkQTBOaXNjQ3ZHU0ZMSw==";
 ///base url
 const QString WY_BASE_URL                   = "MVNVTXo4bW9WdHhXR1dXeTZmU3k5dmFOcGlua1VOMlE=";
 const QString WY_ENCRYPT_STRING             = "3go8&$8*3*3h0k(2)2";

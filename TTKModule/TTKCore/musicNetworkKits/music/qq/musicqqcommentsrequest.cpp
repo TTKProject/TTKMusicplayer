@@ -11,6 +11,7 @@ MusicQQSongCommentsRequest::MusicQQSongCommentsRequest(QObject *parent)
 void MusicQQSongCommentsRequest::startToSearch(const QString &name)
 {
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(name));
+
     MusicSemaphoreLoop loop;
     MusicQQQueryRequest *d = new MusicQQQueryRequest(this);
     d->setQueryAllRecords(false);
@@ -35,14 +36,12 @@ void MusicQQSongCommentsRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
-    const QUrl &musicUrl = QString(MusicUtils::Algorithm::mdII(QQ_COMMENT_URL, false));
-    m_pageTotal = 0;
-    m_interrupt = true;
+    deleteAll();
+    m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_COMMENT_URL, false));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -53,41 +52,34 @@ void MusicQQSongCommentsRequest::startToPage(int offset)
 
 void MusicQQSongCommentsRequest::downLoadFinished()
 {
-    if(!m_reply)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    m_interrupt = false;
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    setNetworkAbort(false);
+
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value["code"].toInt() == 0)
             {
-                m_pageTotal = value["commenttotal"].toInt();
+                m_totalSize = value["commenttotal"].toInt();
 
-                const QVariantList &comments = value["comment"].toList();
-                foreach(const QVariant &comm, comments)
+                const QVariantList &datas = value["comment"].toList();
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(comm.isNull())
+                    if(var.isNull())
                     {
                         continue;
                     }
 
-                    if(m_interrupt) return;
+                    value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem comment;
-                    value = comm.toMap();
                     comment.m_playCount = QString::number(value["praisenum"].toInt());
                     comment.m_updateTime = QString::number(value["time"].toLongLong() * 1000);
                     comment.m_description = value["rootcommentcontent"].toString();
@@ -128,14 +120,12 @@ void MusicQQPlaylistCommentsRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
-    const QUrl &musicUrl = QString(MusicUtils::Algorithm::mdII(QQ_COMMENT_URL, false));
-    m_pageTotal = 0;
-    m_interrupt = true;
+    deleteAll();
+    m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_COMMENT_URL, false));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -146,41 +136,34 @@ void MusicQQPlaylistCommentsRequest::startToPage(int offset)
 
 void MusicQQPlaylistCommentsRequest::downLoadFinished()
 {
-    if(!m_reply)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    m_interrupt = false;
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    setNetworkAbort(false);
+
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value["code"].toInt() == 0)
             {
-                m_pageTotal = value["commenttotal"].toInt();
+                m_totalSize = value["commenttotal"].toInt();
 
-                const QVariantList &comments = value["comment"].toList();
-                foreach(const QVariant &comm, comments)
+                const QVariantList &datas = value["comment"].toList();
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(comm.isNull())
+                    if(var.isNull())
                     {
                         continue;
                     }
 
-                    if(m_interrupt) return;
+                    value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem comment;
-                    value = comm.toMap();
                     comment.m_playCount = QString::number(value["praisenum"].toInt());
                     comment.m_updateTime = QString::number(value["time"].toLongLong() * 1000);
                     comment.m_description = value["rootcommentcontent"].toString();

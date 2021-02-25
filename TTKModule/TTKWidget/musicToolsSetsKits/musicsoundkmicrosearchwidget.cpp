@@ -33,7 +33,7 @@ MusicSoundKMicroSearchTableWidget::~MusicSoundKMicroSearchTableWidget()
 
 void MusicSoundKMicroSearchTableWidget::startSearchQuery(const QString &text)
 {
-    if(!M_NETWORK_PTR->isOnline())   //no network connection
+    if(!G_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
         Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
@@ -169,7 +169,7 @@ void MusicSoundKMicroSearchTableWidget::dataDownloadPlay(int row)
     }
 
     const MusicObject::MusicSongInformations musicSongInfos(m_downLoadManager->getMusicSongInfos());
-    foreach(const MusicObject::MusicSongAttribute &attr, musicSongInfos[row].m_songAttrs)
+    for(const MusicObject::MusicSongAttribute &attr : qAsConst(musicSongInfos[row].m_songAttrs))
     {
         Q_EMIT mediaUrlChanged(m_queryMovieMode, attr.m_url, m_queryMovieMode ? QString() : musicSongInfos[row].m_lrcUrl);
     }

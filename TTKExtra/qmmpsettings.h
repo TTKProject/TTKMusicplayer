@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2010-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -111,7 +111,7 @@ public:
      * If \b include is \b true, this function returns include cover file name filters,
      * otherwise returns exclude filters.
      */
-    QStringList coverNameFilters(bool include = true) const;
+    const QStringList &coverNameFilters(bool include = true) const;
     /*!
      * Returns a depth of recursive cover file search.
      */

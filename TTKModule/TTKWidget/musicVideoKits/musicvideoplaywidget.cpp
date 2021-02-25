@@ -138,7 +138,7 @@ void MusicVideoPlayWidget::popup(bool popup)
 
     if(popup)
     {
-        const QSize &size = M_SETTING_PTR->value(MusicSettingManager::ScreenSize).toSize();
+        const QSize &size = G_SETTING_PTR->value(MusicSettingManager::ScreenSize).toSize();
         setGeometry((size.width() - WINDOW_WIDTH) / 2, (size.height() - WINDOW_HEIGHT) / 2, WINDOW_WIDTH, WINDOW_HEIGHT);
         resizeWindow(0, 0);
         setParent(nullptr);
@@ -157,8 +157,8 @@ bool MusicVideoPlayWidget::isPopup() const
 
 void MusicVideoPlayWidget::resizeWindow()
 {
-    const int width = M_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().width();
-    const int height = M_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().height();
+    const int width = G_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().width();
+    const int height = G_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().height();
 
     if(!isFullScreen())
     {
@@ -255,10 +255,9 @@ void MusicVideoPlayWidget::videoResearchButtonSearched(const QVariant &data)
     if(!attrs.isEmpty())
     {
         const MusicObject::MusicSongAttribute &attr = attrs.first();
-        const QString &url = attr.m_multiPart ? attr.m_url.split(TTK_STR_SPLITER).first() : attr.m_url;
         MusicVideoItem data;
         data.m_name = info.m_singerName + " - " + info.m_songName;
-        data.m_url = url;
+        data.m_url = attr.m_url;
         data.m_id = info.m_songId;
         data.m_server = MUSIC_MOVIE_RADIO;
         mediaUrlNameChanged(data);

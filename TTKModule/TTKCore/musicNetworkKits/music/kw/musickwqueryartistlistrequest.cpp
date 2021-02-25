@@ -15,8 +15,8 @@ void MusicKWQueryArtistListRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
+    deleteAll();
     QString catId = "0", initial;
     const QStringList &dds = m_searchText.split(TTK_STR_SPLITER);
     if(dds.count() == 2)
@@ -33,12 +33,10 @@ void MusicKWQueryArtistListRequest::startToPage(int offset)
             initial = QString("&prefix=%1").arg(TTKStatic_cast(char, mIdx + 65));
         }
     }
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KW_ARTIST_LIST_URL, false).arg(catId).arg(offset).arg(m_pageSize) + initial;
-    m_pageTotal = 0;
-    m_interrupt = true;
+    m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KW_ARTIST_LIST_URL, false).arg(catId).arg(offset).arg(m_pageSize) + initial);
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KW_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -55,41 +53,33 @@ void MusicKWQueryArtistListRequest::startToSearch(const QString &artistlist)
 
 void MusicKWQueryArtistListRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+
     Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
-    m_interrupt = false;
+    setNetworkAbort(false);
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll().replace("'", "\"");
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll().replace("'", "\""), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             if(value.contains("artistlist"))
             {
-                m_pageTotal = value["total"].toLongLong();
+                m_totalSize = value["total"].toLongLong();
                 const QVariantList &datas = value["artistlist"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(m_interrupt) return;
-
                     if(var.isNull())
                     {
                         continue;
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     MusicResultsItem info;
                     info.m_id = value["id"].toString();

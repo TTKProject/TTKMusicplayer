@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -113,9 +113,14 @@ protected:
     MusicResultsItem m_currentPlaylistItem;
     MusicItemQueryTableWidget *m_queryTableWidget;
     MusicAbstractQueryRequest *m_downloadRequest;
-    QList<QLabel*> m_resizeWidgets;
     MusicSongSharingWidget::Type m_shareType;
 
+    struct TTKResizeWidget
+    {
+        QLabel *m_label;
+        QFont m_font;
+    };
+    QList<TTKResizeWidget> m_resizeWidgets;
 };
 
 #endif // MusicAbstractItemQueryWidget_H

@@ -94,7 +94,7 @@ MusicWebDJRadioQueryWidget::MusicWebDJRadioQueryWidget(QWidget *parent)
     layout()->addWidget(m_container);
     m_container->addWidget(m_mainWindow);
 
-    m_firstInit = false;
+    m_initialized = false;
     m_infoWidget = nullptr;
     m_gridLayout = nullptr;
     m_pagingWidgetObject = nullptr;
@@ -135,20 +135,20 @@ void MusicWebDJRadioQueryWidget::resizeWindow()
     {
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->removeWidget(m_resizeWidgets[i]);
+            m_gridLayout->removeWidget(m_resizeWidgets[i].m_label);
         }
 
         const int lineNumber = width() / LINE_SPACING_SIZE;
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->addWidget(m_resizeWidgets[i], i/lineNumber, i%lineNumber, Qt::AlignCenter);
+            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i/lineNumber, i%lineNumber, Qt::AlignCenter);
         }
     }
 }
 
 void MusicWebDJRadioQueryWidget::createProgramItem(const MusicResultsItem &item)
 {
-    if(!m_firstInit)
+    if(!m_initialized)
     {
         delete m_statusLabel;
         m_statusLabel = nullptr;
@@ -162,7 +162,7 @@ void MusicWebDJRadioQueryWidget::createProgramItem(const MusicResultsItem &item)
         scrollArea->setWidget(m_mainWindow);
         m_container->addWidget(scrollArea);
 
-        m_firstInit = true;
+        m_initialized = true;
         QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
@@ -194,15 +194,15 @@ void MusicWebDJRadioQueryWidget::createProgramItem(const MusicResultsItem &item)
         m_pagingWidgetObject = new MusicPagingWidgetObject(m_mainWindow);
         connect(m_pagingWidgetObject, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, total));
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, pageTotal));
         mainlayout->addStretch(1);
     }
 
     if(m_pagingWidgetObject)
     {
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        m_pagingWidgetObject->reset(total);
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        m_pagingWidgetObject->reset(pageTotal);
     }
 
     MusicWebDJRadioQueryItemWidget *label = new MusicWebDJRadioQueryItemWidget(this);
@@ -211,7 +211,8 @@ void MusicWebDJRadioQueryWidget::createProgramItem(const MusicResultsItem &item)
 
     int lineNumber = width() / LINE_SPACING_SIZE;
     m_gridLayout->addWidget(label, m_resizeWidgets.count() / lineNumber, m_resizeWidgets.count() % lineNumber, Qt::AlignCenter);
-    m_resizeWidgets << label;
+
+    m_resizeWidgets.push_back({label, label->font()});
 }
 
 void MusicWebDJRadioQueryWidget::currentRadioClicked(const MusicResultsItem &item)
@@ -227,7 +228,7 @@ void MusicWebDJRadioQueryWidget::currentRadioClicked(const MusicResultsItem &ite
 
 void MusicWebDJRadioQueryWidget::backToMainMenuClicked()
 {
-    if(!m_firstInit)
+    if(!m_initialized)
     {
         Q_EMIT backToMainMenu();
         return;
@@ -239,12 +240,12 @@ void MusicWebDJRadioQueryWidget::buttonClicked(int index)
 {
     while(!m_resizeWidgets.isEmpty())
     {
-        QWidget *w = m_resizeWidgets.takeLast();
+        QWidget *w = m_resizeWidgets.takeLast().m_label;
         m_gridLayout->removeWidget(w);
         delete w;
     }
 
-    const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-    m_pagingWidgetObject->paging(index, total);
+    const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+    m_pagingWidgetObject->paging(index, pageTotal);
     m_downloadRequest->startToPage(m_pagingWidgetObject->currentIndex() - 1);
 }

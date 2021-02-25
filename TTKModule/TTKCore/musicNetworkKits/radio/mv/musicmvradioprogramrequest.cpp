@@ -12,15 +12,9 @@ MusicMVRadioProgramRequest::MusicMVRadioProgramRequest(QObject *parent)
 
 void MusicMVRadioProgramRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
+    setNetworkAbort(false);
 
-    m_interrupt = false;
-
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
         QByteArray bytes = m_reply->readAll();
         bytes = QString(bytes).split("var mvfmdata = ").back().split("$img = ").front().toUtf8();
@@ -32,29 +26,29 @@ void MusicMVRadioProgramRequest::downLoadFinished()
         if(ok)
         {
             bool contains = false;
-            foreach(const QVariant &var, data.toList())
+            for(const QVariant &var : data.toList())
             {
-                if(m_interrupt) return;
-
                 if(var.isNull())
                 {
                     continue;
                 }
 
                 QVariantMap value = var.toMap();
+                TTK_NETWORK_QUERY_CHECK();
+
                 MusicResultsItem item;
                 item.m_nickName = value["className"].toString();
 
-                foreach(const QVariant &var, value["fm_list"].toList())
+                for(const QVariant &var : value["fm_list"].toList())
                 {
-                    if(m_interrupt) return;
-
                     if(var.isNull())
                     {
                         continue;
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
+
                     if(!contains && value["fmId"].toString() == m_searchText)
                     {
                         contains = true;
@@ -64,16 +58,16 @@ void MusicMVRadioProgramRequest::downLoadFinished()
 
                         Q_EMIT createCategoryItem(item);
 
-                        foreach(const QVariant &var, value["mvs"].toList())
+                        for(const QVariant &var : value["mvs"].toList())
                         {
-                            if(m_interrupt) return;
-
                             if(var.isNull())
                             {
                                 continue;
                             }
 
                             value = var.toMap();
+                            TTK_NETWORK_QUERY_CHECK();
+
                             MusicObject::MusicSongInformation musicInfo;
                             musicInfo.m_singerName = MusicUtils::String::illegalCharactersReplaced(value["name"].toString());
                             musicInfo.m_songName = MusicUtils::String::illegalCharactersReplaced(value["name"].toString());
@@ -89,15 +83,15 @@ void MusicMVRadioProgramRequest::downLoadFinished()
                             musicInfo.m_timeLength = MusicTime::msecTime2LabelJustified(value["time"].toInt());
 
                             musicInfo.m_songId = value["mvhash"].toString();
-                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                            TTK_NETWORK_QUERY_CHECK();
                             readFromMusicMVAttribute(&musicInfo);
-                            if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                            TTK_NETWORK_QUERY_CHECK();
 
                             if(musicInfo.m_songAttrs.isEmpty())
                             {
                                 continue;
                             }
-
+                            //
                             MusicSearchedItem item;
                             item.m_songName = musicInfo.m_songName;
                             item.m_singerName = musicInfo.m_singerName;
@@ -125,10 +119,9 @@ void MusicMVRadioProgramRequest::readFromMusicMVAttribute(MusicObject::MusicSong
     }
 
     const QByteArray &encodedData = MusicUtils::Algorithm::md5(QString("%1kugoumvcloud").arg(info->m_songId).toUtf8()).toHex().toLower();
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_MOVIE_INFO_URL, false).arg(QString(encodedData)).arg(info->m_songId);
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KG_MOVIE_INFO_URL, false).arg(QString(encodedData)).arg(info->m_songId));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 

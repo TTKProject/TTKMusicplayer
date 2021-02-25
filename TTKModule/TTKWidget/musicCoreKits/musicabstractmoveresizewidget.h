@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 /*! @brief The class of the moving resize struct.
  * @author Greedysky <greedysky@163.com>
  */
-struct MUSIC_WIDGET_EXPORT MoveResizeStruct
+struct MUSIC_WIDGET_EXPORT MoveResizeData
 {
     bool m_mouseLeftPress;
     bool m_isPressBorder;
@@ -84,7 +84,7 @@ protected:
      */
     QObjectList foreachWidget(QObject *object);
 
-    MoveResizeStruct m_struct;
+    MoveResizeData m_struct;
     Direction m_direction;
 
 };

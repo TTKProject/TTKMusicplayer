@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ public Q_SLOTS:
 
 protected:
     QPushButton *m_more, *m_update, *m_search;
-    QPushButton *m_wallp, *m_photo;
+    QPushButton *m_wallpaper, *m_photo;
     MusicLrcFloatPhotoWidget *m_floatPhotoWidget;
     MusicLrcFloatSettingWidget *m_floatSettingWidget;
 

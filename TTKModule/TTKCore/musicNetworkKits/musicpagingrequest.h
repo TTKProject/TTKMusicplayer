@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,16 +50,16 @@ public:
      */
     inline int getPageSize() const { return m_pageSize; }
     /*!
-     * Return the page total number.
+     * Return the total number.
      */
-    inline int getPageTotal() const { return m_pageTotal; }
+    inline int getTotalSize() const { return m_totalSize; }
     /*!
      * Return the page index number.
      */
     inline int getPageIndex() const { return m_pageIndex; }
 
 protected:
-    int m_pageSize, m_pageTotal, m_pageIndex;
+    int m_pageSize, m_totalSize, m_pageIndex;
 
 };
 

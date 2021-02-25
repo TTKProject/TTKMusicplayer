@@ -48,7 +48,7 @@ void MusicUtils::QMMP::updateMidConfigFile()
 
 void MusicUtils::QMMP::enabledVisualPlugin(const QString &name, bool enable)
 {
-    foreach(VisualFactory *v, Visual::factories())
+    for(VisualFactory *v : Visual::factories())
     {
         if(v->properties().shortName == name)
         {
@@ -60,7 +60,7 @@ void MusicUtils::QMMP::enabledVisualPlugin(const QString &name, bool enable)
 
 void MusicUtils::QMMP::enabledEffectPlugin(const QString &name, bool enable)
 {
-    foreach(EffectFactory *factory, Effect::factories())
+    for(EffectFactory *factory : Effect::factories())
     {
         if(factory->properties().shortName == name)
         {
@@ -72,7 +72,7 @@ void MusicUtils::QMMP::enabledEffectPlugin(const QString &name, bool enable)
 
 bool MusicUtils::QMMP::effectHasSetting(const QString &name)
 {
-    foreach(EffectFactory *factory, Effect::factories())
+    for(EffectFactory *factory : Effect::factories())
     {
         if(factory->properties().shortName == name)
         {
@@ -85,7 +85,7 @@ bool MusicUtils::QMMP::effectHasSetting(const QString &name)
 
 void MusicUtils::QMMP::showEffectSetting(const QString &name, QWidget *parent)
 {
-    foreach(EffectFactory *factory, Effect::factories())
+    for(EffectFactory *factory : Effect::factories())
     {
         if(factory->properties().shortName == name)
         {
@@ -100,7 +100,7 @@ void MusicUtils::QMMP::updateRippleSpectrumConfigFile()
     QSettings settings(Qmmp::configFile(), QSettings::IniFormat);
     settings.beginGroup("OuterBlurWave");
 
-    QString colors = M_SETTING_PTR->value(MusicSettingManager::RippleSpectrumColor).toString();
+    QString colors = G_SETTING_PTR->value(MusicSettingManager::RippleSpectrumColor).toString();
     settings.setValue("colors", colors.remove(";"));
     const double opacity = 1.0;
     settings.setValue("opacity", opacity);

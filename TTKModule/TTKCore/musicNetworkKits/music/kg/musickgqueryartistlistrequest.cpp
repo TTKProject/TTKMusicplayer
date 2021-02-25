@@ -4,7 +4,6 @@ MusicKGQueryArtistListRequest::MusicKGQueryArtistListRequest(QObject *parent)
     : MusicQueryArtistListRequest(parent)
 {
     m_pageSize = DEFAULT_LEVEL_HIGHER;
-    m_pageTotal = DEFAULT_LEVEL_HIGHER;
     m_queryServer = QUERY_KG_INTERFACE;
 }
 
@@ -16,8 +15,8 @@ void MusicKGQueryArtistListRequest::startToPage(int offset)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToPage %2").arg(getClassName()).arg(offset));
-    deleteAll();
 
+    deleteAll();
     QString catId = "type=1&sextype=1";
     m_rawData["initial"] = "%E7%83%AD%E9%97%A8";
     const QStringList &dds = m_searchText.split(TTK_STR_SPLITER);
@@ -39,11 +38,10 @@ void MusicKGQueryArtistListRequest::startToPage(int offset)
             m_rawData["initial"] = "%E5%85%B6%E4%BB%96";
         }
     }
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KG_ARTIST_LIST_URL, false).arg(catId);
-    m_interrupt = true;
+    m_totalSize = DEFAULT_LEVEL_HIGHER;
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KG_ARTIST_LIST_URL, false).arg(catId));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -61,24 +59,17 @@ void MusicKGQueryArtistListRequest::startToSearch(const QString &artistlist)
 
 void MusicKGQueryArtistListRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+
     Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
-    m_interrupt = false;
+    setNetworkAbort(false);
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
@@ -86,29 +77,27 @@ void MusicKGQueryArtistListRequest::downLoadFinished()
             {
                 value = value["data"].toMap();
                 const QVariantList &datas = value["info"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(m_interrupt) return;
-
                     if(var.isNull())
                     {
                         continue;
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
 
                     if(m_rawData["initial"].toString() == QUrl(value["title"].toString()).toEncoded())
                     {
-                        foreach(const QVariant &sg, value["singer"].toList())
+                        for(const QVariant &sg : value["singer"].toList())
                         {
-                            if(m_interrupt) return;
-
                             if(sg.isNull())
                             {
                                 continue;
                             }
 
                             value = sg.toMap();
+                            TTK_NETWORK_QUERY_CHECK();
 
                             MusicResultsItem info;
                             info.m_id = QString::number(value["singerid"].toLongLong());

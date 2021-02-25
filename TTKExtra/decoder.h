@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2014-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2014-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,6 +28,7 @@
 #include "qmmp.h"
 #include "audioparameters.h"
 #include "channelmap.h"
+#include "regularwrapper.h"
 
 class QmmpPluginCache;
 class DecoderFactory;
@@ -90,11 +91,11 @@ public:
     /*!
      * Returns detected audio parameters.
      */
-    AudioParameters audioParameters() const;
+    const AudioParameters &audioParameters() const;
     /*!
      * Returns ReplayGain information.
      */
-    QMap<Qmmp::ReplayGainKey, double> replayGainInfo() const;
+    const QMap<Qmmp::ReplayGainKey, double> &replayGainInfo() const;
     /*!
      * Sets ReplayGain information. Use this function before playback.
      * @param rg ReplayGain information

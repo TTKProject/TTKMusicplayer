@@ -45,12 +45,12 @@ MusicArtistListQueryWidget::MusicArtistListQueryWidget(QWidget *parent)
     layout()->addWidget(m_container);
     m_container->addWidget(m_mainWindow);
 
-    m_firstInit = false;
+    m_initialized = false;
     m_categoryChanged = false;
     m_gridLayout = nullptr;
     m_categoryButton = nullptr;
     m_pagingWidgetObject = nullptr;
-    m_downloadRequest = M_DOWNLOAD_QUERY_PTR->getArtistListRequest(this);
+    m_downloadRequest = G_DOWNLOAD_QUERY_PTR->getArtistListRequest(this);
     connect(m_downloadRequest, SIGNAL(createArtistListItem(MusicResultsItem)), SLOT(createArtistListItem(MusicResultsItem)));
 }
 
@@ -79,20 +79,20 @@ void MusicArtistListQueryWidget::resizeWindow()
     {
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->removeWidget(m_resizeWidgets[i]);
+            m_gridLayout->removeWidget(m_resizeWidgets[i].m_label);
         }
 
         const int lineNumber = width() / LINE_SPACING_SIZE;
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->addWidget(m_resizeWidgets[i], i/lineNumber, i%lineNumber, Qt::AlignCenter);
+            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i/lineNumber, i%lineNumber, Qt::AlignCenter);
         }
     }
 }
 
 void MusicArtistListQueryWidget::createArtistListItem(const MusicResultsItem &item)
 {
-    if(!m_firstInit)
+    if(!m_initialized)
     {
         delete m_statusLabel;
         m_statusLabel = nullptr;
@@ -106,7 +106,7 @@ void MusicArtistListQueryWidget::createArtistListItem(const MusicResultsItem &it
         scrollArea->setWidget(m_mainWindow);
         m_container->addWidget(scrollArea);
 
-        m_firstInit = true;
+        m_initialized = true;
         QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QVBoxLayout *containTopLayout  = new QVBoxLayout(containTopWidget);
@@ -161,16 +161,16 @@ void MusicArtistListQueryWidget::createArtistListItem(const MusicResultsItem &it
         m_pagingWidgetObject = new MusicPagingWidgetObject(m_mainWindow);
         connect(m_pagingWidgetObject, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, total));
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, pageTotal));
         mainlayout->addStretch(1);
     }
 
     if(m_categoryChanged && m_pagingWidgetObject)
     {
         m_categoryChanged = false;
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        m_pagingWidgetObject->reset(total);
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        m_pagingWidgetObject->reset(pageTotal);
     }
 
     MusicArtistListQueryItemWidget *label = new MusicArtistListQueryItemWidget(this);
@@ -179,7 +179,8 @@ void MusicArtistListQueryWidget::createArtistListItem(const MusicResultsItem &it
 
     const int lineNumber = width() / LINE_SPACING_SIZE;
     m_gridLayout->addWidget(label, m_resizeWidgets.count() / lineNumber, m_resizeWidgets.count() % lineNumber, Qt::AlignCenter);
-    m_resizeWidgets << label;
+
+    m_resizeWidgets.push_back({label, label->font()});
 }
 
 void MusicArtistListQueryWidget::currentArtistListClicked(const MusicResultsItem &item)
@@ -191,10 +192,10 @@ void MusicArtistListQueryWidget::categoryChanged(const MusicResultsCategoryItem 
 {
     if(m_categoryButton)
     {
-        m_categoryId = category.m_id;
+        m_categoryId = category.m_key;
         m_songNameFull.clear();
 
-        m_categoryButton->setText(category.m_name);
+        m_categoryButton->setText(category.m_value);
         m_categoryButton->closeMenu();
 
         numberButtonClicked(-1);
@@ -205,13 +206,13 @@ void MusicArtistListQueryWidget::buttonClicked(int index)
 {
     while(!m_resizeWidgets.isEmpty())
     {
-        QWidget *w = m_resizeWidgets.takeLast();
+        QWidget *w = m_resizeWidgets.takeLast().m_label;
         m_gridLayout->removeWidget(w);
         delete w;
     }
 
-    const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-    m_pagingWidgetObject->paging(index, total);
+    const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+    m_pagingWidgetObject->paging(index, pageTotal);
     m_downloadRequest->startToPage(m_pagingWidgetObject->currentIndex() - 1);
 }
 
@@ -219,7 +220,7 @@ void MusicArtistListQueryWidget::numberButtonClicked(int index)
 {
     while(!m_resizeWidgets.isEmpty())
     {
-        QWidget *w = m_resizeWidgets.takeLast();
+        QWidget *w = m_resizeWidgets.takeLast().m_label;
         m_gridLayout->removeWidget(w);
         delete w;
     }

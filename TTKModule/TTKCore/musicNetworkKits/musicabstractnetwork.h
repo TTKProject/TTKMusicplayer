@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,6 @@
 #include "musicalgorithmutils.h"
 #///QJson import
 #include "qjson/parser.h"
-
-#define TTK_HTTPM   "http:"
-#define TTK_HTTP    "http://"
-#define TTK_HTTPS   "https://"
 
 /*! @brief The class of abstract downloading data.
  * @author Greedysky <greedysky@163.com>
@@ -120,6 +116,13 @@ protected:
     QNetworkAccessManager *m_manager;
 
 };
+
+#define TTK_HTTPM   "http:"
+#define TTK_HTTP    "http://"
+#define TTK_HTTPS   "https://"
+
+#define TTK_NETWORK_QUERY_CHECK(VALUE)   if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return VALUE
+#define TTK_NETWORK_MANAGER_CHECK(VALUE) if(!m_manager || m_stateCode != MusicObject::NetworkQuery) return VALUE
 
 namespace MusicObject
 {

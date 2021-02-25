@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -317,13 +317,13 @@ protected:
      */
     void setMusicPlayIndex();
     /*!
-     * Read XML config from text.
+     * Read system config from file.
      */
-    void readXMLConfigFromText();
+    void readSystemConfigFromFile();
     /*!
-     * Write XML config to text.
+     * Write system config to file.
      */
-    void writeXMLConfigToText();
+    void writeSystemConfigToFile();
 
 private:
     Ui::MusicApplication *m_ui;

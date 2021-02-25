@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public Q_SLOTS:
     /*!
      * Table widget item cell enter.
      */
-    virtual void itemCellEntered(int row, int column);
+    virtual void itemCellEntered(int row, int column) override;
     /*!
      * Table widget item cell click.
      */

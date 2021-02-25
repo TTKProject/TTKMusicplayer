@@ -95,13 +95,13 @@ MusicLrcLocalLinkWidget::MusicLrcLocalLinkWidget(QWidget *parent)
     connect(m_ui->deleteButton, SIGNAL(clicked()), SLOT(deleteFoundLrc()));
     connect(m_ui->commitButton, SIGNAL(clicked()), SLOT(confirmButtonClicked()));
 
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(getClassName(), MusicDownloadStatusObject::getClassName());
+    G_CONNECTION_PTR->setValue(getClassName(), this);
+    G_CONNECTION_PTR->poolConnect(getClassName(), MusicDownloadStatusObject::getClassName());
 }
 
 MusicLrcLocalLinkWidget::~MusicLrcLocalLinkWidget()
 {
-    M_CONNECTION_PTR->removeValue(getClassName());
+    G_CONNECTION_PTR->removeValue(getClassName());
     delete m_ui;
 }
 
@@ -124,7 +124,7 @@ void MusicLrcLocalLinkWidget::searchInLocalMLrc()
     const QStringList &list = QDir(MusicUtils::String::lrcPrefix()).entryList(QDir::Files |  QDir::Hidden | QDir::NoSymLinks | QDir::NoDotAndDotDot);
 
     MusicLocalDataItems items;
-    foreach(const QString &var, list)
+    for(const QString &var : list)
     {
         if(var.contains(title, m_ui->fuzzyButton->isChecked() ? Qt::CaseInsensitive : Qt::CaseSensitive))
         {
@@ -189,7 +189,7 @@ void MusicLrcLocalLinkWidget::confirmButtonClicked()
         return;
     }
 
-    const QByteArray dataIn(fileIn.readAll());
+    const QByteArray data(fileIn.readAll());
     fileIn.close();
 
     QFile fileOut(QString("%1%2%3").arg(MusicUtils::String::lrcPrefix()).arg(m_currentName).arg(LRC_FILE));
@@ -201,7 +201,7 @@ void MusicLrcLocalLinkWidget::confirmButtonClicked()
         return;
     }
 
-    fileOut.write(dataIn);
+    fileOut.write(data);
     fileOut.flush();
     fileOut.close();
 

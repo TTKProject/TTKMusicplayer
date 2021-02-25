@@ -98,7 +98,7 @@ QPixmap MusicBackgroundSkinDialog::setBackgroundUrl(QString &name)
 {
     QString path = USER_THEME_DIR_FULL + name + TTS_FILE;
     MusicBackgroundSkinDialog::themeValidCheck(name, path);
-    M_BACKGROUND_PTR->setBackgroundUrl(path);
+    G_BACKGROUND_PTR->setBackgroundUrl(path);
 
     MusicBackgroundImage image;
     return MusicExtractWrap::outputSkin(&image, path) ? image.m_pix : QPixmap();
@@ -145,7 +145,7 @@ void MusicBackgroundSkinDialog::setCurrentBackgroundTheme(const QString &theme, 
     m_ui->listTransparentButton->setValue(list);
     setListTransToolText(list);
 
-    const bool state = M_SETTING_PTR->value(MusicSettingManager::BackgroundTransparentEnable).toBool();
+    const bool state = G_SETTING_PTR->value(MusicSettingManager::BackgroundTransparentEnable).toBool();
     m_ui->skinTransparentButton->setValue(state ? skin : 0);
     m_ui->skinTransparentButton->setEnabled(state);
     setSkinTransToolText(state ? skin : 0);
@@ -278,14 +278,14 @@ void MusicBackgroundSkinDialog::currentColorChanged(const QString &path)
     {
         MusicTopAreaWidget::instance()->musicBackgroundSkinCustumChanged(QFileInfo(path).baseName());
     }
-    M_BACKGROUND_PTR->setBackgroundUrl(path);
-    Q_EMIT M_BACKGROUND_PTR->backgroundHasChanged();
+    G_BACKGROUND_PTR->setBackgroundUrl(path);
+    Q_EMIT G_BACKGROUND_PTR->backgroundHasChanged();
 }
 
 void MusicBackgroundSkinDialog::windowTransparentChanged(bool state)
 {
     m_ui->skinTransparentButton->setEnabled(state);
-    M_SETTING_PTR->setValue(MusicSettingManager::BackgroundTransparentEnable, state);
+    G_SETTING_PTR->setValue(MusicSettingManager::BackgroundTransparentEnable, state);
     if(!state)
     {
         m_ui->skinTransparentButton->setValue(0);
@@ -309,8 +309,8 @@ void MusicBackgroundSkinDialog::listWidgetItemClicked(MusicBackgroundListWidget 
     QString s(name);
     QString path = USER_THEME_DIR_FULL + s + TTS_FILE;
     MusicBackgroundSkinDialog::themeValidCheck(s, path);
-    M_BACKGROUND_PTR->setBackgroundUrl(path);
-    Q_EMIT M_BACKGROUND_PTR->backgroundHasChanged();
+    G_BACKGROUND_PTR->setBackgroundUrl(path);
+    Q_EMIT G_BACKGROUND_PTR->backgroundHasChanged();
 }
 
 void MusicBackgroundSkinDialog::listWidgetItemClicked(MusicBackgroundRemoteWidget *item, const QString &name)
@@ -352,15 +352,15 @@ void MusicBackgroundSkinDialog::addThemeListWidgetItem(MusicBackgroundListWidget
 {
     const QStringList files(QDir(dir).entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name));
     TTKIntList data;
-    foreach(const QString &path, files)
+    for(const QString &path : qAsConst(files))
     {
         QString fileName = QFileInfo(path).baseName();
-                fileName = fileName.split("-").last();
+                fileName = fileName.split(STRING_NULL).last();
         data << fileName.trimmed().toInt();
     }
     std::sort(data.begin(), data.end(), std::less<int>());
 
-    foreach(const int index, data)
+    for(const int index : qAsConst(data))
     {
         const QFileInfo info(QString("%1theme-%2%3").arg(dir).arg(index).arg(TTS_FILE));
         item->createItem(info.baseName(), info.filePath(), state);
@@ -382,10 +382,10 @@ int MusicBackgroundSkinDialog::cpoyFileToLocalIndex()
 {
     const QList<QFileInfo> files(QDir(USER_THEME_DIR_FULL).entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name));
     TTKIntList data;
-    foreach(const QFileInfo &info, files)
+    for(const QFileInfo &info : qAsConst(files))
     {
         QString fileName = info.baseName();
-                fileName = fileName.split("-").last();
+                fileName = fileName.split(STRING_NULL).last();
         data << fileName.trimmed().toInt();
     }
     std::sort(data.begin(), data.end(), std::greater<int>());

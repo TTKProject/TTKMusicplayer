@@ -173,8 +173,8 @@ MusicLrcMakerWidget::MusicLrcMakerWidget(QWidget *parent)
     m_playMode = MusicApplication::instance()->getPlayMode();
     MusicApplication::instance()->musicPlayOneLoop();
 
-    M_CONNECTION_PTR->setValue(getClassName(), this);
-    M_CONNECTION_PTR->poolConnect(MusicPlayer::getClassName(), getClassName());
+    G_CONNECTION_PTR->setValue(getClassName(), this);
+    G_CONNECTION_PTR->poolConnect(MusicPlayer::getClassName(), getClassName());
 }
 
 MusicLrcMakerWidget::~MusicLrcMakerWidget()
@@ -184,7 +184,7 @@ MusicLrcMakerWidget::~MusicLrcMakerWidget()
     delete m_analysis;
 
     resetToOriginPlayMode();
-    M_CONNECTION_PTR->removeValue(getClassName());
+    G_CONNECTION_PTR->removeValue(getClassName());
     delete m_ui;
 }
 
@@ -677,25 +677,27 @@ void MusicLrcMakerWidget::createThirdWidget()
 
 bool MusicLrcMakerWidget::checkInputValid()
 {
-    bool errorFlag = false;
+    bool error = false;
     QString msg;
     if(m_ui->artNameEdit->text().isEmpty())
     {
-        errorFlag = true;
+        error = true;
         msg = tr("Art name is empty!");
     }
+
     if(m_ui->songNameEdit->text().isEmpty())
     {
-        errorFlag = true;
+        error = true;
         msg = tr("song name is empty!");
     }
+
     if(m_ui->lrcTextEdit->toPlainText().isEmpty())
     {
-        errorFlag = true;
+        error = true;
         msg = tr("lrc text is empty!");
     }
 
-    if(errorFlag)
+    if(error)
     {
         MusicToastLabel::popup(msg);
         return false;
@@ -755,16 +757,16 @@ void MusicLrcMakerWidget::setItemStyleSheet(int index, int size, int transparent
     w->setFontTransparent(value);
     w->setTransparent(value);
 
-    if(M_SETTING_PTR->value("LrcColor").toInt() != -1)
+    if(G_SETTING_PTR->value("LrcColor").toInt() != -1)
     {
-        const MusicLrcColor::LrcColorType index = TTKStatic_cast(MusicLrcColor::LrcColorType, M_SETTING_PTR->value("LrcColor").toInt());
+        const MusicLrcColor::LrcColorType index = TTKStatic_cast(MusicLrcColor::LrcColorType, G_SETTING_PTR->value("LrcColor").toInt());
         const MusicLrcColor &cl = MusicLrcColor::mapIndexToColor(index);
         w->setLinearGradientColor(cl);
     }
     else
     {
-        const MusicLrcColor cl(MusicUtils::String::readColorConfig(M_SETTING_PTR->value("LrcFrontgroundColor").toString()),
-                               MusicUtils::String::readColorConfig(M_SETTING_PTR->value("LrcBackgroundColor").toString()));
+        const MusicLrcColor cl(MusicUtils::String::readColorConfig(G_SETTING_PTR->value("LrcFrontgroundColor").toString()),
+                               MusicUtils::String::readColorConfig(G_SETTING_PTR->value("LrcBackgroundColor").toString()));
         w->setLinearGradientColor(cl);
     }
 }

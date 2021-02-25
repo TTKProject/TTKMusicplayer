@@ -3,7 +3,7 @@
 MusicAbstractNetwork::MusicAbstractNetwork(QObject *parent)
     : QObject(parent)
 {
-    m_interrupt = false;
+    setNetworkAbort(false);
     m_stateCode = MusicObject::NetworkQuery;
     m_reply = nullptr;
     m_manager = nullptr;
@@ -22,11 +22,14 @@ void MusicAbstractNetwork::deleteAll()
         m_manager->deleteLater();
         m_manager = nullptr;
     }
+
     if(m_reply)
     {
         m_reply->deleteLater();
         m_reply = nullptr;
     }
+
+    setNetworkAbort(true);
 }
 
 void MusicAbstractNetwork::replyError(QNetworkReply::NetworkError)
@@ -47,7 +50,7 @@ void MusicAbstractNetwork::sslErrors(QNetworkReply* reply, const QList<QSslError
 void MusicAbstractNetwork::sslErrorsString(QNetworkReply *reply, const QList<QSslError> &errors)
 {
     QString errorString;
-    foreach(const QSslError &error, errors)
+    for(const QSslError &error : qAsConst(errors))
     {
         if(!errorString.isEmpty())
         {

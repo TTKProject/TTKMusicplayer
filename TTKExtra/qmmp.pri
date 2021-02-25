@@ -44,7 +44,9 @@ HEADERS += \
     $$PWD/audioconverter.h \
     $$PWD/dithering_p.h \
     $$PWD/visualbuffer_p.h \
-    $$PWD/tagreadandwrite.h \
+    $$PWD/tagwrapper.h \
+    $$PWD/regularwrapper.h \
     $$PWD/lightfactory.h \
     $$PWD/florid.h \
+    $$PWD/charchecker.h \
     $$PWD/qmmp_export.h 

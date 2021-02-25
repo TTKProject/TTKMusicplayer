@@ -15,13 +15,11 @@ void MusicQQArtistSimilarRequest::startToSearch(const QString &text)
     }
 
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+
     deleteAll();
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_ARTIST_SIMILAR_URL, false).arg(text);
-    m_interrupt = true;
-
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_ARTIST_SIMILAR_URL, false).arg(text));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -32,16 +30,11 @@ void MusicQQArtistSimilarRequest::startToSearch(const QString &text)
 
 void MusicQQArtistSimilarRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
-    m_interrupt = false;
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    setNetworkAbort(false);
+
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
         QByteArray bytes = m_reply->readAll();
         bytes.replace("SingerSimCallback(", "");
@@ -57,16 +50,16 @@ void MusicQQArtistSimilarRequest::downLoadFinished()
             {
                 value = value["singers"].toMap();
                 const QVariantList &datas = value["items"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
-                    if(m_interrupt) return;
-
                     if(var.isNull())
                     {
                         continue;
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
+
                     MusicResultsItem info;
                     info.m_id = value["mid"].toString();
                     info.m_coverUrl = value["pic"].toString();

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ public Q_SLOTS:
     void buttonClicked(int index);
 
 protected:
-    bool m_firstInit, m_categoryChanged;
+    bool m_initialized, m_categoryChanged;
     QGridLayout *m_gridLayout;
     MusicPagingWidgetObject *m_pagingWidgetObject;
     MusicPlaylistQueryInfoWidget *m_infoWidget;

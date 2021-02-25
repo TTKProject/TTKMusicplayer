@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -144,7 +144,7 @@ protected:
     DECLARE_SINGLETON_CLASS(MusicBackgroundManager)
 };
 
-#define M_BACKGROUND_PTR GetMusicBackgroundManager()
+#define G_BACKGROUND_PTR GetMusicBackgroundManager()
 MUSIC_CORE_EXPORT MusicBackgroundManager* GetMusicBackgroundManager();
 
 #endif // MUSICBACKGROUNDMANAGER_H

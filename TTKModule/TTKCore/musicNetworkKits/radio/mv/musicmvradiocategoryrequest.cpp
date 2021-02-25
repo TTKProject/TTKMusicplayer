@@ -8,15 +8,9 @@ MusicMVRadioCategoryRequest::MusicMVRadioCategoryRequest(QObject *parent)
 
 void MusicMVRadioCategoryRequest::downLoadFinished()
 {
-    if(!m_reply || !m_manager)
-    {
-        deleteAll();
-        return;
-    }
+    setNetworkAbort(false);
 
-    m_interrupt = false;
-
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
         QByteArray bytes = m_reply->readAll();
         bytes = QString(bytes).split("var mvfmdata = ").back().split("$img = ").front().toUtf8();
@@ -28,34 +22,33 @@ void MusicMVRadioCategoryRequest::downLoadFinished()
         if(ok)
         {
             const QVariantList &datas = data.toList();
-            foreach(const QVariant &var, datas)
+            for(const QVariant &var : qAsConst(datas))
             {
-                if(m_interrupt) return;
-
                 if(var.isNull())
                 {
                     continue;
                 }
 
                 QVariantMap value = var.toMap();
+                TTK_NETWORK_QUERY_CHECK();
+
                 if(value["classId"].toString() == m_searchText)
                 {
-                    const QVariantList &fmList = value["fm_list"].toList();
-                    foreach(const QVariant &var, fmList)
+                    const QVariantList &fms = value["fm_list"].toList();
+                    for(const QVariant &var : qAsConst(fms))
                     {
-                        if(m_interrupt) return;
-
                         if(var.isNull())
                         {
                             continue;
                         }
 
                         value = var.toMap();
+                        TTK_NETWORK_QUERY_CHECK();
+
                         MusicResultsItem item;
                         item.m_name = value["fmName"].toString();
                         item.m_id = value["fmId"].toString();
                         item.m_coverUrl = value["imgUrlMv"].toString();
-
                         Q_EMIT createCategoryItem(item);
                     }
                 }

@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2020 Greedysky Studio
+# * Copyright (C) 2015 - 2021 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,17 @@
 #browser type defined
 Browser = 0
 
+equals(QT_MAJOR_VERSION, 4){
+    DEFINES += MUSIC_WEBKIT
+    win32{
+        CONFIG += qaxcontainer
+        Browser = 1
+    }
+    else{
+        QT += webkit webkitwidgets
+        Browser = 2
+    }
+}
 equals(QT_MAJOR_VERSION, 5){
     win32{
         QT += axcontainer
@@ -42,17 +53,6 @@ equals(QT_MAJOR_VERSION, 5){
                 Browser = 3
             }
         }
-    }
-}
-else{
-    DEFINES += MUSIC_WEBKIT
-    win32{
-        CONFIG += qaxcontainer
-        Browser = 1
-    }
-    else{
-        QT += webkit webkitwidgets
-        Browser = 2
     }
 }
 

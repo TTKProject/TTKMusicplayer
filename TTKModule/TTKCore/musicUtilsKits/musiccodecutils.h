@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,15 +44,6 @@ namespace MusicUtils
          * Set local codec by format.
          */
         MUSIC_UTILS_EXPORT void setLocalCodec(const char *format = "utf-8");
-        /*!
-         * Trasform string to local 8bit char.
-         */
-        MUSIC_UTILS_EXPORT const char *toLocal8Bit(const QString &str);
-        /*!
-         * Trasform string to utf8 char.
-         */
-        MUSIC_UTILS_EXPORT const char *toUtf8(const QString &str);
-
     }
 }
 

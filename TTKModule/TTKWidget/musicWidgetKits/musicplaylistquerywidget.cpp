@@ -122,13 +122,13 @@ MusicPlaylistQueryWidget::MusicPlaylistQueryWidget(QWidget *parent)
     layout()->addWidget(m_container);
     m_container->addWidget(m_mainWindow);
 
-    m_firstInit = false;
+    m_initialized = false;
     m_categoryChanged = false;
     m_infoWidget = nullptr;
     m_gridLayout = nullptr;
     m_categoryButton = nullptr;
     m_pagingWidgetObject = nullptr;
-    m_downloadRequest = M_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this);
+    m_downloadRequest = G_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this);
     connect(m_downloadRequest, SIGNAL(createPlaylistItem(MusicResultsItem)), SLOT(createPlaylistItem(MusicResultsItem)));
 }
 
@@ -167,20 +167,20 @@ void MusicPlaylistQueryWidget::resizeWindow()
     {
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->removeWidget(m_resizeWidgets[i]);
+            m_gridLayout->removeWidget(m_resizeWidgets[i].m_label);
         }
 
         const int lineNumber = width() / LINE_SPACING_SIZE;
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->addWidget(m_resizeWidgets[i], i/lineNumber, i%lineNumber, Qt::AlignCenter);
+            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i/lineNumber, i%lineNumber, Qt::AlignCenter);
         }
     }
 }
 
 void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
 {
-    if(!m_firstInit)
+    if(!m_initialized)
     {
         delete m_statusLabel;
         m_statusLabel = nullptr;
@@ -194,7 +194,7 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
         scrollArea->setWidget(m_mainWindow);
         m_container->addWidget(scrollArea);
 
-        m_firstInit = true;
+        m_initialized = true;
         QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
@@ -203,7 +203,9 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
         m_categoryButton->setCategory(m_downloadRequest->getQueryServer(), this);
         containTopLayout->addWidget(m_categoryButton);
         containTopLayout->addStretch(1);
-        foreach(const QString &data, QStringList() << tr("Recommend") << tr("Top") << tr("Hot") << tr("New"))
+
+        QStringList titles{ tr("Recommend"), tr("Top"), tr("Hot"), tr("New") };
+        for(const QString &data : titles)
         {
             QLabel *l = new QLabel(data, containTopWidget);
             l->setStyleSheet(QString("QLabel::hover{%1}").arg(MusicUIObject::MQSSColorStyle08));
@@ -231,16 +233,16 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
         m_pagingWidgetObject = new MusicPagingWidgetObject(m_mainWindow);
         connect(m_pagingWidgetObject, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, total));
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, pageTotal));
         mainlayout->addStretch(1);
     }
 
     if(m_categoryChanged && m_pagingWidgetObject)
     {
         m_categoryChanged = false;
-        const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-        m_pagingWidgetObject->reset(total);
+        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        m_pagingWidgetObject->reset(pageTotal);
     }
 
     MusicPlaylistQueryItemWidget *label = new MusicPlaylistQueryItemWidget(this);
@@ -249,14 +251,15 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
 
     const int lineNumber = width() / LINE_SPACING_SIZE;
     m_gridLayout->addWidget(label, m_resizeWidgets.count() / lineNumber, m_resizeWidgets.count() % lineNumber, Qt::AlignCenter);
-    m_resizeWidgets << label;
+
+    m_resizeWidgets.push_back({label, label->font()});
 }
 
 void MusicPlaylistQueryWidget::currentPlaylistClicked(const MusicResultsItem &item)
 {
     delete m_infoWidget;
     m_infoWidget = new MusicPlaylistQueryInfoWidget(this);
-    MusicQueryPlaylistRequest *d = TTKStatic_cast(MusicQueryPlaylistRequest*, M_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this));
+    MusicQueryPlaylistRequest *d = TTKStatic_cast(MusicQueryPlaylistRequest*, G_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this));
     MusicResultsItem it(item);
     if(it.isEmpty())
     {
@@ -279,16 +282,16 @@ void MusicPlaylistQueryWidget::categoryChanged(const MusicResultsCategoryItem &c
     {
         m_songNameFull.clear();
         m_categoryChanged = true;
-        m_categoryButton->setText(category.m_name);
+        m_categoryButton->setText(category.m_value);
         m_categoryButton->closeMenu();
 
         while(!m_resizeWidgets.isEmpty())
         {
-            QWidget *w = m_resizeWidgets.takeLast();
+            QWidget *w = m_resizeWidgets.takeLast().m_label;
             m_gridLayout->removeWidget(w);
             delete w;
         }
-        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_id);
+        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_key);
     }
 }
 
@@ -296,12 +299,12 @@ void MusicPlaylistQueryWidget::buttonClicked(int index)
 {
     while(!m_resizeWidgets.isEmpty())
     {
-        QWidget *w = m_resizeWidgets.takeLast();
+        QWidget *w = m_resizeWidgets.takeLast().m_label;
         m_gridLayout->removeWidget(w);
         delete w;
     }
 
-    const int total = ceil(m_downloadRequest->getPageTotal() * 1.0 / m_downloadRequest->getPageSize());
-    m_pagingWidgetObject->paging(index, total);
+    const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+    m_pagingWidgetObject->paging(index, pageTotal);
     m_downloadRequest->startToPage(m_pagingWidgetObject->currentIndex() - 1);
 }

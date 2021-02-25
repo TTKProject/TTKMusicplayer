@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ protected:
 
 };
 
-#define M_DISPATCH_PTR GetMusicDispatchManager()
+#define G_DISPATCH_PTR GetMusicDispatchManager()
 MUSIC_CORE_EXPORT MusicDispatchManager* GetMusicDispatchManager();
 
 #endif // MUSICDISPATCHMANAGER_H

@@ -21,12 +21,10 @@ void MusicKWQueryInterface::readFromMusicLLAttribute(MusicObject::MusicSongInfor
     QDesWrap des;
     const QByteArray &parameter = des.encrypt(MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_DATA_URL, false).arg(info->m_songId).arg(suffix).arg(format).toUtf8(),
                                               MusicUtils::Algorithm::mdII(_SIGN, ALG_UNIMP_KEY, false).toUtf8());
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KW_MOVIE_URL, false).arg(QString(parameter));
 
     QNetworkAccessManager manager;
     QNetworkRequest request;
-    request.setUrl(musicUrl);
-//    request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KW_UA_URL, ALG_UA_KEY, false).toUtf8());
+    request.setUrl(MusicUtils::Algorithm::mdII(KW_MOVIE_URL, false).arg(QString(parameter)));
     MusicObject::setSslConfiguration(&request);
 
     MusicSemaphoreLoop loop;
@@ -40,11 +38,11 @@ void MusicKWQueryInterface::readFromMusicLLAttribute(MusicObject::MusicSongInfor
         return;
     }
 
-    QByteArray data = reply->readAll();
+    const QByteArray &data = reply->readAll();
     if(!data.isEmpty() && !data.contains("res not found"))
     {
         const QString text(data);
-        QRegExp regx(".*url=(.*).*");
+        QRegExp regx(".*url=(.*)\r\nsig=");
 
         if(text.indexOf(regx) != -1)
         {
@@ -52,7 +50,7 @@ void MusicKWQueryInterface::readFromMusicLLAttribute(MusicObject::MusicSongInfor
             attr.m_url = regx.cap(1);
             attr.m_bitrate = bitrate;
             attr.m_format = suffix;
-            attr.m_size = "-";
+            attr.m_size = STRING_NULL;
             if(attr.m_url.isEmpty() || info->m_songAttrs.contains(attr))
             {
                 return;
@@ -70,7 +68,7 @@ void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -79,7 +77,7 @@ void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -88,7 +86,7 @@ void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -109,7 +107,7 @@ void MusicKWQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -118,7 +116,7 @@ void MusicKWQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -127,7 +125,7 @@ void MusicKWQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
         MusicObject::MusicSongAttribute attr;
         attr.m_bitrate = bitrate;
         attr.m_format = suffix;
-        attr.m_size = "-";
+        attr.m_size = STRING_NULL;
         attr.m_url = MusicUtils::Algorithm::mdII(KW_SONG_DETAIL_URL, false).arg(bitrate).arg(info->m_songId);
         info->m_songAttrs.append(attr);
     }
@@ -175,7 +173,7 @@ void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
 
 void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInformation *info, const QVariantList &format, const QString &quality, bool all)
 {
-    foreach(const QVariant &var, format)
+    for(const QVariant &var : qAsConst(format))
     {
         const QString &fs = var.toString();
         if(all)
@@ -209,17 +207,15 @@ void MusicKWQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
     }
 }
 
-void MusicKWQueryInterface::readFromMusicSongPic(MusicObject::MusicSongInformation *info)
+void MusicKWQueryInterface::readFromMusicSongPicture(MusicObject::MusicSongInformation *info)
 {
     if(info->m_songId.isEmpty())
     {
         return;
     }
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(KW_SONG_LRC_URL, false).arg(info->m_songId);
-
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(KW_SONG_LRC_URL, false).arg(info->m_songId));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KW_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -237,14 +233,15 @@ void MusicKWQueryInterface::readFromMusicSongPic(MusicObject::MusicSongInformati
 
     QJson::Parser parser;
     bool ok;
-    const QVariant &data = parser.parse(reply->readAll().replace("lrclist", "'lrclist'").replace("'", "\""), &ok);
+    const QVariant &data = parser.parse(reply->readAll(), &ok);
     if(ok)
     {
         QVariantMap value = data.toMap();
-        if(value.contains("songinfo"))
+        if(value.contains("data"))
         {
+            value = value["data"].toMap();
             value = value["songinfo"].toMap();
-            info->m_smallPicUrl = value["artpic"].toString();
+            info->m_smallPicUrl = value["pic"].toString();
             if(!info->m_smallPicUrl.contains(TTK_HTTP) && !info->m_smallPicUrl.contains(COVER_URL_NULL))
             {
                 info->m_smallPicUrl = MusicUtils::Algorithm::mdII(KW_ALBUM_COVER_URL, false) + info->m_smallPicUrl;

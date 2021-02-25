@@ -32,7 +32,7 @@ void MusicPlaylistQueryCategoryItem::setCategory(const MusicResultsCategory &cat
 
     for(int i=0; i<m_category.m_items.count(); ++i)
     {
-        MusicClickedLabel *l = new MusicClickedLabel(m_category.m_items[i].m_name, item);
+        MusicClickedLabel *l = new MusicClickedLabel(m_category.m_items[i].m_value, item);
         l->setStyleSheet(QString("QLabel::hover{%1}").arg(MusicUIObject::MQSSColorStyle08));
         l->setFixedSize(75, ITEM_LABEL_WIDTH);
 
@@ -82,7 +82,7 @@ void MusicPlaylistFoundCategoryPopWidget::setCategory(const QString &server, QOb
     scrollArea->setWidget(containWidget);
     layout->addWidget(scrollArea);
 
-    foreach(const MusicResultsCategory &category, categorys)
+    for(const MusicResultsCategory &category : qAsConst(categorys))
     {
         MusicPlaylistQueryCategoryItem *item = new MusicPlaylistQueryCategoryItem(this);
         connect(item, SIGNAL(categoryChanged(MusicResultsCategoryItem)), obj, SLOT(categoryChanged(MusicResultsCategoryItem)));

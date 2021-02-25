@@ -4,7 +4,7 @@
 /**
  * C
  *
- * opyright (c) 2015 - 2020 Greedysky Studio <greedysky@163.com>
+ * opyright (c) 2015 - 2021 Greedysky Studio <greedysky@163.com>
  *
  * TTKMusicPlayer that imitation Kugou music, the music player use
  * of qmmp core library based on Qt for windows and linux
@@ -40,7 +40,7 @@
  *
  *  CUE File(*.cue)
  *
- *  MPEG File(*.mp1 *.mp2 *.mp3 *.wav)
+ *  MPEG File(*.mp1 *.mp2 *.mp3)
  *
  *  Game Audio File(*.ay *.gms *.gym *.hes *.kss *.nsf *.nsfe *.sap *.spc *.vgm *.vgz)
  *
@@ -54,27 +54,23 @@
  *
  *  AdLib Sound File(*.adl *.hsc *.ksm *.lds)
  *
- *  Apple Lossless Audio File(*.alac)
+ *  Another Slight Atari File(*.sap *.cm3 *.cmc *.cmr *.cms *.dmc *.dlt *.mpd *.mpt *.rmt *.tm2 *.tm8 *.tmc)
  *
- *  Another Slight Atari File(*.sap *.cm3 *.cmc *.cmr *.cms *.dmc *.dlt *.mpd *.mpt *.rmt *.tm2 *.tm8 *.tmc *.fc)
- *
- *  DTS Coherent Acoustics File(*.wav *.dts *.cpt)
- *
- *  Dynamic Universal File(*.mod *.mdz *.stk *.m15 *.fst *.oct *.nt *.s3m *.s3z *.stm *.stz *.it *.itz *.xm *.xmz *ptm *.ptz *mtm *.mtz *669 *psm *umx *am *.j2b *dsm *amf *okt *.okta *mo3)
+ *  DTS Coherent Acoustics File(*.dts *.cpt)
  *
  *  Future Composer File(*.fc *.fc13 *.fc14 *.smod)
  *
  *  OptimFrog File(*.ofr *.ofs)
  *
- *  Audio Overload File(*.psf *.psf2 *.spu *.ssf *.qsf *.dsf *.minipsf *.minipsf2 *.minissf *.miniqsf *.minidsf)
+ *  Audio Overload File(*.psf *.spu *.ssf *.qsf *.dsf *.minipsf *.minissf *.miniqsf *.minidsf)
  *
- *  Atari ST(E) And Amiga File(*.sndh *.snd *.sc68)
+ *  Atari ST(E) And Amiga File(*.sc68)
  *
  *  Speex Audio File(*.spx)
  *
  *  V2 Module Audio File(*.v2m)
  *
- *  AY/YM Audio File(*.vtx *.asc *.sqt *psg *.stc *.stp *.pt1 *.pt2 *.pt3 *.psc *.ay *.ym)
+ *  AY/YM Audio File(*.vtx *.asc *.sqt *psg *.stc *.stp *.pt1 *.pt2 *.pt3 *.psc *.ay)
  *
  *  ST-Sound File(*.ym)
  *
@@ -120,7 +116,7 @@
  
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,17 +132,17 @@
  * with this program; If not, see <http://www.gnu.org/licenses/>.
  ================================================= */
 
-//update time 2020.09.19
-#define TTKMUSIC_VERSION_STR    "2.13.2.0"
-#define TTKMUSIC_VERSION_WSTR   L"2.13.2.0"
-#define TTKMUSIC_VER_TIME_STR   "(2020/09/19)"
+//update time 2021.01.09
+#define TTKMUSIC_VERSION_STR    "2.13.4.0"
+#define TTKMUSIC_VERSION_WSTR   L"2.13.4.0"
+#define TTKMUSIC_VER_TIME_STR   "(2021/01/09)"
 
 #define TTKMUSIC_MAJOR_VERSION 2
 #define TTKMUSIC_MIDLE_VERSION 13
-#define TTKMUSIC_MINOR_VERSION 2
+#define TTKMUSIC_MINOR_VERSION 4
 #define TTKMUSIC_PATCH_VERSION 0
 
-#define TTKMUSIC_VERSION 0x02D20
+#define TTKMUSIC_VERSION 0x02D40
 
 #define TTKMUSIC_VERSION_CHECK(major, middle, minor, patch) ((major<<12)|(middle<<8)|(minor<<4)|(patch))
 

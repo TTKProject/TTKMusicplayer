@@ -37,9 +37,7 @@ MusicSongSharingWidget::MusicSongSharingWidget(QWidget *parent)
 
 #ifdef Q_OS_UNIX
     m_ui->qqButton->setFocusPolicy(Qt::NoFocus);
-    m_ui->renrenButton->setFocusPolicy(Qt::NoFocus);
     m_ui->qqspaceButton->setFocusPolicy(Qt::NoFocus);
-    m_ui->qqblogButton->setFocusPolicy(Qt::NoFocus);
     m_ui->sinaButton->setFocusPolicy(Qt::NoFocus);
     m_ui->weixingButton->setFocusPolicy(Qt::NoFocus);
     m_ui->shareButton->setFocusPolicy(Qt::NoFocus);
@@ -105,7 +103,7 @@ void MusicSongSharingWidget::confirmButtonClicked()
     {
         case Song:
             {
-                MusicAbstractQueryRequest *d = M_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
+                MusicAbstractQueryRequest *d = G_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
                 d->startToSearch(MusicAbstractQueryRequest::MusicQuery, m_ui->sharedName->text().trimmed());
 
                 MusicSemaphoreLoop loop;
@@ -122,12 +120,12 @@ void MusicSongSharingWidget::confirmButtonClicked()
                         server = MusicUtils::Algorithm::mdII(QQ_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
                     else if(server == QUERY_KG_INTERFACE)
                         server = MusicUtils::Algorithm::mdII(KG_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
-                    else if(server == QUERY_BD_INTERFACE)
-                        server = MusicUtils::Algorithm::mdII(BD_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
                     else if(server == QUERY_KW_INTERFACE)
                         server = MusicUtils::Algorithm::mdII(KW_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
                     else if(server == QUERY_XM_INTERFACE)
                         server = MusicUtils::Algorithm::mdII(XM_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
+                    else if(server == QUERY_MG_INTERFACE)
+                        server = MusicUtils::Algorithm::mdII(MG_SG_SHARE, ALG_UNIMP_KEY, false).arg(info.m_songId);
                     else
                     {
                         QTimer::singleShot(2 * MT_S2MS, this, SLOT(queryUrlTimeout()));
@@ -148,15 +146,15 @@ void MusicSongSharingWidget::confirmButtonClicked()
                 if(server == QUERY_WY_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(WY_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
                 else if(server == QUERY_QQ_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(QQ_MOVIE_SHARE, ALG_UNIMP_KEY, false).arg(id);
+                    server = MusicUtils::Algorithm::mdII(QQ_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
                 else if(server == QUERY_KG_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KG_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
-                else if(server == QUERY_BD_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(BD_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
                 else if(server == QUERY_KW_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(KW_MOVIE_SHARE, ALG_UNIMP_KEY, false).arg(id);
+                    server = MusicUtils::Algorithm::mdII(KW_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
                 else if(server == QUERY_XM_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(XM_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
+                else if(server == QUERY_MG_INTERFACE)
+                    server = MusicUtils::Algorithm::mdII(MG_MV_SHARE, ALG_UNIMP_KEY, false).arg(id);
                 else
                 {
                     QTimer::singleShot(2 * MT_S2MS, this, SLOT(queryUrlTimeout()));
@@ -175,12 +173,12 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     server = MusicUtils::Algorithm::mdII(QQ_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KG_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KG_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
-                else if(server == QUERY_BD_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(BD_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KW_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KW_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_XM_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(XM_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
+                else if(server == QUERY_MG_INTERFACE)
+                    server = MusicUtils::Algorithm::mdII(MG_AR_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else
                 {
                     QTimer::singleShot(2 * MT_S2MS, this, SLOT(queryUrlTimeout()));
@@ -199,12 +197,12 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     server = MusicUtils::Algorithm::mdII(QQ_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KG_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KG_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
-                else if(server == QUERY_BD_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(BD_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KW_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KW_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_XM_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(XM_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
+                else if(server == QUERY_MG_INTERFACE)
+                    server = MusicUtils::Algorithm::mdII(MG_AL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else
                 {
                     QTimer::singleShot(2 * MT_S2MS, this, SLOT(queryUrlTimeout()));
@@ -223,12 +221,12 @@ void MusicSongSharingWidget::confirmButtonClicked()
                     server = MusicUtils::Algorithm::mdII(QQ_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KG_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KG_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
-                else if(server == QUERY_BD_INTERFACE)
-                    server = MusicUtils::Algorithm::mdII(BD_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_KW_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(KW_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else if(server == QUERY_XM_INTERFACE)
                     server = MusicUtils::Algorithm::mdII(XM_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
+                else if(server == QUERY_MG_INTERFACE)
+                    server = MusicUtils::Algorithm::mdII(MG_PL_SHARE, ALG_UNIMP_KEY, false).arg(m_data["id"].toString());
                 else
                 {
                     QTimer::singleShot(2 * MT_S2MS, this, SLOT(queryUrlTimeout()));
@@ -254,17 +252,9 @@ void MusicSongSharingWidget::downLoadFinished(const QString &playUrl, const QStr
     {
         url = QString(MusicUtils::Algorithm::mdII(QQ_SHARE, ALG_UNIMP_KEY, false)).arg(playUrl).arg(m_ui->textEdit->toPlainText()).arg(imageUrl).arg(m_ui->sharedName->text()).arg(tr("TTKMusicPlayer"));
     }
-    else if(m_ui->renrenButton->isChecked())
-    {
-        url = QString(MusicUtils::Algorithm::mdII(RENREN_SHARE, ALG_UNIMP_KEY, false)).arg(playUrl).arg(m_ui->textEdit->toPlainText()).arg(imageUrl);
-    }
     else if(m_ui->qqspaceButton->isChecked())
     {
         url = QString(MusicUtils::Algorithm::mdII(QQ_SPACE_SHARE, ALG_UNIMP_KEY, false)).arg(playUrl).arg(tr("TTKMusicPlayer")).arg(imageUrl).arg(m_ui->textEdit->toPlainText());
-    }
-    else if(m_ui->qqblogButton->isChecked())
-    {
-        url = QString(MusicUtils::Algorithm::mdII(QQ_MICBG_SHARE, ALG_UNIMP_KEY, false)).arg(playUrl).arg(m_ui->textEdit->toPlainText()).arg(imageUrl);
     }
     else if(m_ui->sinaButton->isChecked())
     {

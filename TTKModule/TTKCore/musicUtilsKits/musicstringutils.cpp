@@ -5,7 +5,7 @@
 
 QString MusicUtils::String::lrcPrefix()
 {
-    QString path = M_SETTING_PTR->value(MusicSettingManager::DownloadLrcPathDir).toString();
+    QString path = G_SETTING_PTR->value(MusicSettingManager::DownloadLrcPathDir).toString();
     if(path.isEmpty())
     {
         path = LRC_DIR_FULL;
@@ -22,7 +22,7 @@ QString MusicUtils::String::lrcPrefix()
 
 QString MusicUtils::String::musicPrefix()
 {
-    QString path = M_SETTING_PTR->value(MusicSettingManager::DownloadMusicPathDir).toString();
+    QString path = G_SETTING_PTR->value(MusicSettingManager::DownloadMusicPathDir).toString();
     if(path.isEmpty())
     {
         path = MUSIC_DIR_FULL;
@@ -120,7 +120,7 @@ QString MusicUtils::String::artistName(const QString &value, const QString &key)
     const QStringList &s = stringSplit(value);
     if(s.count() >= 2)
     {
-        if(M_SETTING_PTR->value(MusicSettingManager::OtherSongFormat).toInt() == 0)
+        if(G_SETTING_PTR->value(MusicSettingManager::OtherSongFormat).toInt() == 0)
         {
             const int index = value.indexOf(key);
             return value.left(index).trimmed();
@@ -139,7 +139,7 @@ QString MusicUtils::String::songName(const QString &value, const QString &key)
     const QStringList &s = stringSplit(value);
     if(s.count() >= 2)
     {
-        if(M_SETTING_PTR->value(MusicSettingManager::OtherSongFormat).toInt() == 0)
+        if(G_SETTING_PTR->value(MusicSettingManager::OtherSongFormat).toInt() == 0)
         {
             const int index = value.indexOf(key) + 1;
             return value.right(value.length() - index).trimmed();
@@ -163,8 +163,7 @@ QStringList MusicUtils::String::illegalCharacters()
 bool MusicUtils::String::illegalCharactersCheck(const QString &value)
 {
     const QStringList acs(illegalCharacters());
-
-    foreach(const QString &ac, acs)
+    for(const QString &ac : qAsConst(acs))
     {
         if(value.contains(ac))
         {
@@ -180,7 +179,7 @@ QString MusicUtils::String::illegalCharactersReplaced(const QString &value)
     const QStringList acs(illegalCharacters());
     QString s(value);
 
-    foreach(const QString &ac, acs)
+    for(const QString &ac : qAsConst(acs))
     {
         if(s.contains(ac))
         {
@@ -199,7 +198,7 @@ QList<QColor> MusicUtils::String::readColorConfig(const QString &value)
 #else
     const QStringList &rgbs = value.split(";", QString::SkipEmptyParts);
 #endif
-    foreach(const QString &rgb, rgbs)
+    for(const QString &rgb : qAsConst(rgbs))
     {
         const QStringList &var = rgb.split(",");
         if(var.count() != 3)
@@ -219,7 +218,7 @@ QString MusicUtils::String::writeColorConfig(const QColor &color)
 QString MusicUtils::String::writeColorConfig(const QList<QColor> &colors)
 {
     QString value;
-    foreach(const QColor &rgb, colors)
+    for(const QColor &rgb : qAsConst(colors))
     {
         value.append(writeColorConfig(rgb) + ";");
     }

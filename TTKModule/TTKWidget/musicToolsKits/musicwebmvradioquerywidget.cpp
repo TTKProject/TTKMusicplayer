@@ -103,7 +103,7 @@ MusicWebMVRadioQueryWidget::MusicWebMVRadioQueryWidget(QWidget *parent)
     layout()->addWidget(m_container);
     m_container->addWidget(m_mainWindow);
 
-    m_firstInit = false;
+    m_initialized = false;
     m_infoWidget = nullptr;
     m_gridLayout = nullptr;
     m_categoryButton = nullptr;
@@ -142,20 +142,20 @@ void MusicWebMVRadioQueryWidget::resizeWindow()
     {
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->removeWidget(m_resizeWidgets[i]);
+            m_gridLayout->removeWidget(m_resizeWidgets[i].m_label);
         }
 
         const int lineNumber = width() / LINE_SPACING_SIZE;
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->addWidget(m_resizeWidgets[i], i/lineNumber, i%lineNumber, Qt::AlignCenter);
+            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i/lineNumber, i%lineNumber, Qt::AlignCenter);
         }
     }
 }
 
 void MusicWebMVRadioQueryWidget::createCategoryItem(const MusicResultsItem &item)
 {
-    if(!m_firstInit)
+    if(!m_initialized)
     {
         delete m_statusLabel;
         m_statusLabel = nullptr;
@@ -169,7 +169,7 @@ void MusicWebMVRadioQueryWidget::createCategoryItem(const MusicResultsItem &item
         scrollArea->setWidget(m_mainWindow);
         m_container->addWidget(scrollArea);
 
-        m_firstInit = true;
+        m_initialized = true;
         QHBoxLayout *mainlayout = TTKStatic_cast(QHBoxLayout*, m_mainWindow->layout());
         QWidget *containTopWidget = new QWidget(m_mainWindow);
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
@@ -202,7 +202,8 @@ void MusicWebMVRadioQueryWidget::createCategoryItem(const MusicResultsItem &item
 
     const int lineNumber = width() / LINE_SPACING_SIZE;
     m_gridLayout->addWidget(label, m_resizeWidgets.count() / lineNumber, m_resizeWidgets.count() % lineNumber, Qt::AlignCenter);
-    m_resizeWidgets << label;
+
+    m_resizeWidgets.push_back({label, label->font()});
 }
 
 void MusicWebMVRadioQueryWidget::currentRadioClicked(const MusicResultsItem &item)
@@ -226,15 +227,15 @@ void MusicWebMVRadioQueryWidget::categoryChanged(const MusicResultsCategoryItem 
     if(m_categoryButton)
     {
         m_songNameFull.clear();
-        m_categoryButton->setText(category.m_name);
+        m_categoryButton->setText(category.m_value);
         m_categoryButton->closeMenu();
 
         while(!m_resizeWidgets.isEmpty())
         {
-            QWidget *w = m_resizeWidgets.takeLast();
+            QWidget *w = m_resizeWidgets.takeLast().m_label;
             m_gridLayout->removeWidget(w);
             delete w;
         }
-        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_id);
+        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_key);
     }
 }

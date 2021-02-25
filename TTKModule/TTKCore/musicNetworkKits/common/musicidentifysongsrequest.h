@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,12 @@
 /*! @brief The class of the song identify data item.
  * @author Greedysky <greedysky@163.com>
  */
-typedef struct MUSIC_NETWORK_EXPORT MusicSongIdentify
+typedef struct MUSIC_NETWORK_EXPORT MusicSongIdentifyData
 {
     QString m_singerName;
     QString m_songName;
-}MusicSongIdentify;
-TTK_DECLARE_LISTS(MusicSongIdentify)
+}MusicSongIdentifyData;
+TTK_DECLARE_LISTS(MusicSongIdentifyData)
 
 /*! @brief The class of the song identify query request.
  * @author Greedysky <greedysky@163.com>
@@ -60,7 +60,7 @@ public:
     /*!
      * Get identify songs.
      */
-    inline const MusicSongIdentifys& getIdentifySongs() const { return m_songIdentifys; }
+    inline const MusicSongIdentifyDatas& getIdentifySongs() const { return m_songIdentifys; }
 
 Q_SIGNALS:
     /*!
@@ -79,7 +79,7 @@ public Q_SLOTS:
     void downLoadFinished(const QByteArray &data);
 
 protected:
-    MusicSongIdentifys m_songIdentifys;
+    MusicSongIdentifyDatas m_songIdentifys;
     QString m_accessKey, m_accessSecret;
 
 };

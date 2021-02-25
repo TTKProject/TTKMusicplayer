@@ -23,13 +23,13 @@ bool MusicTXTConfigManager::readPlaylistData(MusicSongItems &items)
         return false;
     }
 
-    foreach(const QString &line, data)
+    for(const QString &line : qAsConst(data))
     {
         int index = line.indexOf(":");
         if(index != -1)
         {
             const QString &part = line.mid(index + 1).trimmed();
-            index = part.lastIndexOf("-");
+            index = part.lastIndexOf(STRING_NULL);
             if(index != -1)
             {
                 MusicSong song(part.left(index).trimmed());

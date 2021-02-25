@@ -171,7 +171,7 @@ void MusicScreenSaverListWidget::createItem(QObject *object, const QString &path
 
 void MusicScreenSaverListWidget::resizeWindow()
 {
-    foreach(MusicScreenSaverListItem *item , m_items)
+    for(MusicScreenSaverListItem *item : qAsConst(m_items))
     {
         m_gridLayout->removeWidget(item);
     }
@@ -283,8 +283,8 @@ MusicScreenSaverWidget::~MusicScreenSaverWidget()
 
 void MusicScreenSaverWidget::applySettingParameter()
 {
-    const bool state = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
-    const int value = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverTime).toInt();
+    const bool state = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
+    const int value = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverTime).toInt();
 
     m_inputEdit->setText(QString::number(value));
     if(state != m_currentState)
@@ -298,9 +298,9 @@ QVector<bool> MusicScreenSaverWidget::parseSettingParameter()
     QVector<bool> statusVector;
     statusVector.fill(true, OS_COUNT);
 
-    const QString &value = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverIndex).toString();
+    const QString &value = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverIndex).toString();
     const QStringList items(value.split(";"));
-    foreach(const QString &item, items)
+    for(const QString &item : qAsConst(items))
     {
         const QStringList itemStatus(item.split(","));
         if(itemStatus.count() == 2)
@@ -320,10 +320,10 @@ void MusicScreenSaverWidget::resizeWindow()
 
 void MusicScreenSaverWidget::inputDataChanged()
 {
-    const bool state = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
+    const bool state = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
     if(state)
     {
-        M_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverTime, m_inputEdit->text().toInt());
+        G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverTime, m_inputEdit->text().toInt());
         MusicApplicationObject::instance()->applySettingParameter();
     }
 }
@@ -339,11 +339,11 @@ void MusicScreenSaverWidget::caseButtonOnAndOff()
     {
         m_currentState = true;
         m_caseButton->setStyleSheet(MusicUIObject::MQSSScreenSaverOn);
-        M_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverTime, m_inputEdit->text().toInt());
+        G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverTime, m_inputEdit->text().toInt());
     }
 
     m_inputEdit->setEnabled(m_currentState);
-    M_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverEnable, m_currentState);
+    G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverEnable, m_currentState);
     MusicApplicationObject::instance()->applySettingParameter();
 }
 
@@ -371,7 +371,7 @@ void MusicScreenSaverWidget::itemHasClicked(int index, bool status)
     {
         items << QString("%1,%2").arg(i).arg(statusVector[i]);
     }
-    M_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverIndex, items.join(";"));
+    G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverIndex, items.join(";"));
     MusicApplicationObject::instance()->applySettingParameter();
 }
 
@@ -450,8 +450,8 @@ void MusicScreenSaverBackgroundWidget::applySettingParameter()
         m_backgroundTimer->stop();
     }
 
-    m_state = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
-    const int value = M_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverTime).toInt();
+    m_state = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverEnable).toBool();
+    const int value = G_SETTING_PTR->value(MusicSettingManager::OtherScreenSaverTime).toInt();
     m_state = (m_state && (value > 0));
     if(m_state)
     {

@@ -23,7 +23,7 @@ void MusicFMRadioChannelRequest::startToDownload(const QString &id)
     m_manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request;
-    request.setUrl(QUrl(MusicUtils::Algorithm::mdII(FM_CHANNEL_URL, false)));
+    request.setUrl(MusicUtils::Algorithm::mdII(FM_CHANNEL_URL, false));
 #ifndef QT_NO_SSL
     connect(m_manager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
     MusicObject::setSslConfiguration(&request);
@@ -41,20 +41,13 @@ void MusicFMRadioChannelRequest::startToDownload(const QString &id)
 
 void MusicFMRadioChannelRequest::downLoadFinished()
 {
-    if(!m_reply)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        deleteAll();
-        return;
-    }
-
-    if(m_reply->error() == QNetworkReply::NoError)
-    {
-        const QByteArray &bytes = m_reply->readAll();
         m_channels.clear();
 
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
@@ -72,7 +65,7 @@ void MusicFMRadioChannelRequest::downLoadFinished()
                 for(int i=0; i<channels.count(); ++i)
                 {
                     value = channels[i].toMap();
-                    MusicFMRadioChannelInfo channel;
+                    MusicFMRadioChannelData channel;
                     channel.m_id = value["id"].toString();
                     channel.m_name = value["name"].toString();
                     channel.m_coverUrl = value["cover"].toString();

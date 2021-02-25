@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ const QString KG_UA_URL                 = "cGhYNDZVdmNaVG5KZk50NVFvcUJyYWVQdmdNT
 ///song url
 const QString KG_SONG_SEARCH_URL        = "K3l5ZjdYOTcySmR6cFdhbHhNTU1KSWswY0JKa1JFWmJoZjJHTExaZFdQejltM3JxbFRWNWRHVmlzL01ORzIwSTVGTHd3dzFaUWdWTG1QRk9ockZJNkczb3poTjBKYVFIdHBNeUpmb013bmFXWXpIZWErZXhJcWRUSEpyTlQ3eGVsWXlpMFJvMzZCZytYMnJMQSs4a2FPYks1T0hwQzFvQWFpZjFWVU5UTXA1YlN2MWxHWW1SQ1VFeTJiYjVTV2d1";
 const QString KG_SONG_LRC_URL           = "Yld5K1Rac2JFc3d0YThTbnluN2RkQ0U0bjBWQkxSQWJGNDZoT2xvUERFdEUzV0RkalhjbVpYT1FGcmY0UlZJTDRoTHFMMklXNWRsdyswcG5XYzArUlJ6bHhoWXdyQ3JtSXRiWEdXbE53dXNjcU1QMzRBNFBhMDdWOE95eVVURG5KRHRPNFE9PQ==";
-const QString KG_SONG_DETAIL_URL        = "SFBKRGpUWnBOS3BVMEZVTWxzWFFDNUd0NDdaZkg4WWEyWUhEOVpidGcyY0c1QmJaWTBIZUIwY0UvcVZLT1ZKK052NGg4YmlTSFZVWmpZdUFGVDRBVWNKQ2JkWi9rTUhSWlNTcElnPT0=";
+const QString KG_SONG_DETAIL_URL        = "Y2taSGF2cmtFOWg2RUxaVklFdmYwZzVDdTdPYnFDaGVJZnkraVgyblFlTC82cFhWenYxSnZPZHdkdmhTMWRUQ2svSWRpTDhwbC9CWkFlcVZaTmlZMDZDNG84cjkxNm1LQ0pTMGxYNmhPbEVWSmZDU3U5eE9CZFVBVmE4Z2tUaERmSWxwYVdDOHBwME9EQTUyRDBjdDRFQnQxN009";
 const QString KG_SONG_INFO_URL          = "dnVZTEYrYXgxcWkvT2dmWHdLNE1oMUZURStIKytVSnBIMzVXUlk2cVkyaURGcEl1WVRZa2lIRE13dTVSQ0JUcWwwM0hkUT09";
 ///artist url
 const QString KG_ARTIST_URL             = "b0pLNUhiUmVtZktML3REeTRLQUFRY0tBZXFtU2IyaU9tWGtNbmg0WUlzYTZWUUdQTU00VkVJdWRWYkJxL013QjBMY1YvUzhGU3RWWEFmR2ZQVW1pVkl4enhDZ1p5ZG14bllHZnpkWm5qemR5NlprUGxDaEs1bnhrQzJQYkhCOUY2NWV3UmxuVEs2dVU0U3UwbjJCZ053PT0=";
@@ -77,7 +77,7 @@ public:
     /*!
      * Read tags(lrc\smallpic) from query results.
      */
-    void readFromMusicSongLrcAndPic(MusicObject::MusicSongInformation *info);
+    void readFromMusicSongLrcAndPicture(MusicObject::MusicSongInformation *info);
     /*!
      * Read tags(album info) from query results.
      */

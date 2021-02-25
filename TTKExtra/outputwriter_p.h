@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2012-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -77,9 +77,13 @@ public:
      */
     Recycler *recycler();
     /*!
-     * Returns selected audio parameters.
+     * Returns selected audio parameters, i.e. passed by \b initialize function.
      */
-    AudioParameters audioParameters() const;
+    const AudioParameters &inputAudioParameters() const;
+    /*!
+     * Returns output audio parameters, i.e. accepted by output device.
+     */
+    AudioParameters outputAudioParameters() const;
     /*!
      * Returns sample size in bytes.
      */

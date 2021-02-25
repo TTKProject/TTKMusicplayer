@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ public:
     /*!
      * Input imported music datas into container.
      */
-    void importMusicSongsByPath(QStringList &filelist);
+    void importMusicSongsByPath(const QStringList &files);
     /*!
      * Get music songs file name by index.
      */

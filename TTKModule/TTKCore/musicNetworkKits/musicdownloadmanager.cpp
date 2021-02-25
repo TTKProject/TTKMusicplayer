@@ -11,7 +11,7 @@ void MusicDownLoadManager::connectNetworkMultiValue(QObject *object)
 {
 #ifndef MUSIC_MOBILE
     m_queueList << object;
-    const QObject *to = M_CONNECTION_PTR->value(MusicDownloadStatusObject::getClassName());
+    const QObject *to = G_CONNECTION_PTR->value(MusicDownloadStatusObject::getClassName());
     if(to)
     {
         QObject::connect(object, SIGNAL(downLoadDataChanged(QString)), to, SLOT(showDownLoadInfoFinished(QString)));
@@ -30,7 +30,7 @@ void MusicDownLoadManager::removeNetworkMultiValue(QObject *object)
     }
 }
 
-void MusicDownLoadManager::connectMusicDownload(const MusicDownLoadPair &pair)
+void MusicDownLoadManager::connectMusicDownload(const MusicDownLoadPairData &pair)
 {
 #ifndef MUSIC_MOBILE
     QString className;
@@ -41,7 +41,7 @@ void MusicDownLoadManager::connectMusicDownload(const MusicDownLoadPair &pair)
         case MusicObject::RecordCloudUpload : className = MusicCloudUploadTableWidget::getClassName(); break;
         default: break;
     }
-    const QObject *to = M_CONNECTION_PTR->value(className);
+    const QObject *to = G_CONNECTION_PTR->value(className);
     if(to && pair.m_object)
     {
         QObject::connect(pair.m_object, SIGNAL(downloadProgressChanged(float, QString, qint64)), to, SLOT(downloadProgressChanged(float, QString, qint64)));
@@ -55,12 +55,12 @@ void MusicDownLoadManager::connectMusicDownload(const MusicDownLoadPair &pair)
 #endif
 }
 
-void MusicDownLoadManager::reconnectMusicDownload(const MusicDownLoadPair &pair)
+void MusicDownLoadManager::reconnectMusicDownload(const MusicDownLoadPairData &pair)
 {
     const int index = m_pairList.indexOf(pair);
     if(index != -1)
     {
-        MusicDownLoadPair *p = &m_pairList[index];
+        MusicDownLoadPairData *p = &m_pairList[index];
         QObject::disconnect(p->m_object, SIGNAL(downloadProgressChanged(float, QString, qint64)), pair.m_object, SLOT(downloadProgressChanged(float, QString, qint64)));
         QObject::disconnect(p->m_object, SIGNAL(createDownloadItem(QString, qint64)), pair.m_object, SLOT(createDownloadItem(QString, qint64)));
 
@@ -69,7 +69,7 @@ void MusicDownLoadManager::reconnectMusicDownload(const MusicDownLoadPair &pair)
     }
 }
 
-void MusicDownLoadManager::removeMusicDownload(const MusicDownLoadPair &pair)
+void MusicDownLoadManager::removeMusicDownload(const MusicDownLoadPairData &pair)
 {
     const int index = m_pairList.indexOf(pair);
     if(index != -1)
@@ -83,6 +83,6 @@ void MusicDownLoadManager::downloadProgressChanged(float percent, const QString 
     Q_UNUSED(total);
     if(percent >= 100)
     {
-        removeMusicDownload(MusicDownLoadPair(time));
+        removeMusicDownload(MusicDownLoadPairData(time));
     }
 }

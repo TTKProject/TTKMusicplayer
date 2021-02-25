@@ -13,11 +13,9 @@ void MusicAbstractMVRadioRequest::startToSearch(QueryType type, const QString &t
 
     deleteAll();
     m_searchText = text.isEmpty() ? "1" : text;
-    m_interrupt = true;
 
     QNetworkRequest request;
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(MV_CATEGORY_URL, false);
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(MV_CATEGORY_URL, false));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2008-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -39,6 +39,15 @@
 #define QStringToFileName(s) s.toLocal8Bit().constData()
 #endif
 
+#ifndef qPrintable
+#define qPrintable(s) QString(s).toLocal8Bit().constData()
+#endif
+
+#ifndef qUtf8Printable
+#define qUtf8Printable(s) QString(s).toUtf8().constData()
+#endif
+
+#ifndef TTK_AS_CONST
 #if (QT_VERSION < QT_VERSION_CHECK(5,7,0))
 // this adds const to non-const objects (like std::as_const)
 template <typename T>
@@ -47,7 +56,7 @@ Q_DECL_CONSTEXPR typename std::add_const<T>::type &qAsConst(T &t) noexcept { ret
 template <typename T>
 void qAsConst(const T &&) = delete;
 #endif
-
+#endif
 
 /*! @brief The Qmmp class stores global settings and enums.
  * @author Ilya Kotov <forkotov02@ya.ru>

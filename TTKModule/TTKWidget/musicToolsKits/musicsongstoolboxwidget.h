@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "musicfunctiontoolboxwidget.h"
 
-class MusicSort;
+class MusicSongSort;
 class MusicSongsToolItemRenamedWidget;
 
 /*! @brief The class of the tool box top widget.
@@ -42,7 +42,7 @@ public:
     /*!
      * Set music sort.
      */
-    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort; }
+    inline void setMusicSongSort(MusicSongSort *sort) { m_musicSort = sort; }
 
 Q_SIGNALS:
     /*!
@@ -138,7 +138,7 @@ protected:
      */
     virtual void contextMenuEvent(QContextMenuEvent *event) override;
     
-    MusicSort *m_musicSort;
+    MusicSongSort *m_musicSort;
     MusicSongsToolItemRenamedWidget *m_renameLine;
 
 };
@@ -186,7 +186,7 @@ public:
     /*!
      * Set music sort.
      */
-    void setMusicSort(MusicSort *sort);
+    void setMusicSongSort(MusicSongSort *sort);
 
 Q_SIGNALS:
     /*!
@@ -245,7 +245,7 @@ public:
     /*!
      * Set music sort.
      */
-    void setMusicSort(QWidget *item, MusicSort *sort);
+    void setMusicSongSort(QWidget *item, MusicSongSort *sort);
 
 protected:
     /*!

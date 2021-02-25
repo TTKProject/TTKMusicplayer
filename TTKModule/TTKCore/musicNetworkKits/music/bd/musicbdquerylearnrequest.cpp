@@ -19,15 +19,13 @@ void MusicBDQueryLearnRequest::startToSearch(QueryType type, const QString &text
         return;
     }
 
-    Q_UNUSED(type);
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
+
+    Q_UNUSED(type);
     deleteAll();
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_LEARN_URL, false).arg(text).arg(1).arg(30);
-    m_interrupt = true;
-
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(BD_LEARN_URL, false).arg(text).arg(1).arg(30));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(BD_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -38,24 +36,17 @@ void MusicBDQueryLearnRequest::startToSearch(QueryType type, const QString &text
 
 void MusicBDQueryLearnRequest::downLoadFinished()
 {
-    if(!m_reply)
-    {
-        deleteAll();
-        return;
-    }
-
     TTK_LOGGER_INFO(QString("%1 downLoadFinished").arg(getClassName()));
+
     Q_EMIT clearAllItems();
     m_musicSongInfos.clear();
-    m_interrupt = false;
+    setNetworkAbort(false);
 
-    if(m_reply->error() == QNetworkReply::NoError)
+    if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
@@ -63,7 +54,7 @@ void MusicBDQueryLearnRequest::downLoadFinished()
             {
                 value = value["result"].toMap();
                 const QVariantList &datas = value["items"].toList();
-                foreach(const QVariant &var, datas)
+                for(const QVariant &var : qAsConst(datas))
                 {
                     if(var.isNull())
                     {
@@ -71,6 +62,8 @@ void MusicBDQueryLearnRequest::downLoadFinished()
                     }
 
                     value = var.toMap();
+                    TTK_NETWORK_QUERY_CHECK();
+
                     MusicObject::MusicSongInformation musicInfo;
                     musicInfo.m_singerName = MusicUtils::String::illegalCharactersReplaced(value["artist_name"].toString());
                     musicInfo.m_songName = MusicUtils::String::illegalCharactersReplaced(value["song_title"].toString());
@@ -81,17 +74,17 @@ void MusicBDQueryLearnRequest::downLoadFinished()
                     musicInfo.m_discNumber = "1";
                     musicInfo.m_trackNumber = value["album_no"].toString();
 
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                    TTK_NETWORK_QUERY_CHECK();
                     readFromMusicLrcAttribute(&musicInfo);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                    TTK_NETWORK_QUERY_CHECK();
                     readFromMusicSongAttribute(&musicInfo);
-                    if(m_interrupt || !m_manager || m_stateCode != MusicObject::NetworkQuery) return;
+                    TTK_NETWORK_QUERY_CHECK();
 
                     if(musicInfo.m_songAttrs.isEmpty())
                     {
                         continue;
                     }
-
+                    //
                     MusicSearchedItem item;
                     item.m_songName = musicInfo.m_songName;
                     item.m_singerName = musicInfo.m_singerName;
@@ -117,10 +110,9 @@ void MusicBDQueryLearnRequest::readFromMusicSongAttribute(MusicObject::MusicSong
     const QString &key = MusicUtils::Algorithm::mdII(BD_LEARN_DATA_URL, false).arg(info->m_songId).arg(MusicTime::timestamp());
     QString eKey = QString(QAesWrap().encryptCBC(key.toUtf8(), "4CC20A0C44FEB6FD", "2012061402992850"));
     MusicUtils::Url::urlEncode(eKey);
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_LEARN_INFO_URL, false).arg(key).arg(eKey);
 
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(BD_LEARN_INFO_URL, false).arg(key).arg(eKey));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(BD_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -149,8 +141,9 @@ void MusicBDQueryLearnRequest::readFromMusicSongAttribute(MusicObject::MusicSong
             attr.m_bitrate = MB_128;
             attr.m_url = value["merge_link"].toString();
             attr.m_format = MP3_FILE_PREFIX;
+            //
             if(!findUrlFileSize(&attr)) return;
-
+            //
             info->m_songAttrs.append(attr);
         }
     }
@@ -163,10 +156,8 @@ void MusicBDQueryLearnRequest::readFromMusicLrcAttribute(MusicObject::MusicSongI
         return;
     }
 
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(BD_SONG_PATH_URL, false).arg(info->m_songId);
-
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(BD_SONG_PATH_URL, false).arg(info->m_songId));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(BD_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -191,7 +182,7 @@ void MusicBDQueryLearnRequest::readFromMusicLrcAttribute(MusicObject::MusicSongI
         {
             value = value["data"].toMap();
             const QVariantList &datas = value["songList"].toList();
-            foreach(const QVariant &var, datas)
+            for(const QVariant &var : qAsConst(datas))
             {
                 if(var.isNull())
                 {
@@ -199,6 +190,8 @@ void MusicBDQueryLearnRequest::readFromMusicLrcAttribute(MusicObject::MusicSongI
                 }
 
                 value = var.toMap();
+                TTK_NETWORK_QUERY_CHECK();
+
                 info->m_lrcUrl = value["lrcLink"].toString();
             }
         }

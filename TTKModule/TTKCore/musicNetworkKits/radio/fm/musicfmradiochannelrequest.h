@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,13 +24,13 @@
 /*! @brief The class of the fm radio channel info item.
  * @author Greedysky <greedysky@163.com>
  */
-typedef struct MUSIC_NETWORK_EXPORT MusicFMRadioChannelInfo
+typedef struct MUSIC_NETWORK_EXPORT MusicFMRadioChannelData
 {
     QString m_id;
     QString m_name;
     QString m_coverUrl;
-}MusicFMRadioChannelInfo;
-TTK_DECLARE_LISTS(MusicFMRadioChannelInfo)
+}MusicFMRadioChannelData;
+TTK_DECLARE_LISTS(MusicFMRadioChannelData)
 
 /*! @brief The class of fm radio request of song channel.
  * @author Greedysky <greedysky@163.com>
@@ -54,7 +54,7 @@ public:
     /*!
      * Get music channel.
      */
-    inline const MusicFMRadioChannelInfos& getMusicChannel() const { return m_channels; }
+    inline const MusicFMRadioChannelDatas& getMusicChannel() const { return m_channels; }
 
 public Q_SLOTS:
     /*!
@@ -63,7 +63,7 @@ public Q_SLOTS:
     virtual void downLoadFinished() override;
 
 protected:
-    MusicFMRadioChannelInfos m_channels;
+    MusicFMRadioChannelDatas m_channels;
 
 };
 

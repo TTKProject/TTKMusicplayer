@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2020 Greedysky Studio
+# * Copyright (C) 2015 - 2021 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ HEADERS  += \
     $$PWD/musicsingleton.h \
     $$PWD/musiccoremplayer.h \
     $$PWD/musicsong.h \
-    $$PWD/musicsongtag.h \
+    $$PWD/musicsongmeta.h \
     $$PWD/musiccryptographichash.h \
     $$PWD/musicbackgroundmanager.h \
     $$PWD/musicsemaphoreloop.h \
@@ -62,7 +62,7 @@ SOURCES += \
     $$PWD/musiccoremplayer.cpp \
     $$PWD/musicsingleton.cpp \
     $$PWD/musicsong.cpp \
-    $$PWD/musicsongtag.cpp \
+    $$PWD/musicsongmeta.cpp \
     $$PWD/musiccryptographichash.cpp \
     $$PWD/musicbackgroundmanager.cpp \
     $$PWD/musicsemaphoreloop.cpp \

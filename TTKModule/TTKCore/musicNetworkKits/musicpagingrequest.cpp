@@ -4,7 +4,7 @@ MusicPagingRequest::MusicPagingRequest(QObject *parent)
     : MusicAbstractNetwork(parent)
 {
     m_pageSize = 0;
-    m_pageTotal = 0;
+    m_totalSize = 0;
     m_pageIndex = 0;
 
     m_manager = new QNetworkAccessManager(this);
@@ -25,6 +25,8 @@ void MusicPagingRequest::deleteAll()
         m_reply->deleteLater();
         m_reply = nullptr;
     }
+
+    setNetworkAbort(true);
 }
 
 void MusicPagingRequest::startToPage(int offset)

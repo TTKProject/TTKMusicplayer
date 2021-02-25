@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ public:
     /*!
      * Set music sort.
      */
-    inline void setMusicSort(MusicSort *sort) { m_musicSort = sort; }
+    inline void setMusicSongSort(MusicSongSort *sort) { m_musicSort = sort; }
     /*!
      * Update item time label time.
      */
@@ -214,7 +214,7 @@ protected:
     bool m_renameActived, m_deleteItemWithFile;
     QTableWidgetItem *m_renameItem;
     MusicRenameLineEditDelegate *m_renameLineEditDelegate;
-    MusicSort *m_musicSort;
+    MusicSongSort *m_musicSort;
 
 };
 

@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,14 +33,6 @@
 #else
 #define CONFIG_THREAD 0
 #endif
-
-//#define QT_NO_DEBUG_OUTPUT 0
-#define CONFIG_DEBUG 1
-#if CONFIG_DEBUG
-#define zDebug(fmt, ...) qDebug("%s: "#fmt, __FUNCTION__, ##__VA_ARGS__)
-#else
-#define zDebug(fmt, ...)
-#endif //CONFIG_DEBUG
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h>

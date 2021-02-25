@@ -3,7 +3,7 @@
 
 /* =================================================
  * This file is part of the TTK Music Player project
- * Copyright (C) 2015 - 2020 Greedysky Studio
+ * Copyright (C) 2015 - 2021 Greedysky Studio
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,27 +102,22 @@ public:
     /*!
      * Get download small picture object by type.
      */
-    MusicAbstractDownLoadRequest *getDownloadSmallPicRequest(const QString &url, const QString &save,
-                                                             MusicObject::DownloadType type,
-                                                             QObject *parent = nullptr);
+    MusicAbstractDownLoadRequest *getDownloadSmallPictureRequest(const QString &url, const QString &save, MusicObject::DownloadType type, QObject *parent = nullptr);
     /*!
      * Get download lrc object by type.
      */
-    MusicAbstractDownLoadRequest *getDownloadLrcRequest(const QString &url, const QString &save,
-                                                        MusicObject::DownloadType type,
-                                                        QObject *parent = nullptr);
+    MusicAbstractDownLoadRequest *getDownloadLrcRequest(const QString &url, const QString &save, MusicObject::DownloadType type, QObject *parent = nullptr);
     /*!
      * Get download big picture object by type.
      */
-    MusicDownloadBackgroundRequest *getDownloadBigPicRequest(const QString &name, const QString &save,
-                                                             QObject *parent = nullptr);
+    MusicDownloadBackgroundRequest *getDownloadBigPictureRequest(const QString &name, const QString &save, QObject *parent = nullptr);
 
 protected:
     DECLARE_SINGLETON_CLASS(MusicDownLoadQueryFactory)
 
 };
 
-#define M_DOWNLOAD_QUERY_PTR GetMusicDownLoadQueryFactory()
+#define G_DOWNLOAD_QUERY_PTR GetMusicDownLoadQueryFactory()
 MUSIC_NETWORK_EXPORT MusicDownLoadQueryFactory* GetMusicDownLoadQueryFactory();
 
 #endif // MUSICDOWNLOADQUERYFACTORY_H

@@ -13,56 +13,32 @@
 
 void MusicQQQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInformation *info, const QVariantMap &key, int bitrate)
 {
-    MusicTime::initRandom();
-    QString mid = key["strMediaMid"].toString();
-    if(mid.isEmpty())
-    {
-        mid = key["songmid"].toString();
-    }
-
+    const QString &mid = key["songmid"].toString();
     if(key["size128"].toULongLong() != 0 && bitrate == MB_128)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("M500" + mid + MP3_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_128_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size128"].toULongLong());
         attr.m_format = MP3_FILE_PREFIX;
         attr.m_bitrate = bitrate;
         info->m_songAttrs.append(attr);
     }
-    else if(key["sizeogg"].toULongLong() != 0 && bitrate == MB_192)
-    {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
-        {
-            return;
-        }
-
-        MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_192_URL, false).arg(mid).arg(vkey).arg(randKey);
-        attr.m_size = MusicUtils::Number::size2Label(key["sizeogg"].toULongLong());
-        attr.m_format = OGG_FILE_PREFIX;
-        attr.m_bitrate = bitrate;
-        info->m_songAttrs.append(attr);
-    }
     else if(key["size320"].toULongLong() != 0 && bitrate == MB_320)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("M800" + mid + MP3_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_320_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size320"].toULongLong());
         attr.m_format = MP3_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -70,15 +46,14 @@ void MusicQQQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
     }
     else if(key["sizeape"].toULongLong() != 0 && bitrate == MB_750)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("A000" + mid + APE_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_APE_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["sizeape"].toULongLong());
         attr.m_format = APE_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -86,15 +61,14 @@ void MusicQQQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
     }
     else if(key["sizeflac"].toULongLong() != 0 && bitrate == MB_1000)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("F000" + mid + FLC_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_FLAC_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["sizeflac"].toULongLong());
         attr.m_format = FLC_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -136,51 +110,32 @@ void MusicQQQueryInterface::readFromMusicSongAttribute(MusicObject::MusicSongInf
 
 void MusicQQQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSongInformation *info, const QVariantMap &key, int bitrate)
 {
-    MusicTime::initRandom();
     const QString &mid = key["media_mid"].toString();
     if(key["size_128mp3"].toULongLong() != 0 && bitrate == MB_128)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("M500" + mid + MP3_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_128_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size_128mp3"].toULongLong());
         attr.m_format = MP3_FILE_PREFIX;
         attr.m_bitrate = bitrate;
         info->m_songAttrs.append(attr);
     }
-    else if(key["size_192ogg"].toULongLong() != 0 && bitrate == MB_192)
-    {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
-        {
-            return;
-        }
-
-        MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_192_URL, false).arg(mid).arg(vkey).arg(randKey);
-        attr.m_size = MusicUtils::Number::size2Label(key["size_192ogg"].toULongLong());
-        attr.m_format = OGG_FILE_PREFIX;
-        attr.m_bitrate = bitrate;
-        info->m_songAttrs.append(attr);
-    }
     else if(key["size_320mp3"].toULongLong() != 0 && bitrate == MB_320)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("M800" + mid + MP3_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_320_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size_320mp3"].toULongLong());
         attr.m_format = MP3_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -188,15 +143,14 @@ void MusicQQQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
     }
     else if(key["size_ape"].toULongLong() != 0 && bitrate == MB_750)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("A000" + mid + APE_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_APE_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size_ape"].toULongLong());
         attr.m_format = APE_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -204,15 +158,14 @@ void MusicQQQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
     }
     else if(key["size_flac"].toULongLong() != 0 && bitrate == MB_1000)
     {
-        const QString &randKey = QString::number(MusicTime::random());
-        const QString &vkey = getMusicKey(randKey);
-        if(vkey.isEmpty())
+        const QString &musicUrl = getMusicPath("F000" + mid + FLC_FILE, mid);
+        if(musicUrl.isEmpty())
         {
             return;
         }
 
         MusicObject::MusicSongAttribute attr;
-        attr.m_url = MusicUtils::Algorithm::mdII(QQ_SONG_FLAC_URL, false).arg(mid).arg(vkey).arg(randKey);
+        attr.m_url = musicUrl;
         attr.m_size = MusicUtils::Number::size2Label(key["size_flac"].toULongLong());
         attr.m_format = FLC_FILE_PREFIX;
         attr.m_bitrate = bitrate;
@@ -229,12 +182,10 @@ void MusicQQQueryInterface::readFromMusicSongAttributePlus(MusicObject::MusicSon
     readFromMusicSongAttributePlus(info, key, MB_1000);
 }
 
-QString MusicQQQueryInterface::getMusicKey(const QString &time)
+QString MusicQQQueryInterface::getMusicPath(const QString &file, const QString &mid)
 {
-    const QUrl &musicUrl = MusicUtils::Algorithm::mdII(QQ_SONG_KEY_URL, false).arg(time);
-
     QNetworkRequest request;
-    request.setUrl(musicUrl);
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_SONG_KEY_URL, false).arg(file).arg(mid));
     request.setRawHeader("Referer", MusicUtils::Algorithm::mdII(REFER_URL, false).toUtf8());
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
@@ -251,17 +202,42 @@ QString MusicQQQueryInterface::getMusicKey(const QString &time)
         return QString();
     }
 
-    const QByteArray &bytes = reply->readAll();
-
     QJson::Parser parser;
     bool ok;
-    const QVariant &data = parser.parse(bytes, &ok);
+    const QVariant &data = parser.parse(reply->readAll(), &ok);
     if(ok)
     {
-        const QVariantMap &value = data.toMap();
-        if(value.contains("code") && value["code"].toInt() == 0 && value.contains("key"))
+        QVariantMap value = data.toMap();
+        if(value.contains("code") && value["code"].toInt() == 0)
         {
-            return value["key"].toString();
+            QString url;
+            if(value.contains("req_0"))
+            {
+                QVariantMap req_0 = value["req_0"].toMap();
+                req_0 = req_0["data"].toMap();
+                const QVariantList &datas = req_0["midurlinfo"].toList();
+                for(const QVariant &var : qAsConst(datas))
+                {
+                    req_0 = var.toMap();
+                    if(req_0.contains("purl"))
+                    {
+                        url = req_0["purl"].toString();
+                        break;
+                    }
+                }
+            }
+
+            if(value.contains("req") && file.startsWith("M500"))
+            {
+                QVariantMap req = value["req"].toMap();
+                req = req["data"].toMap();
+                if(req.contains("keepalivefile"))
+                {
+                    url = req["keepalivefile"].toString();
+                }
+            }
+
+            return url.isEmpty() ? url : MusicUtils::Algorithm::mdII(QQ_SONG_PREFIX_URL, false) + url;
         }
     }
 

@@ -1,6 +1,6 @@
 # =================================================
 # * This file is part of the TTK Music Player project
-# * Copyright (C) 2015 - 2020 Greedysky Studio
+# * Copyright (C) 2015 - 2021 Greedysky Studio
 #
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ INCLUDEPATH += $$PWD \
                $$PWD/music/kw \
                $$PWD/music/bd \
                $$PWD/music/qq \
+               $$PWD/music/mg \
                $$PWD/radio/fm \
                $$PWD/radio/dj \
                $$PWD/radio/mv
@@ -34,7 +35,7 @@ HEADERS  += \
     $$PWD/common/musicnetworkoperator.h \
     $$PWD/common/musicdownloaddatarequest.h \
     $$PWD/common/musicdownloadtextrequest.h \
-    $$PWD/common/musicdownloaddatatagrequest.h \
+    $$PWD/common/musicdownloadtagdatarequest.h \
     $$PWD/common/musicdownloadsourcerequest.h \
     $$PWD/common/musicdownloadbackgroundrequest.h \
     $$PWD/common/musicdownloadqueuerequest.h \
@@ -100,19 +101,7 @@ HEADERS  += \
     $$PWD/music/kw/musickwsongsuggestrequest.h \
     $$PWD/music/kw/musickwartistsimilarrequest.h \
     $$PWD/music/bd/musicbdqueryinterface.h \
-    $$PWD/music/bd/musicbdqueryrequest.h \
-    $$PWD/music/bd/musicbdqueryalbumrequest.h \
-    $$PWD/music/bd/musicbdqueryartistrequest.h \
-    $$PWD/music/bd/musicbdqueryplaylistrequest.h \
     $$PWD/music/bd/musicbdquerylearnrequest.h \
-    $$PWD/music/bd/musicbdquerytoplistrequest.h \
-    $$PWD/music/bd/musicbdquerymovierequest.h \
-    $$PWD/music/bd/musicbdqueryrecommendrequest.h \
-    $$PWD/music/bd/musicbdqueryartistlistrequest.h \
-    $$PWD/music/bd/musicbddiscoverlistrequest.h \
-    $$PWD/music/bd/musicbdcommentsrequest.h \
-    $$PWD/music/bd/musicbdsongsuggestrequest.h \
-    $$PWD/music/bd/musicbdartistsimilarrequest.h \
     $$PWD/music/bd/musicbdtranslationrequest.h \
     $$PWD/music/qq/musicqqqueryinterface.h \
     $$PWD/music/qq/musicqqqueryrequest.h \
@@ -129,6 +118,20 @@ HEADERS  += \
     $$PWD/music/qq/musicqqcommentsrequest.h \
     $$PWD/music/qq/musicqqsongsuggestrequest.h \
     $$PWD/music/qq/musicqqartistsimilarrequest.h \
+    $$PWD/music/mg/musicmgqueryinterface.h \
+    $$PWD/music/mg/musicmgqueryrequest.h \
+    $$PWD/music/mg/musicmgdownloadtextrequest.h \
+    $$PWD/music/mg/musicmgsongsuggestrequest.h \
+    $$PWD/music/mg/musicmgdiscoverlistrequest.h \
+    $$PWD/music/mg/musicmgquerymovierequest.h \
+    $$PWD/music/mg/musicmgqueryrecommendrequest.h \
+    $$PWD/music/mg/musicmgquerytoplistrequest.h \
+    $$PWD/music/mg/musicmgqueryplaylistrequest.h \
+    $$PWD/music/mg/musicmgcommentsrequest.h \
+    $$PWD/music/mg/musicmgqueryartistrequest.h \
+    $$PWD/music/mg/musicmgqueryalbumrequest.h \
+    $$PWD/music/mg/musicmgartistsimilarrequest.h \
+    $$PWD/music/mg/musicmgqueryartistlistrequest.h \
     $$PWD/radio/fm/musicfmradiochannelrequest.h \
     $$PWD/radio/fm/musicfmradiodownloadtextrequest.h \
     $$PWD/radio/fm/musicfmradiosongsrequest.h \
@@ -167,7 +170,7 @@ SOURCES += \
     $$PWD/common/musicnetworkoperator.cpp \
     $$PWD/common/musicdownloaddatarequest.cpp \
     $$PWD/common/musicdownloadtextrequest.cpp \
-    $$PWD/common/musicdownloaddatatagrequest.cpp \
+    $$PWD/common/musicdownloadtagdatarequest.cpp \
     $$PWD/common/musicdownloadsourcerequest.cpp \
     $$PWD/common/musicdownloadbackgroundrequest.cpp \
     $$PWD/common/musicdownloadqueuerequest.cpp \
@@ -232,20 +235,7 @@ SOURCES += \
     $$PWD/music/kw/musickwcommentsrequest.cpp \
     $$PWD/music/kw/musickwsongsuggestrequest.cpp \
     $$PWD/music/kw/musickwartistsimilarrequest.cpp \
-    $$PWD/music/bd/musicbdqueryinterface.cpp \
-    $$PWD/music/bd/musicbdqueryrequest.cpp \
-    $$PWD/music/bd/musicbdqueryalbumrequest.cpp \
-    $$PWD/music/bd/musicbdqueryartistrequest.cpp \
-    $$PWD/music/bd/musicbdqueryplaylistrequest.cpp \
     $$PWD/music/bd/musicbdquerylearnrequest.cpp \
-    $$PWD/music/bd/musicbdquerytoplistrequest.cpp \
-    $$PWD/music/bd/musicbdquerymovierequest.cpp \
-    $$PWD/music/bd/musicbdqueryrecommendrequest.cpp \
-    $$PWD/music/bd/musicbdqueryartistlistrequest.cpp \
-    $$PWD/music/bd/musicbddiscoverlistrequest.cpp \
-    $$PWD/music/bd/musicbdcommentsrequest.cpp \
-    $$PWD/music/bd/musicbdsongsuggestrequest.cpp \
-    $$PWD/music/bd/musicbdartistsimilarrequest.cpp \
     $$PWD/music/bd/musicbdtranslationrequest.cpp \
     $$PWD/music/qq/musicqqqueryinterface.cpp \
     $$PWD/music/qq/musicqqqueryrequest.cpp \
@@ -262,6 +252,20 @@ SOURCES += \
     $$PWD/music/qq/musicqqcommentsrequest.cpp \
     $$PWD/music/qq/musicqqsongsuggestrequest.cpp \
     $$PWD/music/qq/musicqqartistsimilarrequest.cpp \
+    $$PWD/music/mg/musicmgqueryinterface.cpp \
+    $$PWD/music/mg/musicmgqueryrequest.cpp \
+    $$PWD/music/mg/musicmgdownloadtextrequest.cpp \
+    $$PWD/music/mg/musicmgsongsuggestrequest.cpp \
+    $$PWD/music/mg/musicmgdiscoverlistrequest.cpp \
+    $$PWD/music/mg/musicmgquerymovierequest.cpp \
+    $$PWD/music/mg/musicmgqueryrecommendrequest.cpp \
+    $$PWD/music/mg/musicmgquerytoplistrequest.cpp \
+    $$PWD/music/mg/musicmgqueryplaylistrequest.cpp \
+    $$PWD/music/mg/musicmgcommentsrequest.cpp \
+    $$PWD/music/mg/musicmgqueryartistrequest.cpp \
+    $$PWD/music/mg/musicmgqueryalbumrequest.cpp \
+    $$PWD/music/mg/musicmgartistsimilarrequest.cpp \
+    $$PWD/music/mg/musicmgqueryartistlistrequest.cpp \
     $$PWD/radio/fm/musicfmradiochannelrequest.cpp \
     $$PWD/radio/fm/musicfmradiodownloadtextrequest.cpp \
     $$PWD/radio/fm/musicfmradiosongsrequest.cpp \

@@ -1,7 +1,6 @@
 #include "musicbdtranslationrequest.h"
+#include "musicbdqueryinterface.h"
 #include "musicobject.h"
-
-const QString TRANSLATION_URL = "TXRkdVhlYnQzSEtZUmpJMVpDeHpaVG5DVzhId0NyVE42YXBPYkw2d25YeGJENDBONm9kSVZ2My95eHgvbVJSQjlDSE92clVkam85OG9uYjU=";
 
 MusicBDTranslationRequest::MusicBDTranslationRequest(QObject *parent)
     : MusicTranslationRequest(parent)
@@ -17,10 +16,11 @@ void MusicBDTranslationRequest::startToDownload(const QString &data)
 void MusicBDTranslationRequest::startToDownload(TranslationType from, TranslationType to, const QString &data)
 {
     TTK_LOGGER_INFO(QString("%1 startToSearch").arg(getClassName()));
+
     deleteAll();
 
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(TRANSLATION_URL, false).arg(mapTypeFromEnumToString(from)).arg(data).arg(mapTypeFromEnumToString(to)));
+    request.setUrl(MusicUtils::Algorithm::mdII(BD_TRANSLATION_URL, false).arg(mapTypeFromEnumToString(from)).arg(data).arg(mapTypeFromEnumToString(to)));
     MusicObject::setSslConfiguration(&request);
 
     m_reply = m_manager->get(request);
@@ -55,25 +55,33 @@ QString MusicBDTranslationRequest::mapTypeFromEnumToString(TranslationType type)
 
 void MusicBDTranslationRequest::downLoadFinished()
 {
+    setNetworkAbort(false);
+
     if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
-        const QByteArray &bytes = m_reply->readAll();
-
         QJson::Parser parser;
         bool ok;
-        const QVariant &data = parser.parse(bytes, &ok);
+        const QVariant &data = parser.parse(m_reply->readAll(), &ok);
         if(ok)
         {
             QVariantMap value = data.toMap();
             value = value["trans_result"].toMap();
             const QVariantList &datas = value["data"].toList();
-            foreach(const QVariant &var, datas)
+            for(const QVariant &var : qAsConst(datas))
             {
+                if(var.isNull())
+                {
+                    continue;
+                }
+
                 value = var.toMap();
+                TTK_NETWORK_QUERY_CHECK();
+
                 if(value.isEmpty() || value["dst"].toString().isEmpty())
                 {
                     continue;
                 }
+
                 Q_EMIT downLoadDataChanged(value["dst"].toString());
                 break;
             }
@@ -88,5 +96,6 @@ void MusicBDTranslationRequest::downLoadFinished()
         TTK_LOGGER_ERROR("Translation source data error");
         Q_EMIT downLoadDataChanged(QString());
     }
+
     deleteAll();
 }

@@ -20,19 +20,18 @@ void MusicKWDownloadBackgroundRequest::startToDownload()
 
 void MusicKWDownloadBackgroundRequest::downLoadFinished(const QByteArray &bytes)
 {
-    QJson::Parser parser;
-    bool ok;
-
     if(bytes != "NO_PIC")
     {
+        QJson::Parser parser;
+        bool ok;
         const QVariant &data = parser.parse(bytes, &ok);
         if(ok)
         {
             QVariantMap dataMap = data.toMap();
             const QVariantList &datas = dataMap["array"].toList();
-            foreach(const QVariant &value, datas)
+            for(const QVariant &var : qAsConst(datas))
             {
-                dataMap = value.toMap();
+                dataMap = var.toMap();
                 if(m_counter < 5 && !dataMap.isEmpty())
                 {
                     const QString &url = dataMap.values().first().toString();

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2011-2020 by Ilya Kotov                                 *
+ *   Copyright (C) 2011-2021 by Ilya Kotov                                 *
  *   forkotov02@ya.ru                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -62,7 +62,7 @@ public:
     /*!
      * Returns all stream information.
      */
-    QHash<QString, QString> streamInfo() const;
+    const QHash<QString, QString> &streamInfo() const;
 
 private:
     QHash<QString, QString> m_streamInfo;
