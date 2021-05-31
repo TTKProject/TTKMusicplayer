@@ -4,6 +4,9 @@
 #include <QFile>
 #include <QDateTime>
 
+/*! @brief The class of the sync cloud download data private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QSyncDownloadDataPrivate : public QSyncDataInterfacePrivate
 {
 public:
@@ -18,10 +21,8 @@ public:
 
 
 QSyncDownloadData::QSyncDownloadData(QNetworkAccessManager *networkManager, QObject *parent)
-    : QSyncDataInterface(networkManager, parent)
+    : QSyncDataInterface(TTK_CREATE_PRIVATE(QSyncDownloadData), networkManager, parent)
 {
-    TTK_INIT_PUBLIC(QSyncDownloadData);
-    TTK_INIT_PRIVATE;
     TTK_D(QSyncDownloadData);
     d->m_manager = networkManager;
 }

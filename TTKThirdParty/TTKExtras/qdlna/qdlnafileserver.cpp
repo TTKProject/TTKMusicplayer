@@ -8,6 +8,9 @@
 #include <QRegExp>
 #include <QNetworkInterface>
 
+/*! @brief The class of the dlna file server private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QDlnaFileServerPrivate : public TTKPrivate<QDlnaFileServer>
 {
 public:
@@ -35,7 +38,7 @@ QDlnaFileServerPrivate::~QDlnaFileServerPrivate()
 QDlnaFileServer::QDlnaFileServer(QObject *parent)
     : QObject(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QDlnaFileServer);
     TTK_D(QDlnaFileServer);
     connect(d->m_server, SIGNAL(newRequest(QHttpRequest*, QHttpResponse*)), SLOT(handleRequest(QHttpRequest*, QHttpResponse*)));
 }

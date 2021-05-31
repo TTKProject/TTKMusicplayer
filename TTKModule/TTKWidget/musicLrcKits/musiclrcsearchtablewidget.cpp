@@ -29,14 +29,13 @@ void MusicLrcSearchTableWidget::startSearchQuery(const QString &text)
     if(!G_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
 
     MusicItemSearchTableWidget::startSearchQuery(text);
-    connect(m_downLoadManager, SIGNAL(downLoadDataChanged(QString)), SIGNAL(resolvedSuccess()));
+    connect(m_networkRequest, SIGNAL(downLoadDataChanged(QString)), SIGNAL(resolvedSuccess()));
     m_loadingLabel->run(true);
-    m_downLoadManager->startToSearch(MusicAbstractQueryRequest::LrcQuery, text);
+    m_networkRequest->startToSearch(MusicAbstractQueryRequest::LrcQuery, text);
 }
 
 void MusicLrcSearchTableWidget::musicDownloadLocal(int row)
@@ -47,10 +46,10 @@ void MusicLrcSearchTableWidget::musicDownloadLocal(int row)
         return;
     }
 
-    const MusicObject::MusicSongInformations musicSongInfos(m_downLoadManager->getMusicSongInfos());
+    const MusicObject::MusicSongInformations musicSongInfos(m_networkRequest->getMusicSongInfos());
     ///download lrc
     MusicAbstractDownLoadRequest *d = G_DOWNLOAD_QUERY_PTR->getDownloadLrcRequest(musicSongInfos[row].m_lrcUrl,
-                                     MusicUtils::String::lrcPrefix() + m_downLoadManager->getSearchedText() + LRC_FILE,
+                                     MusicUtils::String::lrcPrefix() + m_networkRequest->getQueryText() + LRC_FILE,
                                      MusicObject::DownloadLrc, this);
     connect(d, SIGNAL(downLoadDataChanged(QString)), SIGNAL(lrcDownloadStateChanged(QString)));
     d->startToDownload();

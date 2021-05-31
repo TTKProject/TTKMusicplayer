@@ -1,6 +1,9 @@
 #include "qhttprequest.h"
 #include "qhttpconnection.h"
 
+/*! @brief The class of the http request private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QHttpRequestPrivate : public TTKPrivate<QHttpRequest>
 {
 public:
@@ -31,7 +34,7 @@ QHttpRequestPrivate::QHttpRequestPrivate()
 QHttpRequest::QHttpRequest(QHttpConnection *connection, QObject *parent)
     : QObject(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QHttpRequest);
     TTK_D(QHttpRequest);
     d->m_connection = connection;
 }

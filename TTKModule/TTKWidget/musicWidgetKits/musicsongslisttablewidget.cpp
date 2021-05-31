@@ -33,8 +33,10 @@
 
 
 MusicSongsListTableWidget::MusicSongsListTableWidget(int index, QWidget *parent)
-    : MusicAbstractSongsListTableWidget(parent), m_openFileWidget(nullptr),
-      m_musicSongsInfoWidget(nullptr), m_musicSongsPlayWidget(nullptr)
+    : MusicAbstractSongsListTableWidget(parent),
+      m_openFileWidget(nullptr),
+      m_musicSongsInfoWidget(nullptr),
+      m_musicSongsPlayWidget(nullptr)
 {
     m_deleteItemWithFile = false;
     m_renameActived = false;
@@ -83,7 +85,7 @@ MusicSongsListTableWidget::~MusicSongsListTableWidget()
 
 void MusicSongsListTableWidget::updateSongsFileName(const MusicSongs &songs)
 {
-    if(createUploadFileWidget())
+    if(createUploadFileModule())
     {
         return;
     }
@@ -124,11 +126,16 @@ void MusicSongsListTableWidget::updateSongsFileName(const MusicSongs &songs)
         setItem(i, 5, item);
     }
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
 }
 
 void MusicSongsListTableWidget::clearAllItems()
 {
+    if(m_playRowIndex < 0)
+    {
+        return;
+    }
+
     //Remove play widget
     setRowHeight(m_playRowIndex, ITEM_ROW_HEIGHT_M);
     removeCellWidget(m_playRowIndex, 0);
@@ -136,7 +143,7 @@ void MusicSongsListTableWidget::clearAllItems()
     delete m_musicSongsPlayWidget;
     m_musicSongsPlayWidget = nullptr;
 
-    m_playRowIndex = 0;
+    m_playRowIndex = -1;
     //Remove all the original item
     MusicAbstractSongsListTableWidget::clear();
     setColumnCount(6);
@@ -176,7 +183,7 @@ void MusicSongsListTableWidget::setMusicSongsSearchedFileName(MusicSongs *songs,
     }
     else
     {
-        setFixedHeight(allRowsHeight());
+        setFixedHeight(totalHeight());
     }
 }
 
@@ -188,7 +195,7 @@ void MusicSongsListTableWidget::selectRow(int index)
     }
     MusicAbstractSongsListTableWidget::selectRow(index);
 
-    replacePlayWidgetRow();
+    adjustPlayWidgetRow();
     for(int i=0; i<columnCount(); ++i)
     {
         delete takeItem(index, i);
@@ -216,7 +223,7 @@ void MusicSongsListTableWidget::selectRow(int index)
     m_playRowIndex = index;
 
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
 }
 
 void MusicSongsListTableWidget::updateTimeLabel(const QString &current, const QString &total) const
@@ -235,11 +242,11 @@ void MusicSongsListTableWidget::updateCurrentArtist()
     }
 }
 
-void MusicSongsListTableWidget::replacePlayWidgetRow()
+void MusicSongsListTableWidget::adjustPlayWidgetRow()
 {
     if(m_playRowIndex >= rowCount() || m_playRowIndex < 0)
     {
-        m_playRowIndex = 0;
+        return;
     }
 
     const QString &name = !m_musicSongs->isEmpty() ? m_musicSongs->at(m_playRowIndex).getMusicName() : QString();
@@ -279,11 +286,12 @@ void MusicSongsListTableWidget::replacePlayWidgetRow()
     delete m_musicSongsPlayWidget;
     m_musicSongsPlayWidget = nullptr;
 
+    m_playRowIndex = -1;
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
 }
 
-bool MusicSongsListTableWidget::createUploadFileWidget()
+bool MusicSongsListTableWidget::createUploadFileModule()
 {
     if(m_musicSongs->isEmpty() && m_parentToolIndex != MUSIC_LOVEST_LIST && m_parentToolIndex != MUSIC_NETWORK_LIST && m_parentToolIndex != MUSIC_RECENT_LIST)
     {
@@ -293,7 +301,7 @@ bool MusicSongsListTableWidget::createUploadFileWidget()
             m_openFileWidget = new MusicOpenFileWidget(this);
             connect(m_openFileWidget, SIGNAL(uploadFileClicked()), SIGNAL(musicAddNewFiles()));
             connect(m_openFileWidget, SIGNAL(uploadFilesClicked()), SIGNAL(musicAddNewDir()));
-            m_openFileWidget->adjustRect(width(), height());
+            m_openFileWidget->adjustWidgetRect(width(), height());
         }
         m_openFileWidget->raise();
         m_openFileWidget->show();
@@ -459,7 +467,7 @@ void MusicSongsListTableWidget::setDeleteItemAt()
         return;
     }
 
-    TTKIntList deleteList(getMultiSelectedIndexs());
+    const TTKIntList deleteList(getMultiSelectedIndex());
     if(deleteList.isEmpty())
     {
         return;
@@ -472,27 +480,26 @@ void MusicSongsListTableWidget::setDeleteItemAt()
 
     for(int i=0; i<deleteList.count(); ++i)
     {
-        if(i%3 == 0)
+        if(i % 3 == 0)
         {
-            progress.setValue(i/3);
+            progress.setValue(i / 3);
         }
     }
 
     if(deleteList.contains(m_playRowIndex) || deleteList[0] < m_playRowIndex)
     {
-        replacePlayWidgetRow();
+        adjustPlayWidgetRow();
     }
 
     for(int i=deleteList.count() - 1; i>=0; --i)
     {
         const int index = deleteList[i];
-        removeRow(index);           //Delete the current row
+        removeRow(index);
         progress.setValue(deleteList.count() * 2 - i);
     }
 
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
-
+    setFixedHeight(totalHeight());
     Q_EMIT deleteItemAt(deleteList, m_deleteItemWithFile);
 }
 
@@ -618,6 +625,11 @@ void MusicSongsListTableWidget::musicAddToPlayedList()
 
 void MusicSongsListTableWidget::setItemRenameFinished(const QString &name)
 {
+    if(m_playRowIndex >= rowCount() || m_playRowIndex < 0)
+    {
+        return;
+    }
+
     (*m_musicSongs)[m_playRowIndex].setMusicName(name);
 }
 
@@ -703,8 +715,6 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     QMenu rightClickMenu(this);
-    QMenu musicPlaybackMode(tr("playbackMode"), &rightClickMenu);
-
     rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_play"), tr("musicPlay"), this, SLOT(musicPlayClicked()));
     rightClickMenu.addAction(tr("playLater"), this, SLOT(musicAddToPlayLater()));
@@ -712,6 +722,7 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
     rightClickMenu.addAction(tr("downloadMore..."), this, SLOT(musicSongDownload()));
     rightClickMenu.addSeparator();
 
+    QMenu musicPlaybackMode(tr("playbackMode"), &rightClickMenu);
     rightClickMenu.addMenu(&musicPlaybackMode);
     QList<QAction*> actions;
     actions << musicPlaybackMode.addAction(tr("OrderPlay"), MusicApplication::instance(), SLOT(musicPlayOrder()));
@@ -731,6 +742,7 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
         case MusicObject::PM_PlayOnce: index = 4; break;
         default: break;
     }
+
     if(index > -1 && index < actions.count())
     {
         actions[index]->setIcon(QIcon(":/contextMenu/btn_selected"));
@@ -741,6 +753,7 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
     musicAddNewFiles.setEnabled(m_parentToolIndex != MUSIC_LOVEST_LIST && m_parentToolIndex != MUSIC_NETWORK_LIST);
     musicAddNewFiles.addAction(tr("openOnlyFiles"), this, SIGNAL(musicAddNewFiles()));
     musicAddNewFiles.addAction(tr("openOnlyDir"), this, SIGNAL(musicAddNewDir()));
+    MusicUtils::Widget::adjustMenuPosition(&musicAddNewFiles);
 
     QMenu musicSortFiles(tr("sort"), &rightClickMenu);
     musicSortFiles.addAction(tr("sortByFileName"))->setData(0);
@@ -749,7 +762,9 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
     musicSortFiles.addAction(tr("sortByAddTime"))->setData(3);
     musicSortFiles.addAction(tr("sortByPlayTime"))->setData(4);
     musicSortFiles.addAction(tr("sortByPlayCount"))->setData(5);
+    MusicUtils::Widget::adjustMenuPosition(&musicSortFiles);
     connect(&musicSortFiles, SIGNAL(triggered(QAction*)), SLOT(musicListSongSortBy(QAction*)));
+
     if(m_musicSort)
     {
         const QList<QAction*> actions(musicSortFiles.actions());
@@ -770,6 +785,7 @@ void MusicSongsListTableWidget::contextMenuEvent(QContextMenuEvent *event)
     musicToolMenu.addAction(tr("bell"), this, SLOT(musicMakeRingWidget()));
     musicToolMenu.addAction(tr("transform"), this, SLOT(musicTransformWidget()));
     rightClickMenu.addMenu(&musicToolMenu);
+    MusicUtils::Widget::adjustMenuPosition(&musicToolMenu);
 
     rightClickMenu.addAction(tr("musicInfo..."), this, SLOT(musicFileInformation()));
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_localFile"), tr("openFileDir"), this, SLOT(musicOpenFileDir()));

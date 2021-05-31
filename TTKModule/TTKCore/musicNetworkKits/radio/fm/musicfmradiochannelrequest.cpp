@@ -3,11 +3,11 @@
 #include "qsync/qsyncutils.h"
 
 #include <QNetworkRequest>
-#include <QNetworkCookieJar>
+#include <QNetworkCookie>
 #include <QNetworkAccessManager>
 
-MusicFMRadioChannelRequest::MusicFMRadioChannelRequest(QObject *parent, QNetworkCookieJar *cookie)
-    : MusicAbstractFMRadioRequest(parent, cookie)
+MusicFMRadioChannelRequest::MusicFMRadioChannelRequest(QObject *parent)
+    : MusicAbstractFMRadioRequest(parent)
 {
 
 }
@@ -20,19 +20,9 @@ MusicFMRadioChannelRequest::~MusicFMRadioChannelRequest()
 void MusicFMRadioChannelRequest::startToDownload(const QString &id)
 {
     Q_UNUSED(id);
-    m_manager = new QNetworkAccessManager(this);
-
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(FM_CHANNEL_URL, false));
-#ifndef QT_NO_SSL
-    connect(m_manager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
+    request.setUrl(MusicUtils::Algorithm::mdII(FM_CHANNEL_URL, false).arg(FM_API_KEY));
     MusicObject::setSslConfiguration(&request);
-#endif
-    if(m_cookJar)
-    {
-        m_manager->setCookieJar(m_cookJar);
-        m_cookJar->setParent(nullptr);
-    }
 
     m_reply = m_manager->get(request);
     connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
@@ -44,6 +34,7 @@ void MusicFMRadioChannelRequest::downLoadFinished()
     if(m_reply && m_reply->error() == QNetworkReply::NoError)
     {
         m_channels.clear();
+        setHeader("Cookie", m_reply->rawHeader("Set-Cookie"));
 
         QJson::Parser parser;
         bool ok;

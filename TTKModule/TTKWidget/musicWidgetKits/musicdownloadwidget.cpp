@@ -7,6 +7,7 @@
 #include "musictoastlabel.h"
 #include "musicdownloadqueryfactory.h"
 #include "musicstringutils.h"
+#include "musicfileutils.h"
 #include "musicwidgetheaders.h"
 
 Q_DECLARE_METATYPE(MusicDownloadTableItemRole)
@@ -132,7 +133,7 @@ MusicDownloadWidget::MusicDownloadWidget(QWidget *parent)
 #endif
 
     m_querySingleInfo = false;
-    m_downloadRequest = G_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
+    m_networkRequest = G_DOWNLOAD_QUERY_PTR->getQueryRequest(this);
 
     m_queryType = MusicAbstractQueryRequest::MusicQuery;
     m_ui->loadingLabel->setType(MusicGifLabelWidget::Gif_Cicle_Blue);
@@ -140,13 +141,13 @@ MusicDownloadWidget::MusicDownloadWidget(QWidget *parent)
     connect(m_ui->pathChangedButton, SIGNAL(clicked()), SLOT(downloadDirSelected()));
     connect(m_ui->topTitleCloseButton, SIGNAL(clicked()), SLOT(close()));
     connect(m_ui->downloadButton, SIGNAL(clicked()), SLOT(startToDownload()));
-    connect(m_downloadRequest, SIGNAL(downLoadDataChanged(QString)), SLOT(queryAllFinished()));
+    connect(m_networkRequest, SIGNAL(downLoadDataChanged(QString)), SLOT(queryAllFinished()));
 }
 
 MusicDownloadWidget::~MusicDownloadWidget()
 {
     delete m_ui;
-    delete m_downloadRequest;
+    delete m_networkRequest;
 }
 
 void MusicDownloadWidget::initWidget()
@@ -179,8 +180,8 @@ void MusicDownloadWidget::setSongName(const QString &name, MusicAbstractQueryReq
     initWidget();
 
     m_ui->downloadName->setText(MusicUtils::Widget::elidedText(font(), name, Qt::ElideRight, 200));
-    m_downloadRequest->setQueryAllRecords(true);
-    m_downloadRequest->startToSearch(type, name);
+    m_networkRequest->setQueryAllRecords(true);
+    m_networkRequest->startToSearch(type, name);
 }
 
 void MusicDownloadWidget::setSongName(const MusicObject::MusicSongInformation &info, MusicAbstractQueryRequest::QueryType type)
@@ -228,10 +229,10 @@ void MusicDownloadWidget::queryAllFinished()
 
 MusicObject::MusicSongInformation MusicDownloadWidget::getMatchMusicSongInformation()
 {
-    const MusicObject::MusicSongInformations musicSongInfos(m_downloadRequest->getMusicSongInfos());
+    const MusicObject::MusicSongInformations musicSongInfos(m_networkRequest->getMusicSongInfos());
     if(!musicSongInfos.isEmpty())
     {
-        const QString &filename = m_downloadRequest->getSearchedText();
+        const QString &filename = m_networkRequest->getQueryText();
         const QString &artistName = MusicUtils::String::artistName(filename);
         const QString &songName = MusicUtils::String::songName(filename);
 
@@ -378,20 +379,14 @@ void MusicDownloadWidget::setMoveWidget(QWidget *w, int pos)
 
 void MusicDownloadWidget::downloadDirSelected()
 {
-    QFileDialog dialog;
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setViewMode(QFileDialog::Detail);
-    if(dialog.exec())
+    const QString &path = MusicUtils::File::getOpenDirectoryDialog(nullptr);
+    if(!path.isEmpty())
     {
-        const QString path = dialog.directory().absolutePath();
-        if(!path.isEmpty())
+        if(m_queryType == MusicAbstractQueryRequest::MusicQuery)
         {
-            if(m_queryType == MusicAbstractQueryRequest::MusicQuery)
-            {
-                G_SETTING_PTR->setValue(MusicSettingManager::DownloadMusicPathDir, path + "/");
-            }
-            m_ui->downloadPathEdit->setText(path + "/");
+            G_SETTING_PTR->setValue(MusicSettingManager::DownloadMusicPathDir, path + "/");
         }
+        m_ui->downloadPathEdit->setText(path + "/");
     }
 }
 

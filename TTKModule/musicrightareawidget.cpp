@@ -5,7 +5,7 @@
 #include "musiclrccontainerfordesktop.h"
 #include "musiclrccontainerforwallpaper.h"
 #include "musicvideoplaywidget.h"
-#include "musicdownloadstatusobject.h"
+#include "musicdownloadstatusmodule.h"
 #include "musicsettingwidget.h"
 #include "musictoastlabel.h"
 #include "musicalbumquerywidget.h"
@@ -48,7 +48,7 @@ MusicRightAreaWidget::MusicRightAreaWidget(QWidget *parent)
     m_lrcAnalysis = new MusicLrcAnalysis(this);
     m_lrcAnalysis->setLineMax(MUSIC_LRC_INTERIOR_MAX_LINE);
 
-    m_downloadStatusObject = new MusicDownloadStatusObject(parent);
+    m_downloadStatusObject = new MusicDownloadStatusModule(parent);
     m_settingWidget = new MusicSettingWidget(this);
     connect(m_settingWidget, SIGNAL(parameterSettingChanged()), parent, SLOT(applySettingParameter()));
 }
@@ -188,12 +188,12 @@ void MusicRightAreaWidget::loadCurrentSongLrc(const QString &name, const QString
         if(QFileInfo(path).suffix().toLower() == KRC_FILE_PREFIX)
         {
             TTK_LOGGER_INFO("Current in krc parser mode");
-            state = m_lrcAnalysis->transKrcFileToTime(path);
+            state = m_lrcAnalysis->readFromKrcFile(path);
         }
         else
         {
             TTK_LOGGER_INFO("Current in lrc parser mode");
-            state = m_lrcAnalysis->transLrcFileToTime(path);
+            state = m_lrcAnalysis->readFromLrcFile(path);
         }
 
         m_musicLrcForInterior->updateCurrentLrc(state);

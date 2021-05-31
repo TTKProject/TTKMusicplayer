@@ -259,7 +259,7 @@ MusicDownloadBatchTableWidget::~MusicDownloadBatchTableWidget()
     clearAllItems();
 }
 
-void MusicDownloadBatchTableWidget::setParentObject(QWidget *parent)
+void MusicDownloadBatchTableWidget::setParentClass(QWidget *parent)
 {
     m_supperClass = parent;
 }
@@ -313,21 +313,21 @@ void MusicDownloadBatchTableWidget::dataDownloadFinished()
 
 void MusicDownloadBatchTableWidget::currentQualityChanged(int index)
 {
-    int bitRate = -1;
+    int bitrate = -1;
     switch(index)
     {
-        case 1: bitRate = MB_32; break;
-        case 2: bitRate = MB_128; break;
-        case 3: bitRate = MB_192; break;
-        case 4: bitRate = MB_320; break;
-        case 5: bitRate = MB_1000; break;
+        case 1: bitrate = MB_32; break;
+        case 2: bitrate = MB_128; break;
+        case 3: bitrate = MB_192; break;
+        case 4: bitrate = MB_320; break;
+        case 5: bitrate = MB_1000; break;
         default: break;
     }
 
     for(MusicDownloadBatchTableItem *item : qAsConst(m_items))
     {
         ///Remove first null item object
-        item->setCurrentQuality(bitRate);
+        item->setCurrentQuality(bitrate);
     }
 }
 
@@ -357,7 +357,7 @@ MusicDownloadBatchWidget::MusicDownloadBatchWidget(QWidget *parent)
 
     m_queryType = MusicAbstractQueryRequest::MusicQuery;
 
-    m_ui->tableWidget->setParentObject(this);
+    m_ui->tableWidget->setParentClass(this);
     m_ui->downloadButton->setStyleSheet(MusicUIObject::MQSSPushButtonStyle06);
 #ifdef Q_OS_UNIX
     m_ui->downloadButton->setFocusPolicy(Qt::NoFocus);

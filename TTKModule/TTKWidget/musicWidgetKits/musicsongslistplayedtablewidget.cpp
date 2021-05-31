@@ -12,7 +12,7 @@
 MusicSongsListPlayedTableWidget::MusicSongsListPlayedTableWidget(QWidget *parent)
     : MusicAbstractSongsListTableWidget(parent)
 {
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     setColumnCount(5);
@@ -24,7 +24,6 @@ MusicSongsListPlayedTableWidget::MusicSongsListPlayedTableWidget(QWidget *parent
     headerview->resizeSection(3, 25);
     headerview->resizeSection(4, 45);
 
-    m_playRowIndex = -1;
     m_hasParentToolIndex = false;
     m_musicSongsPlayWidget = nullptr;
 
@@ -37,7 +36,7 @@ MusicSongsListPlayedTableWidget::~MusicSongsListPlayedTableWidget()
     delete m_musicSongsPlayWidget;
 }
 
-void MusicSongsListPlayedTableWidget::clearPlayLaterState()
+void MusicSongsListPlayedTableWidget::clearPlayQueueState()
 {
     for(int i=0; i<rowCount(); ++i)
     {
@@ -49,7 +48,7 @@ void MusicSongsListPlayedTableWidget::clearPlayLaterState()
     }
 }
 
-void MusicSongsListPlayedTableWidget::setPlayLaterState(int row)
+void MusicSongsListPlayedTableWidget::setPlayQueueState(int row)
 {
     if(row < 0 || row >= rowCount())
     {
@@ -100,7 +99,7 @@ void MusicSongsListPlayedTableWidget::updateSongsFileName(const MusicSongs &song
         setItem(i, 4, item);
     }
 
-    setFixedHeight(qMax(365, allRowsHeight()));
+    setFixedHeight(qMax(365, totalHeight()));
 }
 
 void MusicSongsListPlayedTableWidget::clearAllItems()
@@ -130,7 +129,7 @@ void MusicSongsListPlayedTableWidget::selectRow(int index)
     }
     MusicAbstractSongsListTableWidget::selectRow(index);
 
-    replacePlayWidgetRow();
+    adjustPlayWidgetRow();
     for(int i=0; i<columnCount(); ++i)
     {
         delete takeItem(index, i);
@@ -145,11 +144,11 @@ void MusicSongsListPlayedTableWidget::selectRow(int index)
     setCellWidget(index, 0, m_musicSongsPlayWidget);
     m_playRowIndex = index;
 
-    setFixedHeight(qMax(365, allRowsHeight()));
+    setFixedHeight(qMax(365, totalHeight()));
 
     if(m_scrollBar)
     {
-        m_scrollBar->setSliderPosition(index*30);
+        m_scrollBar->setSliderPosition(index * 30);
     }
 }
 
@@ -158,7 +157,7 @@ void MusicSongsListPlayedTableWidget::selectPlayedRow()
     selectRow(m_playRowIndex);
 }
 
-void MusicSongsListPlayedTableWidget::replacePlayWidgetRow()
+void MusicSongsListPlayedTableWidget::adjustPlayWidgetRow()
 {
     if(m_playRowIndex >= rowCount() || m_playRowIndex < 0)
     {
@@ -201,7 +200,9 @@ void MusicSongsListPlayedTableWidget::replacePlayWidgetRow()
     delete m_musicSongsPlayWidget;
     m_musicSongsPlayWidget = nullptr;
 
-    setFixedHeight(qMax(365, allRowsHeight()));
+    //m_playRowIndex = -1;
+    //just fix table widget size hint
+    setFixedHeight(qMax(365, totalHeight()));
 }
 
 void MusicSongsListPlayedTableWidget::itemCellEntered(int row, int column)
@@ -282,32 +283,33 @@ void MusicSongsListPlayedTableWidget::itemCellClicked(int row, int column)
 
 void MusicSongsListPlayedTableWidget::setDeleteItemAt()
 {
-    const int index = currentRow();
-    if(rowCount() == 0 || index < 0)
+    const TTKIntList deleteList(getMultiSelectedIndex());
+    if(deleteList.isEmpty())
     {
         return;
     }
 
-    replacePlayWidgetRow();
-
-    if(index < m_playRowIndex)
+    if(deleteList.contains(m_playRowIndex) || deleteList[0] < m_playRowIndex)
     {
-        --m_playRowIndex;
+        adjustPlayWidgetRow();
     }
 
-    removeRow(index);
-    m_musicSongs->removeAt(index);
+    for(int i=deleteList.count() - 1; i>=0; --i)
+    {
+        const int index = deleteList[i];
+        removeRow(index);
+        m_musicSongs->removeAt(index);
+    }
 
-    setFixedHeight(qMax(365, allRowsHeight()));
-
-    Q_EMIT setDeleteItemAt(index);
+    //just fix table widget size hint
+    setFixedHeight(qMax(365, totalHeight()));
+    Q_EMIT deleteItemAt(deleteList);
 }
 
 void MusicSongsListPlayedTableWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     QMenu rightClickMenu(this);
-
     rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_play"), tr("musicPlay"), this, SLOT(musicPlayClicked()));
     rightClickMenu.addAction(tr("downloadMore..."), this, SLOT(musicSongDownload()));

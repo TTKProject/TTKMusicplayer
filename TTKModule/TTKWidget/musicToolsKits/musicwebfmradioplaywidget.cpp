@@ -76,16 +76,10 @@ MusicWebFMRadioPlayWidget::~MusicWebFMRadioPlayWidget()
     delete m_ui;
 }
 
-void MusicWebFMRadioPlayWidget::closeEvent(QCloseEvent *event)
-{
-    delete m_mediaPlayer;
-    m_mediaPlayer = nullptr;
-    QWidget::closeEvent(event);
-}
-
-void MusicWebFMRadioPlayWidget::updateRadioSong(const QString &id)
+void MusicWebFMRadioPlayWidget::updateRadioSong(const QString &id, const QString &cookie)
 {
     m_currentID = id;
+    m_songsThread->setHeader("Cookie", cookie);
     m_songsThread->startToDownload(m_currentID);
 }
 
@@ -171,6 +165,13 @@ void MusicWebFMRadioPlayWidget::getSongInfoFinished()
     startToPlay();
 }
 
+void MusicWebFMRadioPlayWidget::closeEvent(QCloseEvent *event)
+{
+    delete m_mediaPlayer;
+    m_mediaPlayer = nullptr;
+    QWidget::closeEvent(event);
+}
+
 void MusicWebFMRadioPlayWidget::createCoreModule()
 {
     m_mediaPlayer = new MusicCoreMPlayer(this);
@@ -249,7 +250,7 @@ void MusicWebFMRadioPlayWidget::lrcDownloadStateChanged()
 
     const QString &name = (info.m_singerName + " - " + info.m_songName).trimmed();
     m_ui->titleWidget->setText(name);
-    m_analysis->transLrcFileToTime(MusicUtils::String::lrcPrefix() + name + LRC_FILE);
+    m_analysis->readFromLrcFile(MusicUtils::String::lrcPrefix() + name + LRC_FILE);
 }
 
 void MusicWebFMRadioPlayWidget::picDownloadStateChanged()

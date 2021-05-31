@@ -6,6 +6,9 @@
 #include "qhttpserver.h"
 #include "qhttpconnection.h"
 
+/*! @brief The class of the http response private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QHttpResponsePrivate : public TTKPrivate<QHttpResponse>
 {
 public:
@@ -195,7 +198,7 @@ void QHttpResponsePrivate::setHeader(const QString &field, const QString &value)
 QHttpResponse::QHttpResponse(QHttpConnection *connection)
     : QObject(0)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QHttpResponse);
     TTK_D(QHttpResponse);
     d->m_connection = connection;
     connect(connection, SIGNAL(allBytesWritten()), this, SIGNAL(allBytesWritten()));

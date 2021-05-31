@@ -5,6 +5,9 @@
 
 #define DEFAULT_ROUTER_IP   "192.168.0.1"
 
+/*! @brief The class of the dlna finder private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QDlnaFinderPrivate : public TTKPrivate<QDlnaFinder>
 {
 public:
@@ -68,7 +71,7 @@ bool QDlnaFinderPrivate::findClient(const QString &server)
 QDlnaFinder::QDlnaFinder(QObject *parent)
     : QObject(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QDlnaFinder);
     TTK_D(QDlnaFinder);
     connect(d->m_udpSock, SIGNAL(readyRead()), SLOT(readResponse()));
 }
@@ -128,7 +131,7 @@ void QDlnaFinder::readResponse()
         {
             --tryTimes;
             client->connect();
-        }while(!client->isConnected() && tryTimes > 0);
+        } while(!client->isConnected() && tryTimes > 0);
 
         d->m_clients.push_back(client);
         Q_EMIT finished();

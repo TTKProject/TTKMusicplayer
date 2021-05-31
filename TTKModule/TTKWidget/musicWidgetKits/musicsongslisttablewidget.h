@@ -61,10 +61,6 @@ public:
      */
     virtual void selectRow(int index) override;
     /*!
-     * Get the current play row.
-     */
-    inline int getPlayRowIndex() const { return m_playRowIndex; }
-    /*!
      * Set music sort.
      */
     inline void setMusicSongSort(MusicSongSort *sort) { m_musicSort = sort; }
@@ -77,13 +73,13 @@ public:
      */
     void updateCurrentArtist();
     /*!
-     * Replace current play widget row.
+     * Adjust current play widget row.
      */
-    void replacePlayWidgetRow();
+    void adjustPlayWidgetRow();
     /*!
-     * Create upload file widget.
+     * Create upload file module.
      */
-    bool createUploadFileWidget();
+    bool createUploadFileModule();
 
 Q_SIGNALS:
     /*!

@@ -6,12 +6,14 @@
 #include "musicwidgetutils.h"
 #include "musicstringutils.h"
 
-///qmmp incldue
 #include "decoderfactory.h"
 #include "metadatamodel.h"
 #include "decoder.h"
 
 
+/*! @brief The class of the music meta.
+ * @author Greedysky <greedysky@163.com>
+ */
 struct MusicMeta
 {
     QPixmap m_cover;
@@ -33,15 +35,15 @@ MusicSongMeta::~MusicSongMeta()
 
 bool MusicSongMeta::read(const QString &file)
 {
-    bool cue = false;
+    bool track = false;
     QString path(file);
-    if(path.startsWith(MUSIC_CUE_FILE "://") || path.startsWith(MUSIC_GME_FILE "://"))
+    if(SongTrackValid(file))
     {
         path = path.section("://", -1);
         if(path.contains("#"))
         {
             path = path.section("#", 0, 0);
-            cue = true;
+            track = true;
         }
     }
 
@@ -53,7 +55,7 @@ bool MusicSongMeta::read(const QString &file)
 
     m_filePath = path;
     const bool status = readInformation();
-    if(status && cue)
+    if(status && track)
     {
         setSongMetaIndex(file.section("#", -1).toInt() - 1);
     }
@@ -69,7 +71,7 @@ bool MusicSongMeta::save()
 QString MusicSongMeta::getDecoder() const
 {
     const QString &suffix = QFileInfo(m_filePath).suffix().toLower();
-    const TTKStringListMap formats(MusicFormats::supportFormatsStringMap());
+    const TTKStringListMap formats(MusicFormats::supportFormatsMap());
     for(const QString &key : formats.keys())
     {
         if(formats.value(key).contains(suffix))
@@ -285,6 +287,45 @@ MusicSongMeta& MusicSongMeta::operator= (MusicSongMeta &&other)
     other.m_songMetas.clear();
 
     return *this;
+}
+
+bool MusicSongMeta::SongTrackValid(const QString &file)
+{
+    QStringList list;
+    list << MUSIC_CUE_FILE "://";
+    list << MUSIC_APE_FILE "://";
+    list << MUSIC_FFMPEG_FILE "://";
+    list << MUSIC_M4B_FILE "://";
+    list << MUSIC_FLAC_FILE "://";
+    list << MUSIC_GME_FILE "://";
+    list << MUSIC_SID_FILE "://";
+    list << MUSIC_WVPACK_FILE "://";
+    list << MUSIC_SC68_FILE "://";
+
+    for(const QString &path : qAsConst(list))
+    {
+        if(file.startsWith(path))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool MusicSongMeta::SongTrackTpyeContains(const QString &file)
+{
+    QStringList list;
+    list << MUSIC_CUE_FILE;
+    list << MUSIC_APE_FILE;
+    list << MUSIC_FFMPEG_FILE;
+    list << MUSIC_M4B_FILE;
+    list << MUSIC_FLAC_FILE;
+    list << MUSIC_GME_FILE;
+    list << MUSIC_SID_FILE;
+    list << MUSIC_WVPACK_FILE;
+    list << MUSIC_SC68_FILE;
+
+    return list.contains(file);
 }
 
 void MusicSongMeta::setSongMetaIndex(int index)

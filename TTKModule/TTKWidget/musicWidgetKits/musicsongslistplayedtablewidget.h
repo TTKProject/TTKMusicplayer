@@ -39,13 +39,14 @@ public:
     virtual ~MusicSongsListPlayedTableWidget();
 
     /*!
-     * Clear play later state.
+     * Clear play queue state.
      */
-    void clearPlayLaterState();
+    void clearPlayQueueState();
     /*!
-     * Set play later state.
+     * Set play queue state.
      */
-    void setPlayLaterState(int row);
+    void setPlayQueueState(int row);
+
     /*!
      * Update songs file names in table.
      */
@@ -64,15 +65,15 @@ public:
      */
     void selectPlayedRow();
     /*!
-     * Replace current play widget row.
+     * Adjust current play widget row.
      */
-    void replacePlayWidgetRow();
+    void adjustPlayWidgetRow();
 
 Q_SIGNALS:
     /*!
-     * Delete item from list at current row.
+     * Delete items from indexs .
      */
-    void setDeleteItemAt(int index);
+    void deleteItemAt(const TTKIntList &index);
 
 public Q_SLOTS:
     /*!

@@ -22,7 +22,7 @@
 #include "musicwyqueryinterface.h"
 #include "musicquerymovierequest.h"
 
-/*! @brief The class to wangyi mv query download data from net.
+/*! @brief The class of wangyi mv query download data from net.
  * @author Greedysky <greedysky@163.com>
  */
 class MUSIC_NETWORK_EXPORT MusicWYQueryMovieRequest : public MusicQueryMovieRequest,
@@ -68,11 +68,19 @@ protected:
     /*!
      * Start to search mv list by id.
      */
-    void startMVListQuery(qint64 id);
+    void queryMovieList(qint64 id);
     /*!
-     * Get artist mvs count.
+     * Start to search video list by id.
      */
-    void getArtistMvsCount(qint64 id);
+    void queryVideoList(const QString &id);
+    /*!
+     * Start to get video url path.
+     */
+    void queryVideoUrlPath(QString &url, const QString &id, int bitrate);
+    /*!
+     * Get artist mv count.
+     */
+    void getArtistMoviesCount(qint64 id);
 
 };
 

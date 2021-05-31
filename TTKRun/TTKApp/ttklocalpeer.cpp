@@ -29,6 +29,9 @@ namespace TTKLockedPrivate {
 #endif
 }
 
+/*! @brief The class of the ttk local peer private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class TTKLocalPeerPrivate : public TTKPrivate<TTKLocalPeer>
 {
 public:
@@ -58,7 +61,7 @@ TTKLocalPeerPrivate::~TTKLocalPeerPrivate()
 TTKLocalPeer::TTKLocalPeer(QObject *parent, const QString &appId)
     : QObject(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKLocalPeer);
     TTK_D(TTKLocalPeer);
 
     QString prefix = d->m_id = appId;
@@ -222,7 +225,7 @@ void TTKLocalPeer::receiveConnection()
         got = ds.readRawData(uMsgBuf, remaining);
         remaining -= got;
         uMsgBuf += got;
-    }while(remaining && got >= 0 && socket->waitForReadyRead(2000));
+    } while(remaining && got >= 0 && socket->waitForReadyRead(2000));
 
     if(got < 0)
     {

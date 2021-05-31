@@ -7,7 +7,7 @@ MusicAbstractQueryRequest::MusicAbstractQueryRequest(QObject *parent)
 {
     m_queryAllRecords = false;
     m_querySimplify = false;
-    m_searchQuality = tr("SD");
+    m_queryQuality = tr("SD");
     m_queryServer = "Invalid";
 }
 
@@ -34,8 +34,8 @@ QString MusicAbstractQueryRequest::mapQueryServerString() const
         return v.arg(tr("QQ"));
     else if(m_queryServer.contains(QUERY_WY_INTERFACE))
         return v.arg(tr("WY"));
-    else if(m_queryServer.contains(QUERY_XM_INTERFACE))
-        return v.arg(tr("XM"));
+    else if(m_queryServer.contains(QUERY_MG_INTERFACE))
+        return v.arg(tr("MG"));
     else
         return QString();
 }

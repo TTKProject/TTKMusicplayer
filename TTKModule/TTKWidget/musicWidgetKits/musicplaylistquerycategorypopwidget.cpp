@@ -37,7 +37,7 @@ void MusicPlaylistQueryCategoryItem::setCategory(const MusicResultsCategory &cat
         l->setFixedSize(75, ITEM_LABEL_WIDTH);
 
         clickedGroup->mapped(l);
-        itemlayout->addWidget(l, i/ITEM_MAX_COLUMN, i%ITEM_MAX_COLUMN, Qt::AlignLeft);
+        itemlayout->addWidget(l, i / ITEM_MAX_COLUMN, i % ITEM_MAX_COLUMN, Qt::AlignLeft);
     }
     item->setLayout(itemlayout);
 
@@ -117,5 +117,4 @@ void MusicPlaylistFoundCategoryPopWidget::initWidget()
     m_containWidget->setStyleSheet(QString("#containWidget{%1}").arg(style));
 
     m_menu->setStyleSheet(MusicUIObject::MQSSMenuStyle05);
-
 }

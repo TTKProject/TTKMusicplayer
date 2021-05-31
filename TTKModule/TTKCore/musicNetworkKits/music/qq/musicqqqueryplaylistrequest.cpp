@@ -18,7 +18,7 @@ void MusicQQQueryPlaylistRequest::startToSearch(QueryType type, const QString &p
     }
     else
     {
-        m_searchText = playlist.isEmpty() ? "10000000" : playlist;
+        m_queryText = playlist.isEmpty() ? "10000000" : playlist;
         startToPage(0);
     }
 }
@@ -36,7 +36,7 @@ void MusicQQQueryPlaylistRequest::startToPage(int offset)
     m_totalSize = 0;
 
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(QQ_PLAYLIST_URL, false).arg(m_searchText).arg(m_pageSize*offset).arg(m_pageSize*(offset + 1) - 1));
+    request.setUrl(MusicUtils::Algorithm::mdII(QQ_PLAYLIST_URL, false).arg(m_queryText).arg(m_pageSize * offset).arg(m_pageSize * (offset + 1) - 1));
     request.setRawHeader("Referer", MusicUtils::Algorithm::mdII(REFER_URL, false).toUtf8());
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(QQ_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
@@ -250,7 +250,7 @@ void MusicQQQueryPlaylistRequest::getDetailsFinished()
                         musicInfo.m_songName = MusicUtils::String::illegalCharactersReplaced(value["songname"].toString());
                         musicInfo.m_timeLength = MusicTime::msecTime2LabelJustified(value["interval"].toInt() * 1000);
 
-                        m_rawData["songID"] = value["songid"].toString();
+                        m_rawData["sid"] = value["songid"].toString();
                         musicInfo.m_songId = value["songmid"].toString();
                         musicInfo.m_albumId = value["albummid"].toString();
                         musicInfo.m_albumName = MusicUtils::String::illegalCharactersReplaced(value["albumname"].toString());
@@ -263,7 +263,7 @@ void MusicQQQueryPlaylistRequest::getDetailsFinished()
                         musicInfo.m_trackNumber = value["belongCD"].toString();
 
                         TTK_NETWORK_QUERY_CHECK();
-                        readFromMusicSongAttribute(&musicInfo, value, m_searchQuality, m_queryAllRecords);
+                        readFromMusicSongAttribute(&musicInfo, value, m_queryQuality, m_queryAllRecords);
                         TTK_NETWORK_QUERY_CHECK();
 
                         if(musicInfo.m_songAttrs.isEmpty())

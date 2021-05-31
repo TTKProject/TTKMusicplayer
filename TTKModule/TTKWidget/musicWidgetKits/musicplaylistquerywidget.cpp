@@ -5,7 +5,7 @@
 #include "musicdownloadqueryfactory.h"
 #include "musictinyuiobject.h"
 #include "musicplaylistquerycategorypopwidget.h"
-#include "musicpagingwidgetobject.h"
+#include "musicpagingwidgetmodule.h"
 #include "musicimageutils.h"
 
 #include <qmath.h>
@@ -24,7 +24,7 @@ MusicPlaylistQueryItemWidget::MusicPlaylistQueryItemWidget(QWidget *parent)
     m_topListenButton->setGeometry(0, 0, WIDTH_LABEL_SIZE, 20);
     m_topListenButton->setIcon(QIcon(":/tiny/btn_listen_hover"));
     m_topListenButton->setText(" - ");
-    m_topListenButton->setStyleSheet(MusicUIObject::MQSSBackgroundStyle04 + MusicUIObject::MQSSColorStyle01);
+    m_topListenButton->setStyleSheet(MusicUIObject::MQSSBorderStyle01 + MusicUIObject::MQSSBackgroundStyle04 + MusicUIObject::MQSSColorStyle01);
 
     m_playButton = new QPushButton(this);
     m_playButton->setGeometry(110, 110, 30, 30);
@@ -128,8 +128,8 @@ MusicPlaylistQueryWidget::MusicPlaylistQueryWidget(QWidget *parent)
     m_gridLayout = nullptr;
     m_categoryButton = nullptr;
     m_pagingWidgetObject = nullptr;
-    m_downloadRequest = G_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this);
-    connect(m_downloadRequest, SIGNAL(createPlaylistItem(MusicResultsItem)), SLOT(createPlaylistItem(MusicResultsItem)));
+    m_networkRequest = G_DOWNLOAD_QUERY_PTR->getPlaylistRequest(this);
+    connect(m_networkRequest, SIGNAL(createPlaylistItem(MusicResultsItem)), SLOT(createPlaylistItem(MusicResultsItem)));
 }
 
 MusicPlaylistQueryWidget::~MusicPlaylistQueryWidget()
@@ -137,14 +137,14 @@ MusicPlaylistQueryWidget::~MusicPlaylistQueryWidget()
     delete m_infoWidget;
     delete m_gridLayout;
     delete m_categoryButton;
-    delete m_downloadRequest;
+    delete m_networkRequest;
     delete m_pagingWidgetObject;
 }
 
 void MusicPlaylistQueryWidget::setSongName(const QString &name)
 {
     MusicAbstractItemQueryWidget::setSongName(name);
-    m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, QString());
+    m_networkRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, QString());
 }
 
 void MusicPlaylistQueryWidget::setSongNameById(const QString &id)
@@ -173,7 +173,7 @@ void MusicPlaylistQueryWidget::resizeWindow()
         const int lineNumber = width() / LINE_SPACING_SIZE;
         for(int i=0; i<m_resizeWidgets.count(); ++i)
         {
-            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i/lineNumber, i%lineNumber, Qt::AlignCenter);
+            m_gridLayout->addWidget(m_resizeWidgets[i].m_label, i / lineNumber, i % lineNumber, Qt::AlignCenter);
         }
     }
 }
@@ -200,7 +200,7 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
         QHBoxLayout *containTopLayout  = new QHBoxLayout(containTopWidget);
         containTopLayout->setContentsMargins(30, 0, 30, 0);
         m_categoryButton = new MusicPlaylistFoundCategoryPopWidget(m_mainWindow);
-        m_categoryButton->setCategory(m_downloadRequest->getQueryServer(), this);
+        m_categoryButton->setCategory(m_networkRequest->getQueryServer(), this);
         containTopLayout->addWidget(m_categoryButton);
         containTopLayout->addStretch(1);
 
@@ -230,10 +230,10 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
         mainlayout->addWidget(line);
         mainlayout->addWidget(containWidget);
 
-        m_pagingWidgetObject = new MusicPagingWidgetObject(m_mainWindow);
+        m_pagingWidgetObject = new MusicPagingWidgetModule(m_mainWindow);
         connect(m_pagingWidgetObject, SIGNAL(clicked(int)), SLOT(buttonClicked(int)));
 
-        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        const int pageTotal = ceil(m_networkRequest->getTotalSize() * 1.0 / m_networkRequest->getPageSize());
         mainlayout->addWidget(m_pagingWidgetObject->createPagingWidget(m_mainWindow, pageTotal));
         mainlayout->addStretch(1);
     }
@@ -241,7 +241,7 @@ void MusicPlaylistQueryWidget::createPlaylistItem(const MusicResultsItem &item)
     if(m_categoryChanged && m_pagingWidgetObject)
     {
         m_categoryChanged = false;
-        const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+        const int pageTotal = ceil(m_networkRequest->getTotalSize() * 1.0 / m_networkRequest->getPageSize());
         m_pagingWidgetObject->reset(pageTotal);
     }
 
@@ -265,6 +265,7 @@ void MusicPlaylistQueryWidget::currentPlaylistClicked(const MusicResultsItem &it
     {
         d->getPlaylistInfo(it);
     }
+
     m_infoWidget->setQueryInput(d);
     m_infoWidget->setMusicResultsItem(it, this);
     m_container->addWidget(m_infoWidget);
@@ -291,7 +292,7 @@ void MusicPlaylistQueryWidget::categoryChanged(const MusicResultsCategoryItem &c
             m_gridLayout->removeWidget(w);
             delete w;
         }
-        m_downloadRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_key);
+        m_networkRequest->startToSearch(MusicAbstractQueryRequest::OtherQuery, category.m_key);
     }
 }
 
@@ -304,7 +305,7 @@ void MusicPlaylistQueryWidget::buttonClicked(int index)
         delete w;
     }
 
-    const int pageTotal = ceil(m_downloadRequest->getTotalSize() * 1.0 / m_downloadRequest->getPageSize());
+    const int pageTotal = ceil(m_networkRequest->getTotalSize() * 1.0 / m_networkRequest->getPageSize());
     m_pagingWidgetObject->paging(index, pageTotal);
-    m_downloadRequest->startToPage(m_pagingWidgetObject->currentIndex() - 1);
+    m_networkRequest->startToPage(m_pagingWidgetObject->currentIndex() - 1);
 }

@@ -23,6 +23,9 @@
 #include <QPushButton>
 #include <QButtonGroup>
 
+/*! @brief The class of the kugou window widget private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QKugouWindowPrivate : public TTKPrivate<QKugouWindow>
 {
 public:
@@ -52,7 +55,7 @@ QKugouWindowPrivate::~QKugouWindowPrivate()
 QKugouWindow::QKugouWindow(KuGouType type, QWidget *parent)
     : QWidget(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QKugouWindow);
 
 #ifdef Q_OS_UNIX
  #ifdef MUSIC_WEBKIT

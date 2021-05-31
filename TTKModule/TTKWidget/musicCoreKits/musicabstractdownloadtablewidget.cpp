@@ -67,16 +67,20 @@ void MusicAbstractDownloadTableWidget::setDeleteItemAt()
        return;
     }
 
-    const TTKIntList deleteList(getMultiSelectedIndexs());
+    const TTKIntList deleteList(getMultiSelectedIndex());
+    if(deleteList.isEmpty())
+    {
+        return;
+    }
 
     for(int i=deleteList.count() - 1; i>=0; --i)
     {
         const int index = deleteList[i];
-        removeRow(index); //Delete the current row
+        removeRow(index);
         m_musicSongs->removeAt(index);
     }
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
     Q_EMIT updateItemTitle(m_parentToolIndex);
 }
 
@@ -99,9 +103,9 @@ void MusicAbstractDownloadTableWidget::downloadProgressChanged(float percent, co
     for(int i=0; i<rowCount(); ++i)
     {
         QTableWidgetItem *it = item(i, 3);
-        if(it && it->data(MUSIC_TIMES_ROLE).toLongLong() == time)
+        if(it && it->data(MUSIC_TIME_ROLE).toLongLong() == time)
         {
-            item(i, 2)->setData(MUSIC_PROCS_ROLE, percent);
+            item(i, 2)->setData(MUSIC_PROGRESS_ROLE, percent);
             item(i, 3)->setText(total);
 
             (*m_musicSongs)[i].setMusicSizeStr(total);

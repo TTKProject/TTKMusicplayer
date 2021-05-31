@@ -32,10 +32,10 @@ namespace MusicUIObject
 
 ///Color
     const QString MQSSColorStyle01 = " \
-            color:white;";
+            color:#FFFFFF;";
 
     const QString MQSSColorStyle02 = " \
-            color:rgb(230, 115, 0);";
+            color:#E67300;";
 
     const QString MQSSColorStyle03 = " \
             color:#888888;";
@@ -50,7 +50,7 @@ namespace MusicUIObject
             color:#F4F4F4;";
 
     const QString MQSSColorStyle07 = " \
-            color:rgb(160, 99, 11);";
+            color:#A0630B;";
 
     const QString MQSSColorStyle08 = " \
             color:#158FE1;";
@@ -68,7 +68,7 @@ namespace MusicUIObject
             color:#323232;";
 
     const QString MQSSColorStyle13 = " \
-            color:black;";
+            color:#000000;";
 
     const QString MQSSColorStyle14 = " \
             color:#CCCCCC;";
@@ -232,7 +232,8 @@ namespace MusicUIObject
             QPushButton{ border-none; }";
 
     const QString MQSSPushButtonStyle03 = " \
-            QPushButton{ border-radius:3px; background-color:#158FE1; color:white; }";
+            QPushButton{ border-radius:3px; background-color:#158FE1; color:white; } \
+            QPushButton::disabled{ background-color:#BBBBBB; }";
 
     const QString MQSSPushButtonStyle04 = " \
             QPushButton{ border:1px solid #AAAAAA; background:#FFFFFF; color:#777777; } \
@@ -275,20 +276,16 @@ namespace MusicUIObject
             QPushButton:hover{ color:#E6E317; } \
             QPushButton{ text-align:right; }";
 
+    const QString MQSSPushButtonStyle15 = " \
+            QPushButton{ background-color:#DDDDDD; color:#222222; }";
+
 
 ///RadioButton
     const QString MQSSRadioButtonStyle01 = " \
             QRadioButton{ background-color:transparent; } \
             QRadioButton::indicator::unchecked{ image:url(:/control/btn_radioButton_unchecked); } \
-            QRadioButton::checked { color:rgb(230, 115, 0); } \
+            QRadioButton::checked { color:#E67300; } \
             QRadioButton::indicator:checked { image:url(:/control/btn_radiobutton_checked); } \
-            QRadioButton::disabled{ color:#BBBBBB; }";
-
-    const QString MQSSRadioButtonStyle02 = " \
-            QRadioButton{ background-color:transparent; } \
-            QRadioButton::indicator::unchecked{ image:url(:/control/btn_radioButton2_unchecked); } \
-            QRadioButton::checked { color:rgb(230, 115, 0); } \
-            QRadioButton::indicator:checked { image:url(:/control/btn_radiobutton2_checked); } \
             QRadioButton::disabled{ color:#BBBBBB; }";
 
 
@@ -296,14 +293,14 @@ namespace MusicUIObject
     const QString MQSSCheckBoxStyle01 = " \
             QCheckBox{ background-color:transparent; } \
             QCheckBox::indicator::unchecked{ image:url(:/control/btn_checkBox_unchecked); } \
-            QCheckBox::checked{ color:rgb(230, 115, 0); } \
+            QCheckBox::checked{ color:#E67300; } \
             QCheckBox::indicator:checked { image:url(:/control/btn_checkBox_checked); } \
             QCheckBox::disabled{ color:#BBBBBB; }";
 
     const QString MQSSCheckBoxStyle02 = " \
             QCheckBox{ background-color:transparent; } \
             QCheckBox::indicator::unchecked{ image:url(:/control/btn_radioButton2_unchecked); } \
-            QCheckBox::checked { color:rgb(230, 115, 0); } \
+            QCheckBox::checked { color:#E67300; } \
             QCheckBox::indicator:checked { image:url(:/control/btn_radiobutton2_checked); } \
             QCheckBox::disabled{ color:#BBBBBB; }";
 
@@ -319,6 +316,12 @@ namespace MusicUIObject
             QCheckBox::checked { color:rgb(255, 255, 255); } \
             QCheckBox::indicator:checked { image:url(:/control/btn_checkBox2_checked); } \
             QCheckBox::disabled{ color:#BBBBBB; }";
+
+
+///GroupBox
+    const QString MQSSGroupBoxStyle01 = " \
+            QGroupBox::indicator::unchecked{ image:url(:/control/btn_checkBox_unchecked); } \
+            QGroupBox::indicator:checked { image:url(:/control/btn_checkBox_checked); }";
 
 
 ///ScrollBar
@@ -567,10 +570,6 @@ namespace MusicUIObject
     const QString MQSSProgressBar01 = " \
             QProgressBar{ border:none; background:rgb(210, 225, 240); text-align:center; } \
             QProgressBar::chunk{ background:rgb(60, 140, 220); }";
-
-    const QString MQSSProgressBar02 = " \
-            QProgressBar{ border:2px solid grey; border-radius: 5px; } \
-            QProgressBar::chunk{ background-color: #05B8CC; }";
 
 
 ///ItemView

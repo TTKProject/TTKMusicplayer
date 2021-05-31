@@ -11,7 +11,7 @@
 MusicAbstractSongsListTableWidget::MusicAbstractSongsListTableWidget(QWidget *parent)
     : MusicSmoothMovingTableWidget(parent)
 {
-    m_playRowIndex = 0;
+    m_playRowIndex = -1;
     m_parentToolIndex = -1;
     m_musicSongs = nullptr;
     m_hasParentToolIndex = true;
@@ -38,7 +38,7 @@ void MusicAbstractSongsListTableWidget::selectRow(int index)
     MusicSmoothMovingTableWidget::selectRow(index);
 }
 
-int MusicAbstractSongsListTableWidget::allRowsHeight() const
+int MusicAbstractSongsListTableWidget::totalHeight() const
 {
     int height = 0;
     for(int i=0; i<rowCount(); ++i)
@@ -154,7 +154,7 @@ void MusicAbstractSongsListTableWidget::musicSongSharedWidget()
     QVariantMap data;
     data["songName"] = getCurrentSongName();
 
-    MusicSongSharingWidget shareWidget(this);
+    MusicSongSharingWidget shareWidget;
     shareWidget.setData(MusicSongSharingWidget::Song, data);
     shareWidget.exec();
 }
@@ -166,7 +166,7 @@ void MusicAbstractSongsListTableWidget::musicSongDownload()
         return;
     }
 
-    MusicDownloadWidget *download = new MusicDownloadWidget(this);
+    MusicDownloadWidget *download = new MusicDownloadWidget;
     download->setSongName(getCurrentSongName(), MusicAbstractQueryRequest::MusicQuery);
     download->show();
 }
@@ -201,7 +201,7 @@ void MusicAbstractSongsListTableWidget::musicSongPlayedSharedWidget()
     QVariantMap data;
     data["songName"] = getSongName(m_playRowIndex);
 
-    MusicSongSharingWidget shareWidget(this);
+    MusicSongSharingWidget shareWidget;
     shareWidget.setData(MusicSongSharingWidget::Song, data);
     shareWidget.exec();
 }
@@ -222,6 +222,7 @@ void MusicAbstractSongsListTableWidget::createMoreMenu(QMenu *menu)
 
     QMenu *addMenu = menu->addMenu(QIcon(":/contextMenu/btn_add"), tr("addToList"));
     addMenu->addAction(tr("musicCloud"));
+    MusicUtils::Widget::adjustMenuPosition(addMenu);
 
     menu->addAction(QIcon(":/contextMenu/btn_similar"), tr("similar"), this, SLOT(musicSimilarQueryWidget()));
     menu->addAction(QIcon(":/contextMenu/btn_share"), tr("songShare"), this, SLOT(musicSongSharedWidget()));
@@ -254,5 +255,10 @@ QString MusicAbstractSongsListTableWidget::getCurrentSongName() const
 
 QString MusicAbstractSongsListTableWidget::getSongName(int index) const
 {
+    if(rowCount() == 0 || index < 0)
+    {
+        return QString();
+    }
+
     return !m_musicSongs->isEmpty() ? m_musicSongs->at(index).getMusicName().trimmed() : QString();
 }

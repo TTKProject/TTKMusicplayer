@@ -81,6 +81,23 @@ QRect MusicUtils::Widget::windowScreenGeometry(int index)
 #endif
 }
 
+void MusicUtils::Widget::adjustMenuPosition(QMenu *menu)
+{
+#if TTK_QT_VERSION_CHECK(5,12,0)
+    const QList<QAction*> actions(menu->actions());
+    if(!actions.empty())
+    {
+        QAction* action(actions.first());
+        if(action->icon().isNull())
+        {
+            action->setIcon(QIcon(":/contextMenu/btn_transparent"));
+        }
+    }
+#else
+    Q_UNUSED(menu);
+#endif
+}
+
 void MusicUtils::Widget::setTransparent(QWidget *widget, int alpha)
 {
     QPalette pal = widget->palette();

@@ -80,7 +80,6 @@ TTK_DECLARE_LISTS(MusicResultsItem)
 
 #define QUERY_WY_INTERFACE      "WangYi"
 #define QUERY_QQ_INTERFACE      "QQ"
-#define QUERY_XM_INTERFACE      "XiaMi"
 #define QUERY_BD_INTERFACE      "BaiDu"
 #define QUERY_KW_INTERFACE      "KuWo"
 #define QUERY_KG_INTERFACE      "KuGou"
@@ -90,13 +89,12 @@ enum DownloadQueryServer
 {
     WYQueryServer,
     QQQueryServer,
-    XMQueryServer,
     KWQueryServer,
     KGQueryServer,
     MGQueryServer
 };
 
-/*! @brief The class to abstract query download data from net.
+/*! @brief The class of abstract query download data from net.
  * @author Greedysky <greedysky@163.com>
  */
 class MUSIC_NETWORK_EXPORT MusicAbstractQueryRequest : public MusicPagingRequest
@@ -132,13 +130,13 @@ public:
     virtual void startToSingleSearch(const QString &text);
 
     /*!
-     * Set search data quality.
+     * Set query data quality.
      */
-    inline void setSearchQuality(const QString &qual) { m_searchQuality = qual; }
+    inline void setQueryQuality(const QString &qual) { m_queryQuality = qual; }
     /*!
-     * Get search data quality.
+     * Get query data quality.
      */
-    inline QString getSearchQuality() const { return m_searchQuality; }
+    inline QString getQueryQuality() const { return m_queryQuality; }
     /*!
      * Set wheather query all quality of records.
      */
@@ -170,7 +168,7 @@ public:
     /*!
      * Return the current song name.
      */
-    inline QString getSearchedText() const { return m_searchText; }
+    inline QString getQueryText() const { return m_queryText; }
     /*!
      * Set the current song container.
      */
@@ -219,7 +217,7 @@ protected:
     bool findUrlFileSize(MusicObject::MusicSongAttributes *attrs);
 
     MusicObject::MusicSongInformations m_musicSongInfos;
-    QString m_searchText, m_searchQuality;
+    QString m_queryText, m_queryQuality;
     QString m_queryServer;
     QueryType m_currentType;
     bool m_queryAllRecords, m_querySimplify;

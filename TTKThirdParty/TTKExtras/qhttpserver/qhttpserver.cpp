@@ -8,6 +8,9 @@
 
 QHash<int, QString> STATUS_CODES;
 
+/*! @brief The class of the http server private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QHttpServerPrivate : public TTKPrivate<QHttpServer>
 {
 public:
@@ -72,7 +75,7 @@ void QHttpServerPrivate::free()
 QHttpServer::QHttpServer(QObject *parent)
     : QObject(parent)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(QHttpServer);
 #define STATUS_CODE(num, reason) STATUS_CODES.insert(num, reason);
     STATUS_CODE(100, "Continue")
     STATUS_CODE(101, "Switching Protocols")

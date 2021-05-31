@@ -13,14 +13,14 @@
 #define MAX_SIZE    3
 
 MusicPlayedListTopContainerWidget::MusicPlayedListTopContainerWidget(QWidget *parent)
-    : QWidget(parent)
+    : QFrame(parent)
 {
     setFixedHeight(37);
 }
 
 void MusicPlayedListTopContainerWidget::paintEvent(QPaintEvent *event)
 {
-    QWidget::paintEvent(event);
+    QFrame::paintEvent(event);
     QPainter painter(this);
 
     QLinearGradient gradient;
@@ -81,7 +81,7 @@ void MusicPlayedListPopWidget::clear()
     setPlaylistCount(0);
 }
 
-void MusicPlayedListPopWidget::resetToolIndex(const PlayedPairList &indexs)
+void MusicPlayedListPopWidget::resetToolIndex(const PlayedItemList &indexs)
 {
     MusicPlayItems *items = m_playlist->mediaList();
     for(int s=0; s<items->count(); ++s)
@@ -105,7 +105,7 @@ void MusicPlayedListPopWidget::remove(int index)
         return;
     }
 
-    m_playedListWidget->replacePlayWidgetRow();
+    m_playedListWidget->adjustPlayWidgetRow();
     m_playedListWidget->removeRow(index);
     m_playedListWidget->setPlayRowIndex(-1);
 
@@ -118,7 +118,7 @@ void MusicPlayedListPopWidget::remove(int index)
 void MusicPlayedListPopWidget::remove(int toolIndex, const QString &path)
 {
     int index = -1;
-    m_playedListWidget->replacePlayWidgetRow();
+    m_playedListWidget->adjustPlayWidgetRow();
     do
     {
         index = m_playlist->removeMedia(toolIndex, path);
@@ -127,7 +127,7 @@ void MusicPlayedListPopWidget::remove(int toolIndex, const QString &path)
             m_songLists.removeAt(index);
             m_playedListWidget->removeRow(index);
         }
-    }while(index != -1);
+    } while(index != -1);
     m_playedListWidget->setPlayRowIndex(-1);
 
     updateSongsFileName();
@@ -165,17 +165,18 @@ void MusicPlayedListPopWidget::insert(int toolIndex, int index, const MusicSong 
     }
 
     (index != m_songLists.count()) ? m_songLists.insert(index, song) : m_songLists.append(song);
-    m_playlist->insertLaterMedia(toolIndex, song.getMusicPath());
+    m_playlist->insertQueueMedia(toolIndex, song.getMusicPath());
 
     const int row = m_playedListWidget->getPlayRowIndex();
     m_playedListWidget->clearAllItems();
     updateSongsFileName();
+
     m_playedListWidget->setPlayRowIndex(row);
     m_playedListWidget->selectPlayedRow();
 
-    for(const MusicPlayItem &item : m_playlist->laterListConst())
+    for(const MusicPlayItem &item : qAsConst(*m_playlist->queueMediaList()))
     {
-        m_playedListWidget->setPlayLaterState(item.m_toolIndex);
+        m_playedListWidget->setPlayQueueState(item.m_toolIndex);
     }
 }
 
@@ -191,31 +192,38 @@ void MusicPlayedListPopWidget::setCurrentIndex(int toolIndex, const MusicSong &s
     setCurrentIndex();
 }
 
-void MusicPlayedListPopWidget::resizeWindow()
-{
-//    int h = G_SETTING_PTR->value(MusicSettingManager::WidgetSize).toSize().height();
-//    m_containWidget->setFixedSize(LEFT_SIDE_WIDTH_MIN, 500 + h - WINDOW_HEIGHT_MIN);
-}
-
 void MusicPlayedListPopWidget::popupMenu()
 {
     QPoint pos = mapToGlobal(QPoint(0, 0));
     pos.setY(pos.y() - m_containWidget->height() - 10);
-    pos.setX(pos.x() - (m_containWidget->width() - width() - 3));
+    pos.setX(pos.x() - m_containWidget->width() + width() + 3);
 
     m_playedListWidget->selectPlayedRow();
     m_menu->exec(pos);
 }
 
-void MusicPlayedListPopWidget::setDeleteItemAt(int index)
+void MusicPlayedListPopWidget::setDeleteItemAt(const TTKIntList &index)
 {
-    m_playedListWidget->clearPlayLaterState();
-    m_playlist->removeMedia(index);
+    if(index.count() == 0)
+    {
+        return;
+    }
 
+    m_playedListWidget->clearPlayQueueState();
     const int id = m_playedListWidget->getPlayRowIndex();
-    m_playedListWidget->setPlayRowIndex(-1);
+    bool contains = false;
 
-    if(id == index)
+    for(int i=index.count() - 1; i>=0; --i)
+    {
+        const int row = index[i];
+        if(id == row)
+        {
+            contains = true;
+        }
+        m_playlist->removeMedia(row);
+    }
+
+    if(contains)
     {
         MusicApplication *w = MusicApplication::instance();
         if(w->isPlaying())
@@ -234,7 +242,16 @@ void MusicPlayedListPopWidget::setDeleteItemAt(int index)
     }
     else
     {
-        m_playedListWidget->selectRow(id);
+        int offset = 0;
+        for(int i=0; i<index.count(); ++i)
+        {
+            if(index[i] >= id)
+            {
+                break;
+            }
+            ++offset;
+        }
+        m_playedListWidget->selectRow(id - offset);
     }
 
     setPlaylistCount(m_songLists.count());
@@ -247,7 +264,7 @@ void MusicPlayedListPopWidget::setDeleteItemAll()
         return;
     }
 
-    m_playedListWidget->replacePlayWidgetRow();
+    m_playedListWidget->adjustPlayWidgetRow();
     const int count = m_playedListWidget->rowCount();
     for(int i=0; i<count; ++i)
     {
@@ -259,8 +276,8 @@ void MusicPlayedListPopWidget::setDeleteItemAll()
 
 void MusicPlayedListPopWidget::cellDoubleClicked(int row, int)
 {
-    m_playlist->laterListClear();
-    m_playedListWidget->clearPlayLaterState();
+    m_playlist->removeQueueList();
+    m_playedListWidget->clearPlayQueueState();
     MusicApplication::instance()->musicPlayedIndex(row);
 }
 
@@ -295,15 +312,15 @@ void MusicPlayedListPopWidget::initWidget()
     m_scrollArea->setFrameShadow(QFrame::Plain);
     m_scrollArea->setAlignment(Qt::AlignLeft);
 
-    const QString &alphaStr = MusicUIObject::MQSSBackgroundStyle17;
+    const QString &background = MusicUIObject::MQSSBackgroundStyle17;
     QWidget *view = m_scrollArea->viewport();
     view->setObjectName("viewport");
-    view->setStyleSheet(QString("#viewport{%1}").arg(alphaStr));
+    view->setStyleSheet(QString("#viewport{%1}").arg(background));
     m_scrollArea->verticalScrollBar()->setStyleSheet(MusicUIObject::MQSSScrollBarStyle01);
 
     m_playedListWidget = new MusicSongsListPlayedTableWidget(this);
     m_playedListWidget->setSongsFileName(&m_songLists);
-    connect(m_playedListWidget, SIGNAL(setDeleteItemAt(int)), SLOT(setDeleteItemAt(int)));
+    connect(m_playedListWidget, SIGNAL(deleteItemAt(TTKIntList)), SLOT(setDeleteItemAt(TTKIntList)));
     connect(m_playedListWidget, SIGNAL(cellDoubleClicked(int,int)), SLOT(cellDoubleClicked(int,int)));
 
     QWidget *playedListContainer = new QWidget(m_scrollArea);
@@ -323,7 +340,10 @@ void MusicPlayedListPopWidget::initWidget()
 QWidget *MusicPlayedListPopWidget::createContainerWidget()
 {
     MusicPlayedListTopContainerWidget *topWidget = new MusicPlayedListTopContainerWidget(this);
-
+#ifdef Q_OS_UNIX
+    topWidget->setObjectName("topWidget");
+    topWidget->setStyleSheet(QString("#topWidget{%1}").arg(MusicUIObject::MQSSBackgroundStyle17));
+#endif
     QHBoxLayout *topWidgetLayout = new QHBoxLayout(topWidget);
     topWidgetLayout->setSpacing(15);
     QLabel *label = new QLabel(tr("playedList"), topWidget);
@@ -374,14 +394,14 @@ void MusicPlayedListPopWidget::setPlaylistCount(int count)
 {
     if(count >= 1000)
     {
-        for(int i=MAX_SIZE-1; i>=0; --i)
+        for(int i=MAX_SIZE - 1; i>=0; --i)
         {
             m_labels[i]->setPixmap(QPixmap(QString(":/tiny/lb_number%1").arg(9)));
         }
     }
     else
     {
-        for(int i=MAX_SIZE-1; i>=0; --i)
+        for(int i=MAX_SIZE - 1; i>=0; --i)
         {
             m_labels[i]->setPixmap(QPixmap(QString(":/tiny/lb_number%1").arg(count%10)));
             count = count/10;

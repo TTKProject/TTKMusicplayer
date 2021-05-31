@@ -4,33 +4,6 @@
 #include "musicgiflabelwidget.h"
 
 #include <qmath.h>
-#include <QActionGroup>
-
-MusicQueryTableWidget::MusicQueryTableWidget(QWidget *parent)
-    : MusicFillItemTableWidget(parent)
-{
-    m_downLoadManager = nullptr;
-}
-
-MusicQueryTableWidget::~MusicQueryTableWidget()
-{
-    delete m_downLoadManager;
-}
-
-void MusicQueryTableWidget::setQueryInput(MusicAbstractQueryRequest *query)
-{
-    delete m_downLoadManager;
-    m_downLoadManager = query;
-    connect(m_downLoadManager, SIGNAL(clearAllItems()), SLOT(clearAllItems()));
-    connect(m_downLoadManager, SIGNAL(createSearchedItem(MusicSearchedItem)), SLOT(createSearchedItem(MusicSearchedItem)));
-}
-
-MusicAbstractQueryRequest *MusicQueryTableWidget::getQueryInput()
-{
-    return m_downLoadManager;
-}
-
-
 
 MusicItemSearchTableWidget::MusicItemSearchTableWidget(QWidget *parent)
     : MusicQueryTableWidget(parent)
@@ -65,14 +38,14 @@ void MusicItemSearchTableWidget::itemCellClicked(int row, int column)
     if(rowCount() > 0 && row == rowCount() - 1)
     {
         QTableWidgetItem *it = item(row, 0);
-        if(it && it->data(MUSIC_TEXTS_ROLE).toString() == tr("More Data"))
+        if(it && it->data(MUSIC_TEXT_ROLE).toString() == tr("More Data"))
         {
             setItemDelegateForRow(row, nullptr);
             clearSpans();
             removeRow(row);
 
             m_loadingLabel->run(true);
-            m_downLoadManager->startToPage(m_downLoadManager->getPageIndex() + 1);
+            m_networkRequest->startToPage(m_networkRequest->getPageIndex() + 1);
         }
     }
 }
@@ -122,27 +95,26 @@ void MusicItemSearchTableWidget::createFinishedItem()
     QTableWidgetItem *it = item(count, 0);
     if(it)
     {
-        const int pageTotal = ceil(m_downLoadManager->getTotalSize() * 1.0 / m_downLoadManager->getPageSize());
-        const bool more = (pageTotal > m_downLoadManager->getPageIndex() + 1);
-        it->setData(MUSIC_TEXTS_ROLE, more ? tr("More Data") : tr("No More Data"));
+        const int pageTotal = ceil(m_networkRequest->getTotalSize() * 1.0 / m_networkRequest->getPageSize());
+        const bool more = (pageTotal > m_networkRequest->getPageIndex() + 1);
+        it->setData(MUSIC_TEXT_ROLE, more ? tr("More Data") : tr("No More Data"));
         setItemDelegateForRow(count, m_labelDelegate);
     }
 }
 
 void MusicItemSearchTableWidget::createContextMenu(QMenu &menu)
 {
-    if(!m_downLoadManager)
+    if(!m_networkRequest)
     {
         return;
     }
 
     menu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
     m_actionGroup->addAction(menu.addAction(tr("musicDownload")))->setData(0);
-
     menu.addSeparator();
 
     const int row = currentRow();
-    const MusicObject::MusicSongInformations musicSongInfos(m_downLoadManager->getMusicSongInfos());
+    const MusicObject::MusicSongInformations musicSongInfos(m_networkRequest->getMusicSongInfos());
     if(row < 0 || row >= musicSongInfos.count())
     {
         return;

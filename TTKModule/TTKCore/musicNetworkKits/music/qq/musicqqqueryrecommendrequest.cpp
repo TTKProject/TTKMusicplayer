@@ -17,7 +17,7 @@ void MusicQQQueryRecommendRequest::startToSearch(const QString &id)
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(id));
 
     deleteAll();
-    m_searchText = id;
+    m_queryText = id;
 
     QNetworkRequest request;
     request.setUrl(MusicUtils::Algorithm::mdII(QQ_RECOMMEND_URL, false));
@@ -75,7 +75,7 @@ void MusicQQQueryRecommendRequest::downLoadFinished()
                     musicInfo.m_songName = MusicUtils::String::illegalCharactersReplaced(value["name"].toString());
                     musicInfo.m_timeLength = MusicTime::msecTime2LabelJustified(value["interval"].toInt() * 1000);
 
-                    m_rawData["songID"] = value["id"].toString();
+                    m_rawData["sid"] = value["id"].toString();
                     musicInfo.m_songId = value["mid"].toString();
 
                     const QVariantMap &albumMap = value["album"].toMap();

@@ -36,7 +36,6 @@ void MusicSoundKMicroSearchTableWidget::startSearchQuery(const QString &text)
     if(!G_NETWORK_PTR->isOnline())   //no network connection
     {
         clearAllItems();
-        Q_EMIT showDownLoadInfoFor(MusicObject::DW_DisConnection);
         return;
     }
 
@@ -47,14 +46,14 @@ void MusicSoundKMicroSearchTableWidget::startSearchQuery(const QString &text)
         MusicKWQueryMovieRequest *d = new MusicKWQueryMovieRequest(this);
         connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
         setQueryInput(d);
-        m_downLoadManager->startToSearch(MusicAbstractQueryRequest::MovieQuery, text);
+        m_networkRequest->startToSearch(MusicAbstractQueryRequest::MovieQuery, text);
     }
     else
     {
         MusicBDQueryLearnRequest *d = new MusicBDQueryLearnRequest(this);
         connect(d, SIGNAL(downLoadDataChanged(QString)), SLOT(createFinishedItem()));
         setQueryInput(d);
-        m_downLoadManager->startToSearch(MusicAbstractQueryRequest::MusicQuery, text);
+        m_networkRequest->startToSearch(MusicAbstractQueryRequest::MusicQuery, text);
     }
 }
 
@@ -66,7 +65,7 @@ void MusicSoundKMicroSearchTableWidget::musicDownloadLocal(int row)
         return;
     }
 
-    const MusicObject::MusicSongInformations musicSongInfos(m_downLoadManager->getMusicSongInfos());
+    const MusicObject::MusicSongInformations musicSongInfos(m_networkRequest->getMusicSongInfos());
     MusicDownloadWidget *download = new MusicDownloadWidget(this);
     download->setSongName(musicSongInfos[row], m_queryMovieMode ? MusicAbstractQueryRequest::MovieQuery : MusicAbstractQueryRequest::MusicQuery);
     download->show();
@@ -168,7 +167,7 @@ void MusicSoundKMicroSearchTableWidget::dataDownloadPlay(int row)
         return;
     }
 
-    const MusicObject::MusicSongInformations musicSongInfos(m_downLoadManager->getMusicSongInfos());
+    const MusicObject::MusicSongInformations musicSongInfos(m_networkRequest->getMusicSongInfos());
     for(const MusicObject::MusicSongAttribute &attr : qAsConst(musicSongInfos[row].m_songAttrs))
     {
         Q_EMIT mediaUrlChanged(m_queryMovieMode, attr.m_url, m_queryMovieMode ? QString() : musicSongInfos[row].m_lrcUrl);

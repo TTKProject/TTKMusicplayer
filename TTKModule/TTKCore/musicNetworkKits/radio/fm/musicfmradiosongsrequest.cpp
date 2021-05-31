@@ -1,12 +1,12 @@
 #include "musicfmradiosongsrequest.h"
 #include "musicnumberutils.h"
+#include "musicqqqueryinterface.h"
 
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
-#include <QNetworkCookieJar>
 
-MusicFMRadioSongsRequest::MusicFMRadioSongsRequest(QObject *parent, QNetworkCookieJar *cookie)
-    : MusicAbstractFMRadioRequest(parent, cookie)
+MusicFMRadioSongsRequest::MusicFMRadioSongsRequest(QObject *parent)
+    : MusicAbstractFMRadioRequest(parent)
 {
 
 }
@@ -20,14 +20,11 @@ void MusicFMRadioSongsRequest::startToDownload(const QString &id)
 {
     m_cachedID = id;
     m_songInfo = MusicObject::MusicSongInformation();
-    m_manager = new QNetworkAccessManager(this);
 
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(FM_SONG_URL, false).arg(id));
-#ifndef QT_NO_SSL
-    connect(m_manager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
+    request.setUrl(MusicUtils::Algorithm::mdII(FM_SONG_URL, false).arg(id).arg(FM_API_KEY));
+    request.setRawHeader("Cookie", getHeader("Cookie").toByteArray());
     MusicObject::setSslConfiguration(&request);
-#endif
 
     m_reply = m_manager->get(request);
     connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
@@ -77,7 +74,7 @@ void MusicFMRadioSongsRequest::downLoadFinished()
                 m_songInfo.m_singerName = MusicUtils::String::illegalCharactersReplaced(value["artist"].toString());
                 m_songInfo.m_smallPicUrl = value["picture"].toString();
                 m_songInfo.m_albumName = MusicUtils::String::illegalCharactersReplaced(value["albumtitle"].toString());
-                m_songInfo.m_lrcUrl = MusicUtils::Algorithm::mdII(FM_LRC_URL, false).arg(value["sid"].toString()).arg(value["ssid"].toString());
+                m_songInfo.m_lrcUrl = MusicUtils::Algorithm::mdII(FM_LRC_URL, false).arg(value["sid"].toString()).arg(value["ssid"].toString()).arg(FM_API_KEY);
             }
         }
     }

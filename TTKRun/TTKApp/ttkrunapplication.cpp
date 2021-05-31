@@ -3,6 +3,9 @@
 
 #include <QWidget>
 
+/*! @brief The class of the ttk run application private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class TTKRunApplicationPrivate : public TTKPrivate<TTKRunApplication>
 {
 public:
@@ -29,14 +32,14 @@ TTKRunApplicationPrivate::~TTKRunApplicationPrivate()
 TTKRunApplication::TTKRunApplication(int &argc, char **argv, bool GUIenabled)
     : QApplication(argc, argv, GUIenabled)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize();
 }
 
 TTKRunApplication::TTKRunApplication(const QString &appId, int &argc, char **argv)
     : QApplication(argc, argv)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize(appId);
 }
 
@@ -44,7 +47,7 @@ TTKRunApplication::TTKRunApplication(const QString &appId, int &argc, char **arg
 TTKRunApplication::TTKRunApplication(int &argc, char **argv, Type type)
     : QApplication(argc, argv, type)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize();
 }
 
@@ -52,21 +55,21 @@ TTKRunApplication::TTKRunApplication(int &argc, char **argv, Type type)
 TTKRunApplication::TTKRunApplication(Display* dpy, Qt::HANDLE visual, Qt::HANDLE cmap)
     : QApplication(dpy, visual, cmap)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize();
 }
 
 TTKRunApplication::TTKRunApplication(Display *dpy, int &argc, char **argv, Qt::HANDLE visual, Qt::HANDLE cmap)
     : QApplication(dpy, argc, argv, visual, cmap)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize();
 }
 
 TTKRunApplication::TTKRunApplication(Display* dpy, const QString &appId, int argc, char **argv, Qt::HANDLE visual, Qt::HANDLE cmap)
     : QApplication(dpy, argc, argv, visual, cmap)
 {
-    TTK_INIT_PRIVATE;
+    TTK_INIT_PRIVATE(TTKRunApplication);
     initialize(appId);
 }
 #  endif

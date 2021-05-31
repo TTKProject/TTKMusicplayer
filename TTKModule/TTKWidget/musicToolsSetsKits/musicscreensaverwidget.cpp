@@ -1,5 +1,5 @@
 #include "musicscreensaverwidget.h"
-#include "musicapplicationobject.h"
+#include "musicapplicationmodule.h"
 #include "musicsettingmanager.h"
 #include "musicuiobject.h"
 #include "musictoolsetsuiobject.h"
@@ -31,7 +31,7 @@ MusicScreenSaverHoverItem::MusicScreenSaverHoverItem(QLabel *parent)
 
     hide();
     m_index = -1;
-    m_parent = parent;
+    m_parentClass = parent;
     m_enableButton = new QPushButton(this);
     m_enableButton->setCursor(Qt::PointingHandCursor);
     m_enableButton->setStyleSheet(MusicUIObject::MQSSScreenItemDisable);
@@ -46,7 +46,7 @@ void MusicScreenSaverHoverItem::setFilePath(const QString &path)
 {
     m_path = path;
     QPixmap pix(m_path);
-    m_parent->setPixmap(pix);
+    m_parentClass->setPixmap(pix);
     setPixmap(pix);
 }
 
@@ -70,7 +70,7 @@ void MusicScreenSaverHoverItem::caseButtonOnAndOff()
     if(m_enableButton->styleSheet().contains(MusicUIObject::MQSSScreenItemDisable))
     {
         QPixmap pix(MusicUtils::Image::grayScalePixmap(QPixmap(m_path), 70));
-        m_parent->setPixmap(pix);
+        m_parentClass->setPixmap(pix);
         setPixmap(pix);
         m_enableButton->setStyleSheet(MusicUIObject::MQSSScreenItemEnable);
         Q_EMIT itemClicked(m_index, false);
@@ -78,7 +78,7 @@ void MusicScreenSaverHoverItem::caseButtonOnAndOff()
     else
     {
         QPixmap pix(m_path);
-        m_parent->setPixmap(pix);
+        m_parentClass->setPixmap(pix);
         setPixmap(pix);
         m_enableButton->setStyleSheet(MusicUIObject::MQSSScreenItemDisable);
         Q_EMIT itemClicked(m_index, true);
@@ -324,7 +324,7 @@ void MusicScreenSaverWidget::inputDataChanged()
     if(state)
     {
         G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverTime, m_inputEdit->text().toInt());
-        MusicApplicationObject::instance()->applySettingParameter();
+        MusicApplicationModule::instance()->applySettingParameter();
     }
 }
 
@@ -344,7 +344,7 @@ void MusicScreenSaverWidget::caseButtonOnAndOff()
 
     m_inputEdit->setEnabled(m_currentState);
     G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverEnable, m_currentState);
-    MusicApplicationObject::instance()->applySettingParameter();
+    MusicApplicationModule::instance()->applySettingParameter();
 }
 
 void MusicScreenSaverWidget::downLoadFinished(const QString &data)
@@ -372,7 +372,7 @@ void MusicScreenSaverWidget::itemHasClicked(int index, bool status)
         items << QString("%1,%2").arg(i).arg(statusVector[i]);
     }
     G_SETTING_PTR->setValue(MusicSettingManager::OtherScreenSaverIndex, items.join(";"));
-    MusicApplicationObject::instance()->applySettingParameter();
+    MusicApplicationModule::instance()->applySettingParameter();
 }
 
 void MusicScreenSaverWidget::initialize()

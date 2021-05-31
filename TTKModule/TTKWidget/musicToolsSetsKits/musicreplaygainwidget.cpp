@@ -99,6 +99,9 @@ MusicReplayGainWidget::MusicReplayGainWidget(QWidget *parent)
     m_ui->volumeLineEdit->setStyleSheet(MusicUIObject::MQSSLineEditStyle01);
     m_ui->volumeLineEdit->setValidator(new QRegExpValidator(QRegExp("-?[0-9]+$"), this));
 
+    m_ui->progressBar->setStyleSheet(MusicUIObject::MQSSProgressBar01);
+    m_ui->progressBarAll->setStyleSheet(MusicUIObject::MQSSProgressBar01);
+
     m_process = new QProcess(this);
     m_process->setProcessChannelMode(QProcess::MergedChannels);
     m_replayGainWidget = nullptr;
@@ -223,13 +226,11 @@ void MusicReplayGainWidget::addFileButtonClicked()
 
 void MusicReplayGainWidget::addFilesButtonClicked()
 {
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setViewMode(QFileDialog::Detail);
-    if(dialog.exec())
+    const QString &path = MusicUtils::File::getOpenDirectoryDialog(this);
+    if(!path.isEmpty())
     {
         setControlEnabled(false);
-        for(const QFileInfo &info : MusicUtils::File::getFileListByDir(dialog.directory().absolutePath(), true))
+        for(const QFileInfo &info : MusicUtils::File::getFileListByDir(path, true))
         {
             if(QString(MP3_FILE_PREFIX).contains(info.suffix().toLower()) && !m_paths.contains(info.absoluteFilePath()))
             {

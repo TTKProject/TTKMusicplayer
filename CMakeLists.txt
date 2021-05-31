@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.11)
 add_definitions(-DTTK_LIBRARY)
 add_definitions(-DQMMP_LIBRARY)
 
-set(TTK_MAJOR_VERSION "2.13.4")
+set(TTK_MAJOR_VERSION "2.15.0")
 set(TTK_VERSION ${TTK_MAJOR_VERSION}.0)
 
 # Find includes in the build directories
@@ -56,7 +56,6 @@ include_directories(
     ${MUSIC_CORE_NETWORK_DIR}/music/mg
     ${MUSIC_CORE_NETWORK_DIR}/music/qq
     ${MUSIC_CORE_NETWORK_DIR}/music/wy
-    ${MUSIC_CORE_NETWORK_DIR}/music/xm
     ${MUSIC_CORE_NETWORK_DIR}/radio/dj
     ${MUSIC_CORE_NETWORK_DIR}/radio/mv
     ${MUSIC_CORE_NETWORK_DIR}/radio/fm

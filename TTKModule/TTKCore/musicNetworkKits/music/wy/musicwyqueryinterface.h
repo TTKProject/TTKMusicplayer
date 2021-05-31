@@ -35,7 +35,7 @@ const QString WY_ENCRYPT_STRING             = "3go8&$8*3*3h0k(2)2";
 const QString WY_SECKRY_STRING              = "411571dca16717d9af5ef1ac97a8d21cb740329890560688b1b624de43f49fdd7702493835141b06ae45f1326e264c98c24ce87199c1a776315e5f25c11056b02dd92791fcc012bff8dd4fc86e37888d5ccc060f7837b836607dbb28bddc703308a0ba67c24c6420dd08eec2b8111067486c907b6e53c027ae1e56c188bc568e";
 ///song url
 const QString WY_SONG_SEARCH_URL            = "STg2eHNFN0FLWnRzeDNlQXRlaHIvVlJ6b2k5a2s3Y2JmMG9lUEQzTytuNG5JenowY3ZleC9SbXFyak1ta29pYzA3dytZZz09";
-const QString WY_SONG_SEARCH_DATA_URL       = "ZEhwSlR5d1o1dENWUjk3Q09uckZpSG5QTGtEWnMwaUp3Ky9xYlE1S3lRVCtyNzNDNnp3bGQ2QzVCdE9FWlRuMVAxQ21uQT09";
+const QString WY_SONG_SEARCH_DATA_URL       = "UUlpSjlhZzFoVnExMDRudE5PWlFva25EWCt1d09CbGVYdlNpVVhvUWVna29JVU9sa3cxK2N0bUU0eW1VMENTTjlhR3JnQT09";
 const QString WY_SONG_LRC_OLD_URL           = "eEZRWnA5eWZZZWFvakpnQ2F2Sml1aTZQa1crekFlZUJoTXUwRUgwekRtOXFsU2l2S1BKZFdwTUVaNGRzWUJ2ZTNpdlRDNnVuTUt2M0xtUTRsaWh2NTZBQ0JacnNTbXp6";
 const QString WY_SONG_PATH_OLD_URL          = "SXZWVUpDL0FCM1pUODJsaDNGZjN4OFlVZk1JQzdXOXRpWVJTSTVEUEZJZkI3YUJOMUdLQ3lnPT0=";
 const QString WY_SONG_PATH_URL              = "M21IV2dlSHNzaE1zZEpyb2hrQ0dqVEY3Ly9DZ3ZteDM1RStuSlJIRVVCRTljbWJKKzRBVnNZY3JEcEZKY045dEJ5KzM0WHArSDVCYXhrMHBoZmlTZXBWdHIvND0=";
@@ -60,6 +60,10 @@ const QString WY_ALBUM_URL                  = "QzJrMDNKTGlpVHpvY2taYm5BSWZGVTZWM
 ///movie url
 const QString WY_MOVIE_URL                  = "dFowcHhjYXk3UWRkZlo2eW40NkY2TEU4VzRoMC84TFh4Wm93N1hCbWk5V21WQnZnYzIrVUhvYmVtK0xtUW90cGpidHBqdz09";
 const QString WY_MOVIE_DATA_URL             = "dmt4VnNDdWErYjRYUXBnOWdubVBIQT09";
+const QString WY_VIDEO_INFO_URL             = "VGVNaXVsNW9GSTA0d1VYMnFlRnhuVFoyd1BTV0U0Y1RMWGxON25tTlZ4S2lxSUthSFkvSXFOcFB1MjE1eG4xVFBhUXpITWVEZkVrbU5uNk0=";
+const QString WY_VIDEO_INFO_DATA_URL        = "MTFxaHNCYnNQYnh5YWFMQUpadk9sWmRCY3FJPQ==";
+const QString WY_VIDEO_PATH_URL             = "VjZLL2tEVlFnYjhQclRPMDVnblZiNmE4Q0NDMzBqa3ZaeStjallYbkdBbllYU2YxSWE0OFFIRXppVDRLeEtsM2g4OTROdz09";
+const QString WY_VIDEO_PATH_DATA_URL        = "OE8vNmRpSVV6VXg4OGRKL0s5OStEdFQ4K1R2SGJlblZnSGljeVllZ1RQUW5ES1JONWIvdVhNSWdtZGc9";
 ///toplist url
 const QString WY_TOPLIST_URL                = "VUdTa0xMeG1Nblc4cThoS2E1QzhJK0lrTHJBRmk4TUJZMC9NQW1GanZydDJmR0VJVVRZNmJQSEhOZU96aE55bTJxdW55RldJOHl6aElNdTlHbkZkSmc9PQ==";
 const QString WY_TOPLIST_DATA_URL           = "UzFpUWk1ZjVnTlpZS2Fabjl0dE50Sk1mUmJZZjlRVTNwVHJlem9ndG1mUzNpSXdvaDluK3NXUlEzdjkyRTl6bXoxYjg1c3g0UXZPWnlPUkxUM0YzMWtmZzVVdzduV2M1";
@@ -81,7 +85,7 @@ const QString WY_SUGGEST_DATA_URL           = "ajU1Wm14WjV3KzhBeTdpSlNmVE5lUT09"
 
 class QNetworkRequest;
 
-/*! @brief The class to wangyi query interface.
+/*! @brief The class of wangyi query interface.
  * @author Greedysky <greedysky@163.com>
  */
 class MUSIC_NETWORK_EXPORT MusicWYQueryInterface

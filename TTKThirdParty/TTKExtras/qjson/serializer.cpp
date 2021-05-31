@@ -45,6 +45,9 @@
 
 using namespace QJson;
 
+/**
+* @brief Main class used to convert QVariant objects to JSON data private.
+*/
 class Serializer::SerializerPrivate : public TTKPrivate<Serializer>
 {
   public:
@@ -391,7 +394,7 @@ QByteArray Serializer::SerializerPrivate::escapeString( const QString& str )
 
 Serializer::Serializer()
 {
-  TTK_INIT_PRIVATE;
+  TTK_INIT_PRIVATE(Serializer);
 }
 
 void Serializer::serialize( const QVariant &v, QIODevice* io, bool* ok)

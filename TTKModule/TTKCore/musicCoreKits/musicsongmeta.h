@@ -22,7 +22,7 @@
 #include "tagwrapper.h"
 #include "musicglobaldefine.h"
 
-class MusicMeta;
+struct MusicMeta;
 
 /*! @brief The class of the music song meta.
  * @author Greedysky <greedysky@163.com>
@@ -158,6 +158,16 @@ public:
 
     MusicSongMeta& operator= (const MusicSongMeta &other);
     MusicSongMeta& operator= (MusicSongMeta &&other);
+
+public:
+    /*!
+     * Check song track is valid or not.
+     */
+    static bool SongTrackValid(const QString &file);
+    /*!
+     * Check song track contains type.
+     */
+    static bool SongTrackTpyeContains(const QString &file);
 
 public:
     /*!

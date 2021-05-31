@@ -13,7 +13,7 @@
 #include "musictopareawidget.h"
 #include "musicrightareawidget.h"
 #include "musicleftareawidget.h"
-#include "musicapplicationobject.h"
+#include "musicapplicationmodule.h"
 #include "musichotkeymanager.h"
 #include "musicfunctionuiobject.h"
 #include "musictoastlabel.h"
@@ -25,7 +25,6 @@
 #include "musictkplconfigmanager.h"
 
 #include <QMimeData>
-#include <QFileDialog>
 
 MusicApplication *MusicApplication::m_instance = nullptr;
 
@@ -39,7 +38,7 @@ MusicApplication::MusicApplication(QWidget *parent)
 #else
     setAttribute(Qt::WA_TranslucentBackground, false);
 #endif
-    m_applicationObject = new MusicApplicationObject(this);
+    m_applicationObject = new MusicApplicationModule(this);
     m_topAreaWidget = new MusicTopAreaWidget(this);
     m_bottomAreaWidget = new MusicBottomAreaWidget(this);
     m_rightAreaWidget = new MusicRightAreaWidget(this);
@@ -357,6 +356,7 @@ void MusicApplication::showCurrentSong(int index)
         positionChanged(0);
         m_rightAreaWidget->loadCurrentSongLrc(name, name);
     }
+
     m_ui->musicPlayedList->setCurrentIndex();
     m_musicSongTreeWidget->setRecentMusicSongs(index);
     m_musicSongTreeWidget->setMusicPlayCount(index);
@@ -502,6 +502,8 @@ void MusicApplication::musicImportSongs()
     menu.addAction(tr("openOnlyDir"), this, SLOT(musicImportSongsOnlyDir()));
     menu.addSeparator();
     menu.addAction(tr("dragAnddrop"))->setEnabled(false);
+
+    MusicUtils::Widget::adjustMenuPosition(&menu);
     menu.exec(QCursor::pos());
 }
 
@@ -510,7 +512,7 @@ void MusicApplication::musicImportSongsOnlyFile()
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setViewMode(QFileDialog::Detail);
-    dialog.setNameFilters(MusicFormats::supportFormatsFilterDialogString());
+    dialog.setNameFilters(MusicFormats::supportFormatsDialogFilter());
 
     if(dialog.exec())
     {
@@ -520,15 +522,13 @@ void MusicApplication::musicImportSongsOnlyFile()
 
 void MusicApplication::musicImportSongsOnlyDir()
 {
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setViewMode(QFileDialog::Detail);
-    if(dialog.exec())
+    const QString &path = MusicUtils::File::getOpenDirectoryDialog(this);
+    if(!path.isEmpty())
     {
         QStringList fileList;
-        for(const QFileInfo &info : MusicUtils::File::getFileListByDir(dialog.directory().absolutePath(), true))
+        for(const QFileInfo &info : MusicUtils::File::getFileListByDir(path, true))
         {
-            if(MusicFormats::supportFormatsString().contains(info.suffix().toLower()))
+            if(MusicFormats::supportFormats().contains(info.suffix().toLower()))
             {
                fileList << info.absoluteFilePath();
             }
@@ -751,6 +751,7 @@ void MusicApplication::musicCreateRightMenu()
     rightClickMenu.addMenu(&musicAddNewFiles);
     musicAddNewFiles.addAction(tr("openOnlyFiles"), this, SLOT(musicImportSongsOnlyFile()));
     musicAddNewFiles.addAction(tr("openOnlyDir"), this, SLOT(musicImportSongsOnlyDir()));
+    MusicUtils::Widget::adjustMenuPosition(&musicAddNewFiles);
 
     QMenu musicPlaybackMode(tr("playbackMode"), &rightClickMenu);
     rightClickMenu.addMenu(&musicPlaybackMode);
@@ -788,6 +789,7 @@ void MusicApplication::musicCreateRightMenu()
     musicRemoteControl.addAction(tr("ComplexStyleRemote"), m_topAreaWidget, SLOT(musicComplexStyleRemote()));
     musicRemoteControl.addAction(tr("RippleRemote"), m_topAreaWidget, SLOT(musicRippleRemote()));
     musicRemoteControl.addAction(tr("DeleteRemote"), m_topAreaWidget, SLOT(musicDeleteRemote()));
+    MusicUtils::Widget::adjustMenuPosition(&musicRemoteControl);
 
     rightClickMenu.addAction(QIcon(":/contextMenu/btn_equalizer"), tr("Equalizer"), m_applicationObject, SLOT(musicSetEqualizer()));
     rightClickMenu.addAction(tr("SoundEffect"), m_applicationObject, SLOT(musicSetSoundEffect()));
@@ -865,7 +867,7 @@ void MusicApplication::setDeleteItemAt(const QStringList &path, bool remove, boo
                 {
                     index << idx;
                 }
-            }while(idx != -1);
+            } while(idx != -1);
         }
 
         if(index.isEmpty())
@@ -896,6 +898,7 @@ void MusicApplication::setDeleteItemAt(const QStringList &path, bool remove, boo
         {
             oldIndex -= index.count();
         }
+
         if(oldIndex == m_musicPlaylist->mediaCount()) ///Play index error correction
         {
             --oldIndex;
@@ -982,7 +985,6 @@ void MusicApplication::resizeEvent(QResizeEvent *event)
         m_topAreaWidget->musicBackgroundThemeChangedByResize();
         m_rightAreaWidget->resizeWindow();
         m_bottomAreaWidget->resizeWindow();
-        m_ui->musicPlayedList->resizeWindow();
         MusicAbstractMoveResizeWidget::resizeEvent(event);
     }
     else

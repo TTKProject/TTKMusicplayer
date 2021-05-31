@@ -1,4 +1,5 @@
 #include "musicdownloadcounterpvrequest.h"
+#include "musicobject.h"
 
 MusicDownloadCounterPVRequest::MusicDownloadCounterPVRequest(QObject *parent)
     : MusicAbstractNetwork(parent)
@@ -13,17 +14,12 @@ MusicDownloadCounterPVRequest::~MusicDownloadCounterPVRequest()
 
 void MusicDownloadCounterPVRequest::startToDownload()
 {
-    m_manager = new QNetworkAccessManager(this);
-
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(QURTY_URL, false));
+    request.setUrl(MusicUtils::Algorithm::mdII(QUERY_URL, false));
     request.setRawHeader("Host", MusicUtils::Algorithm::mdII(HOST_URL, false).toUtf8());
     request.setRawHeader("Referer", MusicUtils::Algorithm::mdII(REFER_URL, false).toUtf8());
     request.setRawHeader("Cookie", MusicUtils::Algorithm::mdII(COOKIE_URL, false).toUtf8());
-#ifndef QT_NO_SSL
-    connect(m_manager, SIGNAL(sslErrors(QNetworkReply*,QList<QSslError>)), SLOT(sslErrors(QNetworkReply*,QList<QSslError>)));
     MusicObject::setSslConfiguration(&request);
-#endif
 
     m_reply = m_manager->get(request);
     connect(m_reply, SIGNAL(finished()), SLOT(downLoadFinished()));
@@ -35,7 +31,7 @@ void MusicDownloadCounterPVRequest::downLoadFinished()
     {
         const QByteArray &bytes = m_reply->readAll();
         QString value(bytes);
-        value.remove("try{BusuanziCallback_850915854978(");
+        value.remove(MusicUtils::Algorithm::mdII(RM_KEYWORD, false));
         value.remove(");}catch(e){}");
 
         QJson::Parser parser;
@@ -48,13 +44,13 @@ void MusicDownloadCounterPVRequest::downLoadFinished()
         }
         else
         {
-            Q_EMIT downLoadDataChanged(QString());
+            Q_EMIT downLoadDataChanged(STRING_NULL);
         }
     }
     else
     {
         TTK_LOGGER_ERROR("Counter PV data error");
-        Q_EMIT downLoadDataChanged(QString());
+        Q_EMIT downLoadDataChanged(STRING_NULL);
     }
 
     deleteAll();

@@ -19,7 +19,9 @@
 #define ICON_SIZE       50
 
 MusicWebFMRadioWidget::MusicWebFMRadioWidget(QWidget *parent)
-    : MusicAbstractTableWidget(parent), m_musicRadio(nullptr), m_getChannelThread(nullptr)
+    : MusicAbstractTableWidget(parent),
+      m_musicRadio(nullptr),
+      m_getChannelThread(nullptr)
 {
     setIconSize(QSize(ICON_SIZE, ICON_SIZE));
     setColumnCount(4);
@@ -109,7 +111,7 @@ void MusicWebFMRadioWidget::itemCellDoubleClicked(int row, int column)
 
     if(!channels.isEmpty())
     {
-        m_musicRadio->updateRadioSong(channels[row].m_id);
+        m_musicRadio->updateRadioSong(channels[row].m_id, m_getChannelThread->getHeader("Cookie").toString());
     }
     m_musicRadio->show();
 }
@@ -124,7 +126,7 @@ void MusicWebFMRadioWidget::addListWidgetItem()
         setRowHeight(index, ITEM_ROW_HEIGHT_XL);
 
         QTableWidgetItem *item = new QTableWidgetItem;
-        item->setData(MUSIC_DATAS_ROLE, channel.m_coverUrl);
+        item->setData(MUSIC_DATA_ROLE, channel.m_coverUrl);
         setItem(index, 0, item);
 
                           item = new QTableWidgetItem;
@@ -151,9 +153,7 @@ void MusicWebFMRadioWidget::addListWidgetItem()
         connect(download, SIGNAL(downLoadRawDataChanged(QByteArray)), SLOT(downLoadFinished(QByteArray)));
         if(!channel.m_coverUrl.isEmpty() && channel.m_coverUrl != COVER_URL_NULL)
         {
-            QVariantMap map;
-            map["id"] = index;
-            download->setRawData(map);
+            download->setHeader("id", index);
             download->startToDownload(channel.m_coverUrl);
         }
     }
@@ -174,7 +174,7 @@ void MusicWebFMRadioWidget::downLoadFinished(const QByteArray &data)
         return;
     }
 
-    QTableWidgetItem *it = item(download->getRawData()["id"].toInt(), 1);
+    QTableWidgetItem *it = item(download->getHeader("id").toInt(), 1);
     if(it)
     {
         QPixmap pix;
@@ -224,6 +224,7 @@ void MusicWebFMRadioWidget::sendToDesktopLink()
 void MusicWebFMRadioWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     MusicAbstractTableWidget::contextMenuEvent(event);
+
     QMenu rightClickMenu(this);
     rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 

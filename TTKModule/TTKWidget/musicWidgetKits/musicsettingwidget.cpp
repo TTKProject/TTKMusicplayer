@@ -7,7 +7,7 @@
 #include "musicnetworkconnectiontestwidget.h"
 #include "musictoastlabel.h"
 #include "musichotkeymanager.h"
-#include "musicapplicationobject.h"
+#include "musicapplicationmodule.h"
 #include "musiclrccolorwidget.h"
 #include "musiclrcdefines.h"
 #include "musiclrcmanager.h"
@@ -23,7 +23,6 @@
 ///qmmp incldue
 #include "qmmpsettings.h"
 
-#include <QFileDialog>
 #include <QFontDatabase>
 #include <QButtonGroup>
 #include <QAudioDeviceInfo>
@@ -353,16 +352,10 @@ void MusicSettingWidget::downloadGroupSpeedLimit(int index)
 
 void MusicSettingWidget::downloadDirSelected(int index)
 {
-    QFileDialog dialog;
-    dialog.setFileMode(QFileDialog::Directory);
-    dialog.setViewMode(QFileDialog::Detail);
-    if(dialog.exec())
+    const QString &path = MusicUtils::File::getOpenDirectoryDialog(this);
+    if(!path.isEmpty())
     {
-        const QString &path = dialog.directory().absolutePath();
-        if(!path.isEmpty())
-        {
-            index == 0 ? m_ui->downloadDirEdit->setText(path + "/") : m_ui->downloadLrcDirEdit->setText(path + "/");
-        }
+        index == 0 ? m_ui->downloadDirEdit->setText(path + "/") : m_ui->downloadLrcDirEdit->setText(path + "/");
     }
 }
 
@@ -878,7 +871,6 @@ void MusicSettingWidget::initDownloadWidget()
 
     m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_wangyiyun"), tr("wangyiMusic"));
     m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_qq"), tr("qqMusic"));
-    m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_xiami"), tr("xiamiMusic"));
     m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_kuwo"), tr("kuwoMusic"));
     m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_kugou"), tr("kugouMusic"));
     m_ui->downloadServerComboBox->addItem(QIcon(":/server/lb_migu"), tr("miguMusic"));
@@ -1029,8 +1021,8 @@ void MusicSettingWidget::initSoundEffectWidget()
     m_ui->equalizerPluginsButton->setFocusPolicy(Qt::NoFocus);
 #endif
 
-    connect(m_ui->equalizerButton, SIGNAL(clicked()), MusicApplicationObject::instance(), SLOT(musicSetEqualizer()));
-    connect(m_ui->equalizerPluginsButton, SIGNAL(clicked()), MusicApplicationObject::instance(), SLOT(musicSetSoundEffect()));
+    connect(m_ui->equalizerButton, SIGNAL(clicked()), MusicApplicationModule::instance(), SLOT(musicSetEqualizer()));
+    connect(m_ui->equalizerPluginsButton, SIGNAL(clicked()), MusicApplicationModule::instance(), SLOT(musicSetSoundEffect()));
     connect(m_ui->fadeInAndOutCheckBox, SIGNAL(clicked(bool)), SLOT(musicFadeInAndOutClicked(bool)));
 }
 

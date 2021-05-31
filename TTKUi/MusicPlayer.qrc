@@ -121,6 +121,7 @@
         <file alias="lb_screen_saver">../TTKResource/tools/lb_screensaver.png</file>
     </qresource>
     <qresource prefix="/contextMenu">
+        <file alias="btn_transparent">../TTKResource/contextMenu/btn_transparent.png</file>
         <file alias="btn_next_normal">../TTKResource/contextMenu/btn_next_normal.png</file>
         <file alias="btn_next_hover">../TTKResource/contextMenu/btn_next_hover.png</file>
         <file alias="btn_pause_normal">../TTKResource/contextMenu/btn_pause_normal.png</file>
@@ -343,7 +344,6 @@
         <file alias="lb_kuwo">../TTKResource/server/lb_server_kuwo.png</file>
         <file alias="lb_qq">../TTKResource/server/lb_server_qq.png</file>
         <file alias="lb_wangyiyun">../TTKResource/server/lb_server_wangyiyun.png</file>
-        <file alias="lb_xiami">../TTKResource/server/lb_server_xiami.png</file>
         <file alias="lb_migu">../TTKResource/server/lb_server_migu.png</file>
     </qresource>
     <qresource prefix="/toolSets">
@@ -362,7 +362,6 @@
         <file alias="lb_mobile_devices">../TTKResource/toolSets/lb_mobile_devices.png</file>
         <file alias="lb_mobile_usb">../TTKResource/toolSets/lb_mobile_usb.png</file>
         <file alias="lb_mobile_computer">../TTKResource/toolSets/lb_mobile_computer.png</file>
-        <file alias="lb_upgrade">../TTKResource/toolSets/lb_upgrade.png</file>
         <file alias="lb_upgradeMain">../TTKResource/toolSets/lb_upgradeMain.png</file>
         <file alias="btn_gain_add_file">../TTKResource/toolSets/btn_gain_add_file.png</file>
         <file alias="btn_gain_add_files">../TTKResource/toolSets/btn_gain_add_files.png</file>

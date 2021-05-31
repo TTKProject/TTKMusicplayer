@@ -53,7 +53,7 @@ void MusicCloudDownloadTableWidget::createItem(int index, const MusicSong &recor
     setItem(index, 1, item);
 
                       item = new QTableWidgetItem;
-    item->setData(MUSIC_PROCS_ROLE, 100);
+    item->setData(MUSIC_PROGRESS_ROLE, 100);
     setItem(index, 2, item);
 
                       item = new QTableWidgetItem(record.getMusicSizeStr());
@@ -63,11 +63,11 @@ void MusicCloudDownloadTableWidget::createItem(int index, const MusicSong &recor
     item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
+    item->setData(MUSIC_TIME_ROLE, record.getMusicAddTimeStr());
     setItem(index, 3, item);
 
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
 }
 
 
@@ -123,7 +123,7 @@ void MusicCloudUploadTableWidget::reuploadFile()
         return;
     }
 
-    const QString data(it->data(MUSIC_DATAS_ROLE).toString());
+    const QString data(it->data(MUSIC_DATA_ROLE).toString());
     if(!data.isEmpty())
     {
         Q_EMIT reuploadFilesToServer(QStringList() << data);
@@ -139,7 +139,7 @@ void MusicCloudUploadTableWidget::reuploadFiles()
     }
 
     QStringList datas;
-    for(const int index : getMultiSelectedIndexs())
+    for(const int index : getMultiSelectedIndex())
     {
         QTableWidgetItem *it = item(index, 0);
         if(it == nullptr)
@@ -147,7 +147,7 @@ void MusicCloudUploadTableWidget::reuploadFiles()
             continue;
         }
 
-        const QString data(it->data(MUSIC_DATAS_ROLE).toString());
+        const QString data(it->data(MUSIC_DATA_ROLE).toString());
         if(!data.isEmpty())
         {
             datas << data;
@@ -164,7 +164,7 @@ void MusicCloudUploadTableWidget::createItem(int index, const MusicSong &record)
 {
     QHeaderView *headerview = horizontalHeader();
     QTableWidgetItem *item = new QTableWidgetItem;
-    item->setData(MUSIC_DATAS_ROLE, record.getMusicPath());
+    item->setData(MUSIC_DATA_ROLE, record.getMusicPath());
     setItem(index, 0, item);
 
                       item = new QTableWidgetItem;
@@ -185,18 +185,17 @@ void MusicCloudUploadTableWidget::createItem(int index, const MusicSong &record)
     item->setTextColor(QColor(MusicUIObject::MQSSColor01));
 #endif
     item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    item->setData(MUSIC_TIMES_ROLE, record.getMusicAddTimeStr());
+    item->setData(MUSIC_TIME_ROLE, record.getMusicAddTimeStr());
     setItem(index, 2, item);
 
     //just fix table widget size hint
-    setFixedHeight(allRowsHeight());
+    setFixedHeight(totalHeight());
 }
 
 void MusicCloudUploadTableWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     QMenu rightClickMenu(this);
-
     rightClickMenu.setStyleSheet(MusicUIObject::MQSSMenuStyle02);
 
     const bool empty = !m_musicSongs->isEmpty();
@@ -211,6 +210,5 @@ void MusicCloudUploadTableWidget::contextMenuEvent(QContextMenuEvent *event)
     rightClickMenu.addAction(tr("reupload"), this, SLOT(reuploadFile()))->setEnabled(empty);
     rightClickMenu.addAction(tr("reuploadAll"), this, SLOT(reuploadFiles()))->setEnabled(empty);
     rightClickMenu.addSeparator();
-
     rightClickMenu.exec(QCursor::pos());
 }

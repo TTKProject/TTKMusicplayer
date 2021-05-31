@@ -76,7 +76,7 @@ public:
      */
     qint64 duration() const;
     /*!
-     * Get current player postion.
+     * Get current player position.
      */
     qint64 position() const;
     /*!
@@ -123,7 +123,7 @@ Q_SIGNALS:
     /*!
      * Current state changed.
      */
-    void stateChanged(MusicObject::PlayState newState);
+    void stateChanged(MusicObject::PlayState state);
     /*!
      * Current duration changed.
      */

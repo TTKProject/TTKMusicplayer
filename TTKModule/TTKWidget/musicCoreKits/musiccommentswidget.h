@@ -23,7 +23,7 @@
 #include "musiccommentsrequest.h"
 
 class QTextEdit;
-class MusicPagingWidgetObject;
+class MusicPagingWidgetModule;
 
 /*! @brief The class of the song comment item.
  * @author Greedysky <greedysky@163.com>
@@ -124,9 +124,9 @@ protected:
     QTextEdit *m_messageEdit;
     QLabel *m_topLabel, *m_commentsLabel;
     QWidget *m_messageComments;
-    MusicCommentsRequest *m_downloadRequest;
+    MusicCommentsRequest *m_networkRequest;
     QList<MusicCommentsItem*> m_commentsItems;
-    MusicPagingWidgetObject *m_pagingWidgetObject;
+    MusicPagingWidgetModule *m_pagingWidgetObject;
 
 };
 

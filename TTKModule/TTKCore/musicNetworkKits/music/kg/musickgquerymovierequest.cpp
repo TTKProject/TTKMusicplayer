@@ -20,7 +20,7 @@ void MusicKGQueryMovieRequest::startToSearch(QueryType type, const QString &text
     TTK_LOGGER_INFO(QString("%1 startToSearch %2").arg(getClassName()).arg(text));
 
     deleteAll();
-    m_searchText = text.trimmed();
+    m_queryText = text.trimmed();
     m_currentType = type;
 
     QNetworkRequest request;
@@ -47,7 +47,7 @@ void MusicKGQueryMovieRequest::startToPage(int offset)
     m_pageSize = 20;
 
     QNetworkRequest request;
-    request.setUrl(MusicUtils::Algorithm::mdII(KG_ARTIST_MOVIE_URL, false).arg(m_searchText).arg(offset + 1).arg(m_pageSize));
+    request.setUrl(MusicUtils::Algorithm::mdII(KG_ARTIST_MOVIE_URL, false).arg(m_queryText).arg(offset + 1).arg(m_pageSize));
     request.setRawHeader("User-Agent", MusicUtils::Algorithm::mdII(KG_UA_URL, ALG_UA_KEY, false).toUtf8());
     MusicObject::setSslConfiguration(&request);
 
@@ -66,7 +66,7 @@ void MusicKGQueryMovieRequest::startToSingleSearch(const QString &text)
     TTK_LOGGER_INFO(QString("%1 startToSingleSearch %2").arg(getClassName()).arg(text));
 
     deleteAll();
-    m_searchText = text.trimmed();
+    m_queryText = text.trimmed();
 
     QTimer::singleShot(MT_MS, this, SLOT(singleDownLoadFinished()));
 }
@@ -186,7 +186,7 @@ void MusicKGQueryMovieRequest::singleDownLoadFinished()
     setNetworkAbort(false);
 
     MusicObject::MusicSongInformation musicInfo;
-    musicInfo.m_songId = m_searchText;
+    musicInfo.m_songId = m_queryText;
     TTK_NETWORK_QUERY_CHECK();
     readFromMusicMVInfo(&musicInfo);
     TTK_NETWORK_QUERY_CHECK();
@@ -311,14 +311,14 @@ void MusicKGQueryMovieRequest::readFromMusicMVAttribute(MusicObject::MusicSongIn
     attr.m_size = MusicUtils::Number::size2Label(key["filesize"].toInt());
     attr.m_format = MusicUtils::String::stringSplitToken(attr.m_url);
 
-    int bitRate = key["bitrate"].toInt() / 1000;
-    if(bitRate <= 375)
+    const int bitrate = key["bitrate"].toInt() / 1000;
+    if(bitrate <= 375)
         attr.m_bitrate = MB_250;
-    else if(bitRate > 375 && bitRate <= 625)
+    else if(bitrate > 375 && bitrate <= 625)
         attr.m_bitrate = MB_500;
-    else if(bitRate > 625 && bitRate <= 875)
+    else if(bitrate > 625 && bitrate <= 875)
         attr.m_bitrate = MB_750;
-    else if(bitRate > 875)
+    else if(bitrate > 875)
         attr.m_bitrate = MB_1000;
 
     attr.m_duration = MusicTime::msecTime2LabelJustified(key["timelength"].toInt());

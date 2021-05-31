@@ -49,7 +49,7 @@ void MusicMVRadioProgramRequest::downLoadFinished()
                     value = var.toMap();
                     TTK_NETWORK_QUERY_CHECK();
 
-                    if(!contains && value["fmId"].toString() == m_searchText)
+                    if(!contains && value["fmId"].toString() == m_queryText)
                     {
                         contains = true;
                         item.m_name = value["fmName"].toString();
@@ -176,14 +176,14 @@ void MusicMVRadioProgramRequest::readFromMusicMVAttribute(MusicObject::MusicSong
     attr.m_size = MusicUtils::Number::size2Label(key["filesize"].toInt());
     attr.m_format = MusicUtils::String::stringSplitToken(attr.m_url);
 
-    int bitRate = key["bitrate"].toInt() / 1000;
-    if(bitRate <= 375)
+    const int bitrate = key["bitrate"].toInt() / 1000;
+    if(bitrate <= 375)
         attr.m_bitrate = MB_250;
-    else if(bitRate > 375 && bitRate <= 625)
+    else if(bitrate > 375 && bitrate <= 625)
         attr.m_bitrate = MB_500;
-    else if(bitRate > 625 && bitRate <= 875)
+    else if(bitrate > 625 && bitrate <= 875)
         attr.m_bitrate = MB_750;
-    else if(bitRate > 875)
+    else if(bitrate > 875)
         attr.m_bitrate = MB_1000;
 
     attr.m_duration = MusicTime::msecTime2LabelJustified(key["timelength"].toInt());

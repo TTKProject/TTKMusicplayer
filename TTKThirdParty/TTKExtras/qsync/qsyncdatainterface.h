@@ -26,7 +26,7 @@
 
 class QSyncDataInterfacePrivate;
 
-/*! @brief The class of the sync cloud data item.
+/*! @brief The class of the sync cloud data interface.
  * @author Greedysky <greedysky@163.com>
  */
 class MUSIC_EXTRAS_EXPORT QSyncDataInterface : public QObject
@@ -58,6 +58,12 @@ protected:
      * Pretty decode the data into url.
      */
     QString pathDecode(const QString &data) const;
+
+protected:
+    /*!
+     * Object contsructor.
+     */
+    QSyncDataInterface(QSyncDataInterfacePrivate &pvt, QNetworkAccessManager *networkManager, QObject *parent = nullptr);
 
 protected:
     TTK_DECLARE_PRIVATE(QSyncDataInterface)

@@ -3,6 +3,9 @@
 
 #include <QFile>
 
+/*! @brief The class of the sync cloud upload data private.
+ * @author Greedysky <greedysky@163.com>
+ */
 class QSyncUploadDataPrivate : public QSyncDataInterfacePrivate
 {
 public:
@@ -16,10 +19,8 @@ public:
 
 
 QSyncUploadData::QSyncUploadData(QNetworkAccessManager *networkManager, QObject *parent)
-    : QSyncDataInterface(networkManager, parent)
+    : QSyncDataInterface(TTK_CREATE_PRIVATE(QSyncUploadData), networkManager, parent)
 {
-    TTK_INIT_PUBLIC(QSyncUploadData);
-    TTK_INIT_PRIVATE;
     TTK_D(QSyncUploadData);
     d->m_manager = networkManager;
 }
